@@ -17,6 +17,7 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css"; 
 // 3. Import locale Tiếng Việt (tùy chọn)
 import { vi } from 'date-fns/locale';
+import RadioButton from "@/components/input/RadioButtons";
 // Đăng ký plugins
 registerPlugin(
   FilePondPluginFileValidateType,
@@ -35,7 +36,7 @@ export const FormProfile=()=>
     const [avatars, setAvatars] = useState<any[]>([]);
     const [isValid, setIsValid] = useState(false);
     const router = useRouter();
-    const [dateOfBirth,setDateOfBirth]=useState(null);
+    const [dateOfBirth,setDateOfBirth]=useState<any|Date>(null);
 const [genderdefault, setGender] = useState('');
     useEffect(() => {
       if(isLogin === false) {
@@ -102,7 +103,9 @@ const [genderdefault, setGender] = useState('');
  
   }, [infoUser]);
 const handleChange = (e:any) => {
- setDateOfBirth(e)
+  const localDate= new Date(e)
+  console.log(localDate)
+  setDateOfBirth(localDate.toLocaleDateString())
     
   };
 
@@ -144,6 +147,7 @@ const handleChange = (e:any) => {
       formData.append("gender", gender);
       formData.append("dateOfBirth", dateOfBirth||"");
       console.log(formData)
+    
        const promise = fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/update`, {
         method: "PATCH",
         body: formData,
@@ -205,7 +209,7 @@ const handleChange = (e:any) => {
                 <label htmlFor="email" className="block font-[500] text-[14px] text-black mb-[5px]">
                   Email *
                 </label>
-                <input 
+                <input readOnly
                   type="email" 
                   name="email" 
                   id="email" 
@@ -227,7 +231,7 @@ const handleChange = (e:any) => {
               </div>
               <div className="">
                 <label htmlFor="address" className="block font-[500] text-[14px] text-black mb-[5px]">
-                  Dia chi *
+                  Địa chỉ 
                 </label>
                 <input 
                   type="text" 
@@ -266,24 +270,7 @@ const handleChange = (e:any) => {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Giới tính:
           </label>
-          <div className="flex space-x-6">
-            {GENDER_OPTIONS.map((option) => (
-              <label key={option.value} className="inline-flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  name="gender"
-                  value={option.value}
-                  checked={genderdefault === option.value}
-                  onChange={(e) => setGender(e.target.value)}
-                  required
-                  id="gender"
-               
-                  className="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
-                />
-                <span className="ml-2 text-gray-700">{option.label}</span>
-              </label>
-            ))}
-          </div>
+          <RadioButton  arrayButtonRadio={GENDER_OPTIONS||[]} buttonRadioDefault={genderdefault} setButtonRadio={setGender} />
         </div>
               <div className="sm:col-span-2">
                 <button className="bg-[#0088FF] rounded-[4px] h-[48px] px-[20px] font-[700] text-[16px] text-white">

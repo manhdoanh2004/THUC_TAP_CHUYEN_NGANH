@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
+import PasswordInput from "@/components/input/PasswordInput";
 import JustValidate from "just-validate";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -93,17 +94,7 @@ export const LoginFrom=()=>
                   className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
                 />
               </div>
-              <div className="">
-                <label htmlFor="password" className="block font-[500] text-[14px] text-black mb-[5px]">
-                  Mật khẩu *
-                </label>
-                <input 
-                  type="password" 
-                  name="password" 
-                  id="password" 
-                  className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
-                />
-              </div>
+                <PasswordInput/>
               <div className="">
                 <button className="bg-[#0088FF] rounded-[4px] w-[100%] h-[48px] px-[20px] font-[700] text-[16px] text-white">
                   Đăng nhập
