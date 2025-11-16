@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
@@ -35,7 +36,7 @@ export const Section2 = () => {
               <CardCompanyItem key={item.id} item={item} />
             ))}
             </>):(<>
-           { Array(9).fill("").map((item:any,index:any)=>{
+           { Array(6).fill("").map((item:any,index:any)=>{
             return ( <CompanyCardSkeleton key={index}/>)
            
            })}

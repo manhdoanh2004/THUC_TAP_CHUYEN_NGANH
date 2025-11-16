@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { LuEye, LuEyeClosed } from 'react-icons/lu'; // Giả định bạn đã cài đặt react-icons
 
-const PasswordInput = () => {
+type PasswordInput={
+    isResending?:boolean
+}
+const PasswordInput = ({isResending}:PasswordInput) => {
     // 1. Khai báo state để quản lý trạng thái ẩn/hiện
     const [showPassword, setShowPassword] = useState(false);
 
@@ -19,6 +22,7 @@ const PasswordInput = () => {
                 Mật khẩu *
             </label>
             <input
+                readOnly={isResending}
                 // 2. Cập nhật type dựa trên state showPassword
                 type={showPassword ? 'text' : 'password'} 
                 name="password"

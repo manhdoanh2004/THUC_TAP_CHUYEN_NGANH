@@ -12,10 +12,10 @@ export default function Home() {
       {/* End Section 1 */}
 
       {/* Section 2 */}
-      <Section2/>
+      <Section3/>
       {/* End Section 2 */}
       {/* Section 2 */}
-      <Section3/>
+      <Section2/>
       {/* End Section 2 */}
     </>
   );

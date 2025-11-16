@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
+import { toast, Toaster } from "sonner";
 export const FormRegiter = () => {
   const router = useRouter();
 // Danh sách các tùy chọn 
@@ -26,7 +27,7 @@ const [radiodefault, setRadio] = useState('candidate');
 
   const [data,setData]=useState<any>(null);
   // Đặt thời gian mặc định cho việc xác minh (ví dụ: 5 phút = 300 giây)
-  const INITIAL_TIME_SECONDS = 30;
+  const INITIAL_TIME_SECONDS = 60;
   // 1. State để lưu trữ thời gian còn lại
   const [timeLeft, setTimeLeft] = useState(INITIAL_TIME_SECONDS);
   // 2. State để quản lý việc đang gửi lại email
@@ -80,10 +81,6 @@ const validatorRef = useRef<typeof JustValidate | null>(null);
     }, 2000);
   };
 
- useEffect(() => {
-    console.log('Giá trị Radio đã thay đổi thành:', radiodefault);
-}, [radiodefault]);
-  const [apiUrl,setapiUrl]=useState(null);
   useEffect(() => {
 
     if (validatorRef.current === null) {
@@ -185,18 +182,30 @@ const validatorRef = useRef<typeof JustValidate | null>(null);
             target.reset(); // Dùng target.reset()
 
             if (data.code === "error") {
-                alert(data.message);
+                 toast.error('Lỗi', {
+                description: `${data.message}`,
+                duration: 3000, // Thông báo sẽ tự đóng sau 3 giây
+              });
             }
 
             if (data.code === "success") {
+              toast.success('Thông báo', {
+                description: `${data.message}`,
+                duration: 3000, // Thông báo sẽ tự đóng sau 3 giây
+              });
                 setData(data);
                 setTimeLeft(INITIAL_TIME_SECONDS);
             }
         })
         .catch((error) => {
             setIsResending(false);
+            event.target.reset();
+              toast.error('Lỗi', {
+                description: `Lỗi kết nối đến máy chủ. Xin vui lòng thử lại sau ít phút`,
+                duration: 3000, // Thông báo sẽ tự đóng sau 3 giây
+              });
             console.error("Lỗi Fetch API:", error);
-            alert("Đã xảy ra lỗi khi kết nối đến máy chủ.");
+        
         });
 
 });
@@ -215,6 +224,7 @@ return () => {
 
   return (
     <>
+      <Toaster richColors position="top-right" />
       <form
         id="registerForm"
         action=""
@@ -241,6 +251,7 @@ return () => {
                   Tên công ty *
                 </label>
                 <input 
+                    readOnly={isResending}
                   type="text" 
                   name="fullName" 
                   id="fullName" 
@@ -258,13 +269,14 @@ return () => {
             Email *
           </label>
           <input
+          readOnly={isResending}
             type="email"
             name="email"
             id="email"
             className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
           />
         </div>
-           <PasswordInput/>
+           <PasswordInput isResending={isResending}/>
            <label className="block text-sm font-medium text-gray-700 mb-2">
           Đăng ký với vai trò
           </label>

@@ -1,5 +1,6 @@
 import { Footer } from "@/components/footer/Footer";
 import { Header } from "@/components/header/client/Header";
+import { SidebarLayout } from "@/components/sider/client/Sidebar";
 
 export default function ClientLayout({
   children,
@@ -8,11 +9,14 @@ export default function ClientLayout({
 }) {
   return (
     <>
-      <Header />
+    <SidebarLayout>
+
+  <Header />
      
                    {children}
      
                    <Footer />
+    </SidebarLayout>
          
     </>
   );

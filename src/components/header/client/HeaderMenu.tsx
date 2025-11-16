@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+
 import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
 import { FaAngleDown, FaAngleRight } from "react-icons/fa6"
@@ -103,7 +104,7 @@ export const HeaderMenu = (
 
   return (
     <>
-      <nav className={"lg:block " + (showMenu ? "fixed top-0 left-0 w-[280px] h-[100vh] z-[999] bg-[#000056]" : "hidden")}>
+      <nav className={"lg:block hidden lg:block " }>
         <ul className="flex gap-x-[30px] flex-wrap">
          {showMenu&& <li className="inline-flex lg:w-auto w-full lg:justify-start
                justify-between p-[10px] items-center gap-x-[8px] relative group/sub-1 flex-wrap">
@@ -168,6 +169,8 @@ export const HeaderMenu = (
           ))}
         </ul>
       </nav>
+      
+    
     </>
   )
 }

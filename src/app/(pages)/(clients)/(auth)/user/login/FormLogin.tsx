@@ -4,12 +4,12 @@ import PasswordInput from "@/components/input/PasswordInput";
 import JustValidate from "just-validate";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Toaster,toast } from "sonner";
 
 export const FormLogin = () => {
   const router = useRouter();
-
+  const [isResending, setIsResending] = useState(false);
   const searchParams=useSearchParams();
 
   const userId=searchParams.get('userId');
@@ -17,8 +17,8 @@ export const FormLogin = () => {
   useEffect(()=>{
       if(userId)
       {
-        toast.success('Verify thanh cong!', {
-        description: `Verify thanh cong!`,
+        toast.success('Thông báo', {
+        description: `Verify thành công!`,
         duration: 3000, // Thông báo sẽ tự đóng sau 3 giây
       });
       }
@@ -64,6 +64,7 @@ export const FormLogin = () => {
         },
       ])
       .onSuccess((event: any) => {
+        setIsResending(true)
         const email = event.target.email.value;
         const password = event.target.password.value;
 
@@ -71,7 +72,7 @@ export const FormLogin = () => {
           email: email,
           password: password
         };
-  
+        
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/login`, {
           method: "POST",
           headers: {
@@ -82,15 +83,32 @@ export const FormLogin = () => {
         })
           .then(res => res.json())
           .then(data => {
+            setIsResending(false)
+            event.target.reset();
             if(data.code == "error") {
-              alert(data.message);
+               toast.error('Lỗi', {
+                description: `${data.message}`,
+                duration: 3000, // Thông báo sẽ tự đóng sau 3 giây
+              });
             }
   
             if(data.code == "success") {
-              console.log(data)
+               toast.success('Thông báo', {
+                description: `Đăng nhập thành công!`,
+                duration: 3000, // Thông báo sẽ tự đóng sau 3 giây
+              });
               router.push("/");
             }
           })
+          .catch((error) => {
+            setIsResending(false)
+            event.target.reset();
+            console.error("Lỗi Fetch API:", error);
+             toast.error('Lỗi', {
+                description: "Đã xảy ra lỗi khi kết nối đến máy chủ. Vui lòng thử lại sau ít phút",
+                duration: 3000, // Thông báo sẽ tự đóng sau 3 giây
+              });
+        });
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -104,20 +122,21 @@ export const FormLogin = () => {
             Email *
           </label>
           <input 
+          readOnly={isResending}
             type="email" 
             name="email" 
             id="email" 
             className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
           />
         </div>
-         <PasswordInput/>
+         <PasswordInput isResending={isResending}/>
         <div className="">
-          <button className="bg-[#0088FF] rounded-[4px] w-[100%] h-[48px] px-[20px] font-[700] text-[16px] text-white">
-            Đăng nhập
+          <button className={`bg-[#0088FF] rounded-[4px] w-[100%] h-[48px] px-[20px] font-[700] text-[16px] text-white ${isResending?" bg-gray-400 text-gray-600 ":""}  ` }disabled={isResending}>
+       {isResending?"Đang đăng nhập ":"Đăng nhập"} 
           </button>
         </div>
         <p> Bạn chưa có tài khoản ? <Link  href="/user/register" className="underline cursor-pointer hover:text-blue-500"> Đăng ký tài khoản ngay</Link></p>
-        <p> Bạn là nhà tuyển dụng ? <Link  href="/company/login" className="underline cursor-pointer hover:text-blue-500"> Đăng nhập với vai trò là tuyển dụng </Link></p>
+        <p> Bạn là nhà tuyển dụng ? <Link  href="/company/login" className="underline cursor-pointer hover:text-blue-500"> Đăng nhập với vai trò là nhà tuyển dụng </Link></p>
       </form>
     </>
   )

@@ -28,6 +28,7 @@
     "filepond-plugin-image-preview": "^4.6.12",
     "flatpickr": "^4.6.13",
     "just-validate": "^4.3.0",
+    "lucide-react": "^0.553.0",
     "next": "15.2.3",
     "react": "^19.0.0",
     "react-apexcharts": "^1.7.0",
