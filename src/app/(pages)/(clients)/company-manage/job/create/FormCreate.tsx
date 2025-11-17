@@ -16,6 +16,7 @@ import { positionList ,workingFromList} from "@/config/variables";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { EditorMCE } from "@/components/editor/EditorMCE";
+import DatePicker from "@/components/form/date-picker";
 
 // Đăng ký plugins
 registerPlugin(
@@ -26,7 +27,7 @@ registerPlugin(
 export const FormCreate = () => {
   const editorRef = useRef(null);
   const [isValid, setIsValid] = useState(false);
-
+  const [datePickerValue, setDatePickerValue] = useState<any | null>(null);
 
     const { infoUser, isLogin } = useAuth();
      const router = useRouter();
@@ -61,6 +62,12 @@ export const FormCreate = () => {
           errorMessage: 'Vui lòng nhập mức lương >= 0'
         },
       ])
+       .addField('#datePicker', [
+        {
+         rule:'required',
+          errorMessage: 'Vui lòng chọn ngày hết hạn nộp hồ sơ!'
+        },
+      ])
       .onFail(() => {
         setIsValid(false);
       })
@@ -78,39 +85,35 @@ export const FormCreate = () => {
     const position = event.target.position.value;
     const workingForm = event.target.workingForm.value;
     const technologies = event.target.technologies.value;
+  
     let description = "";
     if (editorRef.current) {
       description = (editorRef.current as any).getContent();
     }
-
+  
     if(isValid) {
-      // Tạo FormData
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("salaryMin", salaryMin);
-      formData.append("salaryMax", salaryMax);
-      formData.append("position", position);
-      formData.append("workingForm", workingForm);
-      formData.append("technologies", technologies);
-      formData.append("description", description);
   
     
       const dataFinal={
-        ...title,
-        ...salaryMin,
-        ...salaryMax,
-        ...position,
-        ...workingForm,
+        title:title
+        ,salaryMin:salaryMin,
+        salaryMax:salaryMax,
+        position:position,
+        workingForm:workingForm,
         description:description,
-        technologies:technologies
+        technologies:technologies.split(",").map((tech:any)=> tech.trim()),
+        deadline:datePickerValue
       }
-      const promise = fetch(`http://localhost:8080/api/jobs`, {
+
+      console.log("dataFinal",dataFinal);
+      const promise = fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs`, {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(dataFinal),
         credentials: "include", // Gửi kèm cookie
       })
         .then(async (res) => {
+          
           const data = await res.json();
           if (data.code === "error") {
             throw new Error(data.message);
@@ -201,6 +204,19 @@ export const FormCreate = () => {
             name="technologies" 
             id="technologies" 
             className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
+          />
+        </div>
+        <div className="sm:col-span-2">
+        <DatePicker
+            id="datePicker"
+            label="Hạn nộp hồ sơ"
+            placeholder="Chọn thời gian"
+           
+            required={true}
+            onChange={(dates, currentDateString) => {
+              setDatePickerValue(currentDateString);
+              // console.log({ dates, currentDateString });
+            }}
           />
         </div>
         <div className="sm:col-span-2">

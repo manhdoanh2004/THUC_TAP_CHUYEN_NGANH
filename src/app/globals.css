@@ -293,6 +293,7 @@
   }
 }
 
+
 /* third-party libraries CSS */
 .apexcharts-legend-text {
   @apply !text-gray-700 dark:!text-gray-400;
@@ -373,6 +374,11 @@
 .flatpickr-day.prevMonthDay {
   @apply !text-gray-400;
 }
+
+.flatpickr-day > .flatpickr-disabled{
+  color: #f7e4e4 !important;
+}
+
 
 .flatpickr-months > .flatpickr-month {
   background: none !important;

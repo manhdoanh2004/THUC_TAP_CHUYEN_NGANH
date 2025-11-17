@@ -28,7 +28,6 @@ registerPlugin(
 const GENDER_OPTIONS = [
   { label: 'Nam', value: 'Nam' },
   { label: 'Nữ', value: 'Nữ' },
-  { label: 'Khác', value: 'Khác' },
 ];
 export const FormProfile=()=>
 {
@@ -121,11 +120,11 @@ const handleChange = (e:any) => {
   
     const address = event.target.phone.value;
     let avatar=null;
-    
+   
     if(avatars.length>0)
     {
       
-        avatar=avatars[0].file;
+         avatar=avatars[0].file;
 
         if(infoUser.avatar&&infoUser.avatar.includes(avatar.name))
         {
@@ -142,7 +141,10 @@ const handleChange = (e:any) => {
       formData.append("fullname", fullName);
       formData.append("email", email);
       formData.append("phone", phone);
-      formData.append("avatar", avatar);
+      if (avatars.length > 0 && avatars[0].file) {
+          // Kiểm tra xem file có thực sự tồn tại không trước khi append
+          formData.append("avatar", avatars[0].file);
+      }
       formData.append("address", address);
       formData.append("gender", gender);
       formData.append("dateOfBirth", dateOfBirth||"");
