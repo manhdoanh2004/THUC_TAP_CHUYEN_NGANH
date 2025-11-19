@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import Checkbox from "@/components/form/input/Checkbox";
@@ -6,11 +7,40 @@ import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
 import {  EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const [isResending, setIsResending] = useState(false);
+    const router=useRouter();
+  const handleLogin=async (event:any)=>{
+    event.preventDefault();
+    setIsResending(true);
+   const res= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+      credentials: 'include', 
+    })
+
+    const data=await res.json();
+    if(data.code=='success'){
+      router.push('/admin/dashboard');
+    }
+    else{
+        setIsResending(false);
+        event.target.reset();
+      alert(data.message);
+    }
+
+  }
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">
      
@@ -28,7 +58,10 @@ export default function SignInForm() {
                   <Label>
                     Email <span className="text-error-500">*</span>{" "}
                   </Label>
-                  <Input placeholder="info@gmail.com" type="email" />
+                  <Input
+                  name={"email"}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="info@gmail.com" type="email" />
                 </div>
                 <div>
                   <Label>
@@ -36,8 +69,10 @@ export default function SignInForm() {
                   </Label>
                   <div className="relative">
                     <Input
+                    name={"password"}
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
@@ -66,24 +101,13 @@ export default function SignInForm() {
                   </Link> */}
                 </div>
                 <div>
-                  <Button className="w-full" size="sm">
-                    Sign in
+                  <Button onClick={(event)=>handleLogin(event)} className={` w-full  ${isResending?" bg-gray-400 text-gray-600 ":""}  `} size="sm" disabled={isResending}>
+                    {isResending ? "Đang đăng nhập..." : "Đăng nhập"}
                   </Button>
                 </div>
               </div>
             </form>
 
-            {/* <div className="mt-5">
-              <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-                Don&apos;t have an account? {""}
-                <Link
-                  href="/signup"
-                  className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
-                >
-                  Sign Up
-                </Link>
-              </p>
-            </div> */}
           </div>
         </div>
       </div>

@@ -5,8 +5,9 @@ import { usePathname } from "next/navigation";
 
 export const useAuth = () => {
   const [isLogin, setIsLogin] = useState<any>();
- const [infoUser, setInfoUser] = useState<any>();
- const [infoCompany, setInfoCompany] = useState<any>();
+ const [infoUser, setInfoUser] = useState<any>(null);
+ const [infoCompany, setInfoCompany] = useState<any>(null);
+ const[infoAdmin,setInfoAdmin]=useState<any>(null);
   const pathname = usePathname(); // Lấy URL hiện tại
 
   useEffect(() => {
@@ -24,28 +25,29 @@ export const useAuth = () => {
         if(data.code == "error") {
           setIsLogin(false);
         }
-
-        if(data.code == "success") {
+        else{
           setIsLogin(true);
-          console.log(data.result);
           if(data.result.role=="ROLE_CANDIDATE")
             {
               setInfoUser(data.result);
               setInfoCompany(null);
+                setInfoAdmin(null);
             } 
-          else
+          else if(data.result.role=="ROLE_COMPANY")
           {
               setInfoCompany(data.result);
                 setInfoUser(null);
+                setInfoAdmin(null);
+          }
+          else{
+              setInfoAdmin(data.result);
+              setInfoUser(null);
+              setInfoCompany(null);
           }
          
-        }
-        else
-        {
-             console.log(data);
         }
       });
   }, [pathname]);
 
-  return { isLogin ,infoUser,infoCompany};
+  return { isLogin ,infoUser,infoCompany,infoAdmin};
 }
