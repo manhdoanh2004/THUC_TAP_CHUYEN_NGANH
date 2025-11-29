@@ -33,7 +33,7 @@ export const useAuth = () => {
               setInfoCompany(null);
                 setInfoAdmin(null);
             } 
-          else if(data.result.role=="ROLE_COMPANY")
+          else if(data.result.role=="ROLE_EMPLOYER")
           {
               setInfoCompany(data.result);
                 setInfoUser(null);

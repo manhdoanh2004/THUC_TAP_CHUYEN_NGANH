@@ -144,22 +144,22 @@ const ToastNotification = ({ message }:{message:any}) => {
   // --- HÀNH ĐỘNG HÀNG LOẠT (BULK ACTIONS) ---
 
   
-      //    useEffect(() => {
-      //   fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs`,{
-      //       credentials:"include"
-      //   })
-      //     .then(res => res.json())
-      //     .then(data => {
+         useEffect(() => {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs`,{
+            credentials:"include"
+        })
+          .then(res => res.json())
+          .then(data => {
              
-      //       // if(data.code == "success") {
+            // if(data.code == "success") {
               
-      //       //   setCandidates(data.companyList);
-      //       // //   settotalPage(data.totalPage)
-      //       // }
-      //       console.log(data)
-      //       setCandidates(data);
-      //     })
-      // }, []);
+            //   setCandidates(data.companyList);
+            // //   settotalPage(data.totalPage)
+            // }
+            console.log(data)
+            // setCandidates(data);
+          })
+      }, []);
   const handleSubmit = async () => {
  
 

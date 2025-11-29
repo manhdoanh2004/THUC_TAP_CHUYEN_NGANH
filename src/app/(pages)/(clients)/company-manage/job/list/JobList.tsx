@@ -18,7 +18,8 @@ export const JobList = () => {
   const [jobList, setJobList] = useState<any[]>([]);
   const [page,Setpage]=useState<number>(1);
   const [count,Setcount]=useState<number>(1);
-  const { infoUser, isLogin } = useAuth();
+  const { infoCompany, isLogin } = useAuth();
+  console.log(infoCompany)
   const router = useRouter();
 
      useEffect(() => {
@@ -28,15 +29,16 @@ export const JobList = () => {
     }, [isLogin]);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/job/list?page=${page}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/get-jobs`, {
       method: "GET",
       credentials: "include", // Gửi kèm cookie
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.code == "success") {
-          setJobList(data.jobList);
-          settotalPage(data.totalPage);
+          setJobList(data.result);
+          // settotalPage(data.totalPage);
+          console.log(data)
         }
       });
   }, [page,count]);
@@ -63,7 +65,7 @@ export const JobList = () => {
               return (
                 
                   <div
-                    key={item.id}
+                    key={item.jobId}
                     className="border border-[#DEDEDE] rounded-[8px] flex flex-col relative truncate"
                     style={{
                       background:
@@ -91,7 +93,7 @@ export const JobList = () => {
                      {item.title}
                     </h3>
                     <div className="mt-[6px] text-center font-[400] text-[14px] text-[#121212]">
-                      {item.companyName}
+                      {infoCompany?.companyName}
                     </div>
                     <div className="mt-[12px] text-center font-[600] text-[16px] text-[#0088FF]">
                       {item.salaryMin.toLocaleString("vi-VN")}$ -   {item.salaryMax.toLocaleString("vi-VN")}$
@@ -118,6 +120,9 @@ export const JobList = () => {
                         )
                       })}
                       </>):(<></>)}
+                    </div>
+                    <div className=" text-center mb-[10px]">
+                      {item.status?.toLowerCase()}
                     </div>
                     <div className="flex items-center justify-center gap-[12px] mb-[20px]">
                       <Link
