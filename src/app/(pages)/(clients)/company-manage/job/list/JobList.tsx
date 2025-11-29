@@ -35,12 +35,14 @@ export const JobList = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+         console.log(data)
         if (data.code == "success") {
           setJobList(data.result);
           // settotalPage(data.totalPage);
           console.log(data)
         }
       });
+      
   }, [page,count]);
 
 
