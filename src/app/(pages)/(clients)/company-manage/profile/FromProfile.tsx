@@ -45,14 +45,12 @@ export const FormProfile = () => {
       }
       const newCityList=cityList.map((item:any,index:number)=>{
         return ({
-          value:`${index+1}`,
+          value:item.name?item.name:"",
           selected:false,
-          text:item.name?item.name:item,
+          text:item.name?item.name:"",
 
         })
       });
-
-      console.log(newCityList)
       setnewcityList(newCityList)
       setcompanycityList(infoCompany?.city?infoCompany?.city:[])
     }, [isLogin]);
@@ -114,7 +112,7 @@ export const FormProfile = () => {
     if (logos.length > 0) {
       logo = logos[0].file;
 
-      if (infoCompany.logo && infoCompany.logo.includes(logo.name)) {
+      if (infoCompany.logo && infoCompany.logo.includes(logo?.name)) {
         logo = null;
       }
     }
@@ -130,7 +128,7 @@ export const FormProfile = () => {
       formData.append("workingTime", workingTime);
       formData.append("workOvertime", workOvertime);
       formData.append("description", description);
-      formData.append("logo", logo);
+      if(logo)formData.append("logo", logo);
       formData.append("phone", phone);
 
       const promise = fetch(
@@ -199,27 +197,6 @@ export const FormProfile = () => {
             />
           </div>
           <div className="relative">
-            {/* <label
-              htmlFor="city"
-              className="block font-[500] text-[14px] text-black mb-[5px]"
-            >
-              Thành phố
-            </label> */}
-            {/* <select
-              name="city"
-              defaultValue={infoCompany.city}
-              id="city"
-              className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
-            >
-              
-            
-              <option value="">-- Chọn thành phố --</option>
-              {cityList.map((item) => (
-                <option value={item._id} key={item._id}>
-                  {item.name}
-                </option>
-              ))}
-            </select> */}
 
                <MultiSelect
              

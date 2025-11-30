@@ -63,7 +63,8 @@ export const JobList = () => {
           <>
             {jobList.map((item: any, index: any) => {
               const ipos=positionList.find((itemPos)=>itemPos.value==item.position)?.label
-              const iwork=workingFromList.find((itemWok)=>itemWok.value==item.workingForm)?.label
+              const iwork=workingFromList.find((itemWok)=>itemWok.value==item.workingFrom)?.label
+              console.log(item)
               return (
                 
                   <div
@@ -128,7 +129,7 @@ export const JobList = () => {
                     </div>
                     <div className="flex items-center justify-center gap-[12px] mb-[20px]">
                       <Link
-                        href={`/company-manage/job/edit/${item.id}`}
+                        href={`/company-manage/job/edit/${item.jobId}`}
                         className="bg-[#FFB200] rounded-[4px] font-[400] text-[14px] text-black inline-block py-[8px] px-[20px]"
                       >
                         Sửa
