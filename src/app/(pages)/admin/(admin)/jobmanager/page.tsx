@@ -151,11 +151,11 @@ const ToastNotification = ({ message }:{message:any}) => {
           .then(res => res.json())
           .then(data => {
              
-            // if(data.code == "success") {
+           if(data.code == "success") {
               
-            //   setCandidates(data.companyList);
-            // //   settotalPage(data.totalPage)
-            // }
+              setCandidates(data.content);
+             // setTotalPage(data.totalPage)
+            }
             console.log(data)
             // setCandidates(data);
           })
