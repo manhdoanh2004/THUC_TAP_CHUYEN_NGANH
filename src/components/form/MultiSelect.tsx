@@ -1,5 +1,6 @@
+'use client'
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // interface Option {
 //   value: string;
@@ -23,17 +24,20 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   onChange,
   disabled = false,
 }) => {
+  
   const [selectedOptions, setSelectedOptions] =
     useState<string[]>(defaultSelected);
   const [isOpen, setIsOpen] = useState(false);
+
+
 
   const toggleDropdown = () => {
     if (disabled) return;
     setIsOpen((prev) => !prev);
   };
 
+  
   const handleSelect = (optionValue: string) => {
-    console.log(optionValue)
     const newSelectedOptions = selectedOptions.includes(optionValue)
       ? selectedOptions.filter((value) => value !== optionValue)
       : [...selectedOptions, optionValue];
@@ -53,6 +57,13 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
     (value) => options.find((option) => option.value === value)?.text || ""
   );
   
+  useEffect(() => {
+    // Chỉ cập nhật nếu giá trị mới khác với giá trị hiện tại
+    //ngăn ngừa vòng lặp vô tận
+    if (JSON.stringify(defaultSelected) !== JSON.stringify(selectedOptions)) {
+        setSelectedOptions(defaultSelected);
+    }
+  }, [defaultSelected]);
 
   return (
     <div className="w-full">

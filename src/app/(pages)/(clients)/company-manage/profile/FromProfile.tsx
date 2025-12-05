@@ -36,7 +36,7 @@ export const FormProfile = () => {
   const [logos, setLogos] = useState<any[]>([]);
   const [isValid, setIsValid] = useState(false);
   const [newcityList, setnewcityList] = useState<any[]>([]);
-  const [companycityList, setcompanycityList] = useState<any[]>([]);
+  const [companycityList, setcompanycityList] = useState<any[]|undefined>(undefined);
    const router = useRouter();
 
     useEffect(() => {
@@ -52,12 +52,13 @@ export const FormProfile = () => {
         })
       });
       setnewcityList(newCityList)
-      setcompanycityList(infoCompany?.city?infoCompany?.city:[])
+      
     }, [isLogin]);
 
 
   useEffect(() => {
     if (infoCompany) {
+      setcompanycityList(infoCompany?.city)
       if (infoCompany.logo) {
         setLogos([
           {

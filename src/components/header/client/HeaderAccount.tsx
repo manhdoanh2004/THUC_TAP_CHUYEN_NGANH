@@ -13,8 +13,6 @@ export const HeaderAccount = () => {
   const { isLogin, infoUser,infoCompany} = useAuth();
   const router = useRouter();
 
-  console.log("infoUser",infoUser);
-  console.log("infoCompany",infoCompany);
   const handleLogout = (url:any) => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {
       credentials: "include", // Gửi kèm cookie,
