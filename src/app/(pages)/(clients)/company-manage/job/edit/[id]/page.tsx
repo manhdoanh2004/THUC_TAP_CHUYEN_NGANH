@@ -13,6 +13,16 @@ export default async function CompanyManageJobEditPage({
 }) {
   const { id } = await params;
 
+  const res= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    cache: 'no-store',
+    credentials: 'include', // Gửi kèm cookie
+  });
+  const data = await res.json();
+ console.log("data",data);
   return (
     <>
       <div className="py-[60px]">
@@ -27,7 +37,7 @@ export default async function CompanyManageJobEditPage({
               </Link>
             </div>
             
-            <FormEdit id={id} />
+            <FormEdit jobDetail={data.result||null} />
           </div>
         </div>
       </div>

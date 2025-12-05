@@ -35,13 +35,7 @@ export const Header = () => {
             {/* Account */}
            <HeaderAccount/>
             {/* Button Menu Mobile */}
-            <button 
-              onClick={handleShowMenu}
-              className="text-white text-[20px] lg:hidden inline-block ml-[12px]"
-             
-            >
-              <FaBars className="" />
-            </button>
+            
           </div>
         </div>
       </header>

@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
+import JobDetailModal from '@/components/modal/JobDetailModal';
 import React, { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { toast, Toaster } from 'sonner';
 
 // --- ĐỊNH NGHĨA DỮ LIỆU & MAP TRẠNG THÁI ---
 
@@ -34,20 +35,28 @@ const STATUS_MAP:any = {
   },
 };
 
-// Dữ liệu ứng viên mẫu ban đầu
-const INITIAL_CANDIDATE_DATA = [
-  { id: 1, name: 'Nguyễn Văn A', company: 'Kỹ sư Phần mềm Cấp cao', appliedDate: '01/10/2024', status: 'APPROVED' },
-  { id: 2, name: 'Trần Thị B', company: 'Nhà phân tích Dữ liệu', appliedDate: '15/09/2024', status: 'CANCELLED' },
-  { id: 3, name: 'Lê Văn C', company: 'Thiết kế UX/UI', appliedDate: '20/10/2024', status: 'PENDING' },
-  { id: 4, name: 'Phạm Thị D', company: 'Giám đốc Dự án', appliedDate: '28/08/2024', status: 'REJECTED' },
-  { id: 5, name: 'Hoàng Văn E', company: 'Chuyên viên Marketing', appliedDate: '05/11/2024', status: 'CANCELLED' },
-];
+
+// Định nghĩa kiểu dữ liệu cho Công việc
+interface Job {
+  jobId: string;
+  title: string;
+  employerId: string;
+  employerName: string; // Tên công ty mới
+  description: string;
+  salaryMin: number;
+  salaryMax: number;
+  position: string;
+  technologies: string[];
+  deadline: string; // Thêm trường deadline
+  status: string;
+}
 
 // Định nghĩa header cho bảng
 const TABLE_HEADERS = [
   { key: 'name', label: 'Công việc', sortable: true },
   { key: 'company', label: 'Công ty', sortable: true },
   { key: 'appliedDate', label: 'Ngày đăng', sortable: true },
+  { key: 'deadline', label: 'Ngày hết hạn', sortable: true },
   { key: 'status', label: 'Trạng Thái', sortable: true },
   { key: 'action', label: 'Hành Động', sortable: false },
 ];
@@ -90,18 +99,23 @@ const ToastNotification = ({ message }:{message:any}) => {
     );
 };
 
+ // 1. State để quản lý trạng thái hiển thị của Modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // 2. State để lưu thông tin công việc đang được chọn
+  const [selectedJob, setSelectedJob] = useState<Job | null>( null);
 
   // Trạng thái dữ liệu ứng viên
-  const [candidates, setCandidates] = useState(INITIAL_CANDIDATE_DATA);
-  console.log(INITIAL_CANDIDATE_DATA)
+  const [candidates, setCandidates] = useState<undefined|any>(undefined);
+  
   // Trạng thái để lưu trữ ID của các ứng viên đã chọn
   const [selectedIds, setSelectedIds] = useState<any>([]);
   // Trạng thái cho trạng thái mới được chọn trong Bulk Action dropdown
   const [bulkStatusChange, setBulkStatusChange] = useState('');
   const [message, setMessage] = useState<any>(null); // Trạng thái cho thông báo Toast
-  
+  const [count, setCount] = useState(0);
   // Kiểm tra xem tất cả các ứng viên có được chọn hay không
-  const isAllSelected = selectedIds.length === candidates.length && candidates.length > 0;
+  const isAllSelected = selectedIds.length === candidates?.length && candidates.length > 0;
   
   // Kiểm tra xem có bất kỳ ứng viên nào được chọn không (dùng cho indeterminate state)
   const isIndeterminate = selectedIds.length > 0 && !isAllSelected;
@@ -140,36 +154,36 @@ const ToastNotification = ({ message }:{message:any}) => {
       setSelectedIds((prev:any) => prev.filter((selectedId:any) => selectedId !== jobid));
     }
   };
-  
-  // --- HÀNH ĐỘNG HÀNG LOẠT (BULK ACTIONS) ---
 
-  
-         useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs`,{
-            credentials:"include"
-        })
-          .then(res => res.json())
-          .then(data => {
-             
-           if(data.code == "success") {
-              
-              setCandidates(data.content);
-             // setTotalPage(data.totalPage)
-            }
-            console.log(data)
-            // setCandidates(data);
-          })
-      }, []);
+
+   useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs?page=1&size=10&direction=asc`,{
+        credentials:"include"
+    })
+      .then(res => res.json())
+      .then(data => {
+          if(data.code==="success")
+          {
+             setCandidates(data.result.content);
+          }
+     
+      })
+  }, [count]);
+
+  // Hàm thay đổi trạng thái công việc
   const handleSubmit = async () => {
  
-
+  if (!bulkStatusChange) {
+        showMessage('Vui lòng chọn một trạng thái mới để áp dụng.', 'error');
+        return;
+    }
       const promise = fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs/review`, {
         method: "PUT",
         headers:{
             "Content-Type":"application/json"
         },
         body: JSON.stringify({
-           jobId: selectedIds[0]||"",
+           jobId: selectedIds||[],
              jobStatus: bulkStatusChange
         }),
         credentials: "include", // Gửi kèm cookie
@@ -178,6 +192,11 @@ const ToastNotification = ({ message }:{message:any}) => {
           const data = await res.json();
           if (data.code === "error") {
             throw new Error(data.message);
+          }
+          else {
+            setCount(prev=>prev+1);
+                 setSelectedIds([]); // Xóa lựa chọn sau khi hành động
+               setBulkStatusChange(''); // Xóa lựa chọn dropdown
           }
           return data;
         });
@@ -188,48 +207,66 @@ const ToastNotification = ({ message }:{message:any}) => {
         error: (err) => err.message || 'Đã xảy ra lỗi!',
       });
     }
-  const handleBulkStatusChange = () => {
-    if (!bulkStatusChange) {
-        showMessage('Vui lòng chọn một trạng thái mới để áp dụng.', 'error');
-        return;
-    }
-    handleSubmit();
-    // Cập nhật trạng thái của các ứng viên đã chọn
-    setCandidates(prevCandidates =>
-      prevCandidates.map((candidate:any) => {
-        if (selectedIds.includes(candidate.jobid)) {
-          return { ...candidate, status: bulkStatusChange };
-        }
-        return candidate;
+
+
+    //Hàm xóa một hoặc nhiều công việc
+  const handleBulkDelete =async () => {
+      const promise = fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs`, {
+        method: "DELETE",
+        headers:{
+            "Content-Type":"application/json"
+          },
+        body: JSON.stringify({
+           ids: selectedIds||[]
+        }),
+        credentials: "include", // Gửi kèm cookie
       })
-    );
+        .then(async (res) => {
+          const data = await res.json();
+           setCount(prev=>prev+1);
+          if (data.code === "error") {
+            throw new Error(data.message);
+          }
+          else {
+            setCount(prev=>prev+1);
+                 setSelectedIds([]); // Xóa lựa chọn sau khi hành động
+               setBulkStatusChange(''); // Xóa lựa chọn dropdown
+          }
+          return data;
+        });
 
-    showMessage(`Đã cập nhật trạng thái cho ${selectedIds.length} công việc thành '${STATUS_MAP[bulkStatusChange]?.label || bulkStatusChange}'.`, 'success');
-    setSelectedIds([]); // Xóa lựa chọn sau khi hành động
-    setBulkStatusChange(''); // Xóa lựa chọn dropdown
-  };
-
-  const handleBulkEdit = () => {
-    // Mô phỏng API call cho chỉnh sửa hàng loạt
-    console.log("Bulk Editing candidates with IDs:", selectedIds);
-    showMessage(`Đã gửi yêu cầu chỉnh sửa ${selectedIds.length} ứng viên.`, 'info');
-    setSelectedIds([]); // Xóa lựa chọn sau khi hành động
-  };
-
-  const handleBulkDelete = () => {
-    // Xóa các ứng viên khỏi state
-    setCandidates(prevCandidates =>
-        prevCandidates.filter((candidate:any) => !selectedIds.includes(candidate.jobid))
-    );
+      toast.promise(promise, {
+        loading: 'Đang xóa công việc ...',
+        success: (data) => `${data.message}`, // data ở đây là kết quả trả về khi `resolve`
+        error: (err) => err.message || 'Đã xảy ra lỗi!',
+      });
     
-    showMessage(`Đã xóa ${selectedIds.length} công việc khỏi danh sách.`, 'error');
+  
     setSelectedIds([]); // Xóa lựa chọn sau khi hành động
   };
-  // ------------------------------------------
  
+
+
+  const handleViewDetail = (jobInfo: Job) => {
+    setSelectedJob(jobInfo); // Lưu công việc được chọn
+    setIsModalOpen(true); // Mở Modal
+ 
+  };
+
+  /**
+   * Hàm đóng Modal
+   */
   
+  const handleCloseModal = () => {
+   
+    setIsModalOpen(false);
+    setSelectedJob(null); // (Tùy chọn) Xóa công việc đã chọn để reset trạng thái
+  };
+ 
   return (
-    <div className="p-4 sm:p-8 min-h-screen bg-gray-50 dark:bg-gray-900 font-sans">
+    <>
+      <Toaster position="top-right" richColors />
+    <div className="p-4 sm:p-8 min-h-screen bg-gray-50 dark:bg-gray-900 font-sans realtive">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-6">
          Danh sách công việc
@@ -261,7 +298,7 @@ const ToastNotification = ({ message }:{message:any}) => {
                       
                       {/* Nút Áp Dụng Trạng Thái */}
                       <button
-                          onClick={handleBulkStatusChange}
+                          onClick={handleSubmit}
                           disabled={!bulkStatusChange}
                           className="inline-flex items-center justify-center font-medium gap-1 rounded-lg transition px-3 py-1.5 text-xs sm:text-sm bg-indigo-600 text-white hover:bg-indigo-700 disabled:bg-indigo-400 dark:disabled:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
                       >
@@ -271,7 +308,7 @@ const ToastNotification = ({ message }:{message:any}) => {
                       {/* Nút Sửa và Xóa (Mô phỏng) */}
                    
                       <button
-                          onClick={handleBulkDelete}
+                          onClick={()=>handleBulkDelete()}
                           className="inline-flex items-center justify-center font-medium gap-1 rounded-lg transition px-3 py-1.5 text-xs sm:text-sm bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
                       >
                           <TrashIcon /> Xóa hàng loạt
@@ -308,7 +345,7 @@ const ToastNotification = ({ message }:{message:any}) => {
                         className="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"
                         onChange={handleSelectAll}
                         checked={isAllSelected}
-                        // FIX LỖI: Sử dụng callback function tường minh, đảm bảo nó trả về void
+                     
                         ref={(el: HTMLInputElement | null) => {
                             if (el) {
                                 el.indeterminate = isIndeterminate;
@@ -332,7 +369,8 @@ const ToastNotification = ({ message }:{message:any}) => {
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {candidates.map((row:any) => {
+                {candidates?(<>
+                  {candidates.map((row:any) => {
                   const statusInfo = getStatusInfo(row.status);
               
                   const isChecked = selectedIds.includes(row.jobId);
@@ -351,20 +389,24 @@ const ToastNotification = ({ message }:{message:any}) => {
                           <label htmlFor={`checkbox-${row.jobId}`} className="sr-only">{`Chọn ${row.name}`}</label>
                         </div>
                       </td>
-                      {/* Tên Ứng Viên */}
+                      {/* Tên công việc */}
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                         {row.title}
                       </td>
-                      {/* Vai Trò */}
+                      {/* Tên công ty */}
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {row.company}
+                        {row.employerName}
                       </td>
-                      {/* Ngày Ứng Tuyển */}
+                      {/* Ngày Ngày đăng */}
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         {row.createdAt}
                       </td>
+                      {/* Ngày hết hạn */}
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        {row.deadline}
+                      </td>
                       {/* Trạng Thái */}
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <td className="px-6 py-4 whitespace-nowrap flex text-center">
                         <span
                           className={`inline-flex items-center px-3 py-1 justify-center rounded-full font-semibold text-xs ${statusInfo.bg} ${statusInfo.textColor}`}
                         >
@@ -374,30 +416,25 @@ const ToastNotification = ({ message }:{message:any}) => {
                       {/* Hành Động */}
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center justify-center gap-3">
-                          {/* <button
+                          <button
                             className="p-1 rounded-full text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 transition duration-150"
-                            onClick={() => showMessage(`Mở chỉnh sửa cho ${row.name}`, 'info')}
+                           onClick={() => handleViewDetail(row)}
                           >
                             <EditIcon />
-                          </button> */}
-                          <button
-                            className="p-1 rounded-full text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition duration-150"
-                            onClick={() => {
-                                setCandidates(prev => prev.filter((c:any) => c.jobId !== row.jobId));
-                                showMessage(`Đã xóa ${row.name} thành công.`, 'error');
-                            }}
-                          >
-                            <TrashIcon />
                           </button>
+                         
                         </div>
                       </td>
                     </tr>
                   );
                 })}
+                </>):(<></>)}
+                
+  
               </tbody>
             </table>
             {/* Trường hợp không có dữ liệu */}
-            {candidates.length === 0 && (
+            {candidates?.length === 0 && (
                 <div className="p-10 text-center text-gray-500 dark:text-gray-400">
                     <p className="font-semibold text-lg">Không tìm thấy công việc nào.</p>
                    
@@ -407,6 +444,7 @@ const ToastNotification = ({ message }:{message:any}) => {
 
           {/* Danh sách Thẻ (Mobile) */}
           <div className="md:hidden divide-y divide-gray-200 dark:divide-gray-700">
+           {candidates?(<>
               {candidates.map((row:any) => {
                 const statusInfo = getStatusInfo(row.status);
                 const isChecked = selectedIds.includes(row.jobId);
@@ -441,9 +479,9 @@ const ToastNotification = ({ message }:{message:any}) => {
                      
                   </div>
                 );
-              })}
+              })}</>):(<></>)}
           </div>
-          {candidates.length === 0 && (
+          {candidates?.length === 0 && (
                 <div className="md:hidden p-10 text-center text-gray-500 dark:text-gray-400">
                     <p className="font-semibold text-lg">Không tìm thấy công việc nào.</p>
                  
@@ -481,13 +519,23 @@ const ToastNotification = ({ message }:{message:any}) => {
                 </button>
             </div>
           </div>
-          
+          {/* 3. Render Modal Component */}
+      <JobDetailModal
+        job={selectedJob}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
         </div>
       </div>
-
+ 
       {/* Toast Notification Component */}
       <ToastNotification message={message} />
     </div>
+
+   
+    
+    </>
+     
   );
 };
 

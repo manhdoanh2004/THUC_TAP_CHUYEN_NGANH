@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
     domains: [
       'res.cloudinary.com',
       // Thêm các tên miền ảnh bên ngoài khác của bạn nếu có
+      'via.placeholder.com', // Tên miền bạn cần thêm để fix lỗi
+      // Nếu có các tên miền khác (ví dụ: firebase storage, cloudinary, v.v.), hãy thêm vào đây
+      // 'example.com', 
+      // 'cdn.anotherdomain.com',
     ],
   },
   webpack(config) {

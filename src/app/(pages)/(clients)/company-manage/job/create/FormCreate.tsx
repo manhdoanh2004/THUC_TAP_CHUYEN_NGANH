@@ -83,7 +83,7 @@ export const FormCreate = () => {
     const salaryMin = event.target.salaryMin.value;
     const salaryMax = event.target.salaryMax.value;
     const position = event.target.position.value;
-    const workingForm = event.target.workingForm.value;
+    const workingFrom = event.target.workingForm.value;
     const technologies = event.target.technologies.value;
   
     let description = "";
@@ -99,7 +99,7 @@ export const FormCreate = () => {
         ,salaryMin:salaryMin,
         salaryMax:salaryMax,
         position:position,
-        workingForm:workingForm,
+        workingFrom:workingFrom,
         description:description,
         technologies:technologies.split(",").map((tech:any)=> tech.trim()),
         deadline:datePickerValue

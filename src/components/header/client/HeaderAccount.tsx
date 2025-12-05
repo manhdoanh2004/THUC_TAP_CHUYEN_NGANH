@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link"
 import { useRouter } from "next/navigation";
 import { usePathname } from 'next/navigation';
+import avatarDefault from "../../../../public/avatarDefault.png"
 export const HeaderAccount = () => {
   const pathname = usePathname();
 
@@ -12,6 +13,8 @@ export const HeaderAccount = () => {
   const { isLogin, infoUser,infoCompany} = useAuth();
   const router = useRouter();
 
+  console.log("infoUser",infoUser);
+  console.log("infoCompany",infoCompany);
   const handleLogout = (url:any) => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {
       credentials: "include", // Gửi kèm cookie,
@@ -23,7 +26,6 @@ export const HeaderAccount = () => {
           router.push(url);
         }
       });}
-console.log(infoUser)
   return (
     <>
       <div className="inline-flex items-center gap-x-[5px] text-white font-[600] sm:text-[16px] text-[12px] relative group/sub-1">
@@ -38,8 +40,8 @@ console.log(infoUser)
                         <Image
                           width={40}
                           height={40}
-                          src={infoUser.avatar}
-                          alt=""
+                          src={infoUser?.avatar||avatarDefault}
+                          alt="avatar user"
                         />
                       </div>
                       <span  className="">{infoUser.fullName}</span>
@@ -66,7 +68,18 @@ console.log(infoUser)
             )}
 
             {/* Đã đăng nhập compnay */}
-            {infoCompany&&(<>  <Link href="#" className="">{infoCompany.companyName}</Link>
+            {infoCompany&&(<> 
+            
+             <div className="w-10 h-10  overflow-hidden rounded-full inline-block">
+                        <Image
+                          width={40}
+                          height={40}
+                          src={infoCompany?.logo||avatarDefault}
+                          alt="avatar user"
+                          className=" object-cover w-[100%] h-[100%]  "
+                        />
+                      </div>
+             <div  className="">{infoCompany.companyName}</div>
             <ul className="absolute top-[100%] right-[0px] w-[200px] bg-[#000065] hidden group-hover/sub-1:block z-[999]">
               <li className="py-[10px] px-[16px] rounded-[4px] flex items-center justify-between hover:bg-[#000096] relative group/sub-2">
                 <Link href="/company-manage/profile" className="text-white font-[600] text-[16px]">
@@ -104,6 +117,7 @@ console.log(infoUser)
             </Link>:""}
           </>
         )}
+     
       </div>
     </>
   )

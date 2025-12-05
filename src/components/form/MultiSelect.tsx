@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 
-interface Option {
-  value: string;
-  text: string;
-  selected: boolean;
-}
+// interface Option {
+//   value: string;
+//   text: string;
+//   selected: boolean;
+// }
 
 interface MultiSelectProps {
   label: string;
@@ -32,6 +33,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   };
 
   const handleSelect = (optionValue: string) => {
+    console.log(optionValue)
     const newSelectedOptions = selectedOptions.includes(optionValue)
       ? selectedOptions.filter((value) => value !== optionValue)
       : [...selectedOptions, optionValue];
