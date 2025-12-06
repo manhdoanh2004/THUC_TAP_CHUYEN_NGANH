@@ -14,6 +14,30 @@ import { useRouter } from "next/navigation";
 import { ButtonDelete } from "@/components/buttons/ButtonDelete";
 
 export const JobList = () => {
+
+  const STATUS_MAP:any = {
+  'APPROVED': {
+    label: 'Đã duyệt',
+    bg: 'bg-emerald-100 dark:bg-emerald-800/20',
+    textColor: 'text-emerald-700 dark:text-emerald-400'
+  },
+  'CANCELLED': {
+    label: 'Hủy',
+    bg: 'bg-amber-100 dark:bg-amber-800/20',
+    textColor: 'text-amber-700 dark:text-amber-400'
+  },
+  'PENDING': {
+    label: 'Chờ Xử Lý',
+    bg: 'bg-blue-100 dark:bg-blue-800/20',
+    textColor: 'text-blue-700 dark:text-blue-400'
+  },
+  'REJECTED': {
+    label: 'Từ Chối',
+    bg: 'bg-red-100 dark:bg-red-800/20',
+    textColor: 'text-red-700 dark:text-red-400'
+  },
+};
+
   const [totalPage, settotalPage] = useState<any>(1);
   const [jobList, setJobList] = useState<any[]>([]);
   const [page,Setpage]=useState<number>(1);
@@ -45,7 +69,11 @@ export const JobList = () => {
       
   }, [page,count]);
 
-
+  const getStatusInfo = (status:any) => STATUS_MAP[status] || {
+    label: status,
+    bg: 'bg-gray-100 dark:bg-gray-700/50',
+    textColor: 'text-gray-600 dark:text-gray-400'
+  };
   const handlePanigation=(event:any)=>
   {
       const value=event.target.value;
@@ -62,6 +90,7 @@ export const JobList = () => {
         {jobList ? (
           <>
             {jobList.map((item: any, index: any) => {
+               const statusInfo = getStatusInfo(item.status);
               const ipos=positionList.find((itemPos)=>itemPos.value==item.position)?.label
               const iwork=workingFromList.find((itemWok)=>itemWok.value==item.workingFrom)?.label
               console.log(item)
@@ -108,9 +137,23 @@ export const JobList = () => {
                       <FaBriefcase className="text-[16px]" /> {iwork}
                     </div>
                     <div className="mt-[6px] flex justify-center items-center gap-[8px] font-[400] text-[14px] text-[#121212]">
-                      <FaLocationDot className="text-[16px]" /> {item.companyCity}
+                      <FaLocationDot className="text-[16px]" />
+                        <div className="  flex flex-wrap justify-center gap-[8px]">
+                      {item.location?(<>
+                      {  item.location.map((itemTech:any,index:any)=>{
+
+                        return(
+                        <div
+                          key={index+1}
+                        className="border border-[#DEDEDE] rounded-[20px] py-[6px] px-[16px] font-[400] text-[12px] text-[#414042]">
+                            {itemTech}
+                          </div>
+                        )
+                      })}
+                      </>):(<></>)}
                     </div>
-                    <div className="mt-[12px] mb-[20px] mx-[16px] flex flex-wrap justify-center gap-[8px]">
+                    </div>
+                    <div className="mt-[12px] mb-[15px] mx-[16px] flex flex-wrap justify-center gap-[8px]">
                       {item.technologies?(<>
                       {  item.technologies.map((itemTech:any,index:any)=>{
 
@@ -125,7 +168,11 @@ export const JobList = () => {
                       </>):(<></>)}
                     </div>
                     <div className=" text-center mb-[10px]">
-                      {item.status?.toLowerCase()}
+                    <span
+                          className={`inline-flex items-center px-3 py-1 justify-center rounded-full font-semibold text-xs ${statusInfo.bg} ${statusInfo.textColor}`}
+                        >
+                          {statusInfo.label}
+                        </span>
                     </div>
                     <div className="flex items-center justify-center gap-[12px] mb-[20px]">
                       <Link
@@ -134,7 +181,7 @@ export const JobList = () => {
                       >
                         Sửa
                       </Link>
-                      <ButtonDelete api={`${process.env.NEXT_PUBLIC_API_URL}/company/job/delete/${item.id}`}
+                      <ButtonDelete api={`${process.env.NEXT_PUBLIC_API_URL}/api/jobs`}
                           item={item}
                           onDeleteSuccess={handleDeleteSuccess}
                           content="Bạn có muốn xóa công việc này không?"

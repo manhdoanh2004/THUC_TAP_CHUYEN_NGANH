@@ -3,23 +3,26 @@
 "use client"
 
 import { CardCompanyItem } from "@/components/card/CardCompanyItem";
+import { CardJobItem } from "@/components/card/CardJobItem";
 import CompanyCardSkeleton from "@/components/card/CompanyCardSkeleton";
+import JobCardSkeleton from "@/components/card/JobCartSkeleton";
 import { useEffect, useState } from "react";
 
 export const Section3 = () => {
   const [companyList, setCompanyList] = useState<any[]>([]);
 
-//   useEffect(() => {
-//     fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/list?limitItems=9`)
-//       .then(res => res.json())
-//       .then(data => {
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs/approved`)
+      .then(res => res.json())
+      .then(data => {
          
-//         if(data.code == "success") {
+        // if(data.code == "success") {
           
-//            setCompanyList(data.companyList);
-//         }
-//       })
-//   }, []);
+        //    setCompanyList(data.companyList);
+        // }
+        setCompanyList(data.content);
+      })
+  }, []);
 
   return (
     <>
@@ -33,11 +36,11 @@ export const Section3 = () => {
             {/* Item */}
             {companyList.length>0?(<>
              {companyList.map(item => (
-              <CardCompanyItem key={item.id} item={item} />
+              <CardJobItem key={item.jobId} item={item} />
             ))}
             </>):(<>
            { Array(6).fill("").map((item:any,index:any)=>{
-            return ( <CompanyCardSkeleton key={index}/>)
+            return ( <JobCardSkeleton key={index}/>)
            
            })}
             </>)}

@@ -10,14 +10,15 @@ export const CardJobItem = (props:{
 }) => {
 
   const {item}=props;
+  
    const position = positionList.find(pos => pos.value === item.position)?.label;
-  const workingForm = workingFromList.find(work => work.value === item.workingForm)?.label;
+  const workingForm = workingFromList.find(work => work.value === item.workingFrom)?.label;
 
 
   return (
     <>
       <Link 
-        href={`/job/detail/${item.id}`}
+        href={`/job/detail/${item.jobId}`}
         className="border border-[#DEDEDE] rounded-[8px] flex flex-col relative truncate"
         style={{
           background: "linear-gradient(180deg, #F6F6F6 2.38%, #FFFFFF 70.43%)"
@@ -46,20 +47,18 @@ export const CardJobItem = (props:{
         <div className="mt-[6px] text-center font-[400] text-[14px] text-[#121212]">
           {item.companyName}
         </div>
-        {/* <div className="mt-[12px] text-center font-[600] text-[16px] text-[#0088FF]">
+        <div className="mt-[12px] text-center font-[600] text-[16px] text-[#0088FF]">
           {item.salaryMin.toLocaleString("vi-VN")}$ - {item.salaryMax.toLocaleString("vi-VN")}$
-        </div> */}
+        </div>
         <div className="mt-[6px] flex justify-center items-center gap-[8px] font-[400] text-[14px] text-[#121212]">
           <FaUserTie className="text-[16px]" /> {position}
         </div>
         <div className="mt-[6px] flex justify-center items-center gap-[8px] font-[400] text-[14px] text-[#121212]">
           <FaBriefcase className="text-[16px]" /> {workingForm}
         </div>
-        <div className="mt-[6px] flex justify-center items-center gap-[8px] font-[400] text-[14px] text-[#121212]">
-          <FaLocationDot className="text-[16px]" /> {item.location}
-        </div>
-        {/* <div className="mt-[12px] mb-[20px] mx-[16px] flex flex-wrap justify-center gap-[8px]">
-          {item.technologies.map((itemTech: string, indexTech: number) => (
+        <div className="mt-[12px] mb-[20px] mx-[16px] items-center flex flex-wrap justify-center gap-[4px]">
+            <FaLocationDot className="text-[16px]" />
+          {item.location?.map((itemTech: string, indexTech: number) => (
             <div 
               className="border border-[#DEDEDE] rounded-[20px] py-[6px] px-[16px] font-[400] text-[12px] text-[#414042]"
               key={indexTech}
@@ -67,7 +66,7 @@ export const CardJobItem = (props:{
               {itemTech}
             </div>
           ))}
-        </div> */}
+        </div>
       </Link>
 
     </>

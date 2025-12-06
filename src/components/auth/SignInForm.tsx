@@ -36,7 +36,7 @@ const [email, setEmail] = useState('');
     }
     else{
         setIsResending(false);
-        event.target.reset();
+     
       alert(data.message);
     }
 

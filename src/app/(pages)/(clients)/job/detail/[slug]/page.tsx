@@ -23,19 +23,19 @@ export default async function JobDetailPage({
 }) {
   const { slug } = await params;
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/job/detail/${slug}`
+    `${process.env.NEXT_PUBLIC_API_URL}/api/jobs/${slug}`
   );
   const data = await res.json();
 
   let jobDetail: any = null;
 
   if (data.code == "success") {
-    jobDetail = data.jobDetail;
+    jobDetail = data.result;
     jobDetail.position = positionList.find(
       (item:any) => item.value == jobDetail.position
     )?.label;
-    jobDetail.workingForm = workingFromList.find(
-      (item:any) => item.value == jobDetail.workingForm
+    jobDetail.workingFrom = workingFromList.find(
+      (item:any) => item.value == jobDetail.workingFrom
     )?.label;
   }
 
@@ -67,28 +67,28 @@ export default async function JobDetailPage({
                   >
                     Ứng tuyển
                   </Link>
-                  <div className="grid grid-cols-3 sm:gap-[16px] gap-[8px] mb-[20px]">
-                    {jobDetail.images.map((image: string, index: number) => (
-                      <img
-                        key={index}
-                        src={image}
-                        alt=""
-                        className="aspect-[232/145] object-cover rounded-[4px] w-full"
-                      />
-                    ))}
-                  </div>
                   <div className="flex items-center gap-[8px] font-[400] text-[14px] text-[#121212] mb-[10px]">
                     <FaUserTie className="text-[16px]" /> {jobDetail.position}
                   </div>
                   <div className="flex items-center gap-[8px] font-[400] text-[14px] text-[#121212] mb-[10px]">
                     <FaBriefcase className="text-[16px]" />{" "}
-                    {jobDetail.workingForm}
+                    {jobDetail.workingFrom}
                   </div>
                   <div className="flex items-center gap-[8px] font-[400] text-[14px] text-[#121212] mb-[10px]">
                     <FaLocationDot className="text-[16px]" />{" "}
-                    {jobDetail.companyAddress}
+                       {jobDetail.location?.map(
+                      (itemTech: string, indexTech: number) => (
+                        <div
+                          key={indexTech}
+                          className="border border-[#DEDEDE] rounded-[20px] font-[400] text-[12px] text-[#414042] py-[6px] px-[16px]"
+                        >
+                          {itemTech}
+                        </div>
+                      )
+                    )}
                   </div>
                   <div className="flex flex-wrap gap-[8px]">
+                    Các công nghệ :
                     {jobDetail.technologies.map(
                       (itemTech: string, indexTech: number) => (
                         <div
