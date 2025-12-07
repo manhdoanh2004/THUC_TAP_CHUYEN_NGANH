@@ -106,11 +106,11 @@ export const HeaderAccount = () => {
         ) : (
           <>
             {/* Chưa đăng nhập */}
-            {pathname!="/user/login"&& pathname != "/company/login"? <Link href="/user/login" className="">
+            {pathname!="/login"? <Link href="/login" className="">
               Đăng Nhập
             </Link>:""}
-           {pathname!="/user/login"&&pathname!="/user/register"&&pathname!="/company/login"&&pathname!="/company/register"?(<><span>/</span></>):(<></>)}
-            {pathname!="/user/register"&& pathname != "/company/register"?  <Link href="/user/register" className="">
+           {pathname!="/login"&&pathname!="/register"?(<><span>/</span></>):(<></>)}
+            {pathname!="/register"?  <Link href="/register" className="">
               Đăng Ký
             </Link>:""}
           </>

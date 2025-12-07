@@ -28,7 +28,7 @@ const PasswordInput = ({isResending}:PasswordInput) => {
                 name="password"
                 id="password"
                 // Tùy chỉnh padding-right để không che icon
-                className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black pr-10" 
+                className=" text-black shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 w-[100%]  h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] pr-10" 
             />
             
             {/* 3. Icon chuyển đổi */}
