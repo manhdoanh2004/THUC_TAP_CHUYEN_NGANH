@@ -118,6 +118,7 @@ export const LoginFrom=()=>
           </button>
               </div>
                  <p> Bạn là ứng viên? <Link  href="/user/login" className="underline cursor-pointer hover:text-blue-500"> Đăng nhập với vai trò là ứng viên </Link></p>
+                 <p> <Link  href="/resetpassword" className="underline cursor-pointer hover:text-blue-500">Quên mật khẩu? </Link></p>
             </form>
     </>)
 }
