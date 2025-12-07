@@ -127,7 +127,7 @@ export const FormProfile = () => {
       formData.append("companyModel", companyModel);
       formData.append("companyEmployees", companyEmployees);
       formData.append("workingTime", workingTime);
-      formData.append("workOvertime", workOvertime);
+      formData.append("workingOvertime", workOvertime);
       formData.append("description", description);
       if(logo)formData.append("logo", logo);
       formData.append("phone", phone);

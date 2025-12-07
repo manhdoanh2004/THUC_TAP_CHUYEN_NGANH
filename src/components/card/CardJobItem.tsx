@@ -36,7 +36,7 @@ export const CardJobItem = (props:{
           }}
         >
           <img 
-            src={item.companyLogo}
+            src={item?.employer?.logo|| item?.logo}
             alt={item.companyName}
             className="w-[100%] h-[100%] object-contain"
           />
@@ -66,6 +66,8 @@ export const CardJobItem = (props:{
               {itemTech}
             </div>
           ))}
+
+       
         </div>
       </Link>
 

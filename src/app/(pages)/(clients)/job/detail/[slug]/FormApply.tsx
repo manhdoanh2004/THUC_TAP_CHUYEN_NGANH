@@ -22,73 +22,23 @@ export const FormApply = (props:{
 
     // Thêm state để lưu đối tượng file (cần thiết cho reset form)
     const [fileObject, setFileObject] = useState<File | null>(null);
-   useEffect(() => {
+  const handleClearFile = () => {
+        // Reset state
+        setFileName('');
+        setFileObject(null);
+        
+        // Reset giá trị của input file gốc (quan trọng để JustValidate nhận diện)
+        const fileInput = document.getElementById("fileCV") as HTMLInputElement;
+        if (fileInput) {
+            fileInput.value = ''; // Đây là cách reset input file trong JS
+        }
+    };
 
-    if(isLogin)
-    {
-         const validator = new JustValidate("#formApply");
-
-    validator
-      .addField('#fullName', [
-        {
-          rule: 'required',
-          errorMessage: 'Vui lòng nhập họ tên!'
-        },
-        {
-          rule: 'minLength',
-          value: 5,
-          errorMessage: 'Họ tên phải có ít nhất 5 ký tự!',
-        },
-        {
-          rule: 'maxLength',
-          value: 50,
-          errorMessage: 'Họ tên không được vượt quá 50 ký tự!',
-        },
-      ])
-      .addField('#email', [
-        {
-          rule: 'required',
-          errorMessage: 'Vui lòng nhập email của bạn!',
-        },
-        {
-          rule: 'email',
-          errorMessage: 'Email không đúng định dạng!',
-        },
-      ])
-      .addField('#phone', [
-        {
-          rule: 'required',
-          errorMessage: 'Vui lòng nhập số điện thoại!'
-        },
-        {
-          rule: 'customRegexp',
-          value: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
-          errorMessage: 'Số điện thoại không đúng định dạng!'
-        },
-      ])
-      .addField('#fileCV', [
-        {
-          rule: 'required',
-          errorMessage: 'Vui lòng chọn file CV!',
-        },
-        {
-          validator: (value: any, fields: any) => {
-            const file = fields['#fileCV']?.elem?.files?.[0];
-            if (!file) return false;
-            return file.type === 'application/pdf';
-          },
-          errorMessage: 'File phải là định dạng PDF!',
-        },
-        {
-          validator: (value: any, fields: any) => {
-            const file = fields['#fileCV']?.elem?.files?.[0];
-            if (!file) return false;
-            return file.size <= 5 * 1024 * 1024; // 5MB = 5 * 1024 KB * 1024 bytes
-          },
-          errorMessage: 'Dung lượng file không được vượt quá 5MB!',
-        },
-      ])
-      .onSuccess((event: any) => {
+    // HÀM XỬ LÝ THÀNH CÔNG (ĐÃ THÊM event.preventDefault())
+    const handleSuccess = (event: any) => {
+        // QUAN TRỌNG: Ngăn chặn hành vi submit mặc định của form
+        event.preventDefault(); 
+        
         const fullName = event.target.fullName.value;
         const email = event.target.email.value;
         const phone = event.target.phone.value;
@@ -97,84 +47,118 @@ export const FormApply = (props:{
         // Tạo FormData
         const formData = new FormData();
         formData.append("jobId", jobId);
-        formData.append("candidateId", jobId);
-        formData.append("fullName", fullName);
+        formData.append("name", fullName);
         formData.append("email", email);
         formData.append("phone", phone);
-        formData.append("fileCV", fileCV);
-        
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/job/apply`, {
-          method: "POST",
-          body: formData
-        })
-          .then(res => res.json())
-          .then(data => {
-            if(data.code === "error") {
-              toast.error(data.message);
+        formData.append("cv", fileCV);
+     
+        const promise = fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/applications`,
+            {
+                method: "POST",
+                body: formData,
+                credentials: "include"
             }
-    
-            if(data.code == "success") {
-              
-            
-                toast.success(data.message);
-              event.target.reset();
-              
+        ).then(async (res) => {
+            const data = await res.json();
+            if (data.code === "error") {
+                throw new Error(data.message);
             }
-          })
-    const promise = fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/job/apply`,
-        {
-          method: "POST",
-          body: formData,
-          credentials:"include"
-        
-        }
-      ).then(async (res) => {
-        const data = await res.json();
-        if (data.code === "error") {
-          throw new Error(data.message);
-        }
-        else
-        {
-             event.target.reset();
-        }
-        return data;
-      });
+            return data;
+        });
 
-      toast.promise(promise, {
-        loading: "Đang gửi cv...",
-        success: (data) => `${data.message}`, // data ở đây là kết quả trả về khi `resolve`
-        error: (err) => err.message || "Đã xảy ra lỗi!",
-      });
-    
-      })
-    }
-   
-  }, []);
-
-// Hàm xử lý chọn file để cập nhật tên file hiển thị
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            setFileName(file.name);
-        } else {
-            setFileName('');
-        }
+        toast.promise(promise, {
+            loading: "Đang gửi CV...",
+            success: (data) => {
+                // Reset form và file input sau khi thành công
+                event.target.reset();
+                handleClearFile(); // Gọi hàm reset state file
+                return `${data.message}`;
+            },
+            error: (err) => err.message || "Đã xảy ra lỗi!",
+        });
     };
 
-    // Hàm xử lý xóa file
-    const handleClearFile = () => {
-        // Reset state
-        setFileName('');
-        setFileObject(null);
-        
-        // Reset giá trị của input file gốc (quan trọng để JustValidate nhận diện)
-        const fileInput = document.getElementById("fileCV") as HTMLInputElement;
-        if (fileInput) {
-            fileInput.value = ''; // Đây là cách reset input file trong JS
-        }
-    };
-   
+   useEffect(() => {
+
+    if(isLogin)
+    {
+         const validator = new JustValidate("#formApply");
+
+    validator
+      .addField('#fullName', [
+        {
+          rule: 'required',
+          errorMessage: 'Vui lòng nhập họ tên!'
+        },
+        {
+          rule: 'minLength',
+          value: 5,
+          errorMessage: 'Họ tên phải có ít nhất 5 ký tự!',
+        },
+        {
+          rule: 'maxLength',
+          value: 50,
+          errorMessage: 'Họ tên không được vượt quá 50 ký tự!',
+        },
+      ])
+      .addField('#email', [
+        {
+          rule: 'required',
+          errorMessage: 'Vui lòng nhập email của bạn!',
+        },
+        {
+          rule: 'email',
+          errorMessage: 'Email không đúng định dạng!',
+        },
+      ])
+      .addField('#phone', [
+        {
+          rule: 'required',
+          errorMessage: 'Vui lòng nhập số điện thoại!'
+        },
+        {
+          rule: 'customRegexp',
+          value: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
+          errorMessage: 'Số điện thoại không đúng định dạng!'
+        },
+      ])
+      .addField('#fileCV', [
+        {
+          rule: 'required',
+          errorMessage: 'Vui lòng chọn file CV!',
+        },
+        {
+          validator: (value: any, fields: any) => {
+            const file = fields['#fileCV']?.elem?.files?.[0];
+            if (!file) return false;
+            return file.type === 'application/pdf';
+          },
+          errorMessage: 'File phải là định dạng PDF!',
+        },
+        {
+          validator: (value: any, fields: any) => {
+            const file = fields['#fileCV']?.elem?.files?.[0];
+            if (!file) return false;
+            return file.size <= 5 * 1024 * 1024; // 5MB = 5 * 1024 KB * 1024 bytes
+          },
+          errorMessage: 'Dung lượng file không được vượt quá 5MB!',
+        },
+      ])
+      .onSuccess(handleSuccess)
+    }
+   
+  }, [isLogin]); // Thêm dependencies để hàm handleSuccess mới được cập nhật
+
+// Hàm xử lý chọn file để cập nhật tên file hiển thị (Giữ nguyên)
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setFileName(file.name);
+        } else {
+            setFileName('');
+        }
+    };
     return (
         <>
         {isLogin?(<>
@@ -226,21 +210,7 @@ export const FormApply = (props:{
                         className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
                     />
                 </div>
-                {/* <div className="mb-[15px]">
-                    <label
-                        htmlFor="fileCV"
-                        className="block font-[500] text-[14px] text-black mb-[5px]"
-                    >
-                        File CV dạng PDF *
-                    </label>
-                    <input
-                        type="file"
-                        name="fileCV"
-                        id="fileCV"
-                        accept="application/pdf"
-                        className=""
-                    />
-                </div> */}
+             
                <div className="mb-[15px]">
                     <label
                         htmlFor="fileCV"

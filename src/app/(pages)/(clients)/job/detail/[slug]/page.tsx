@@ -6,10 +6,12 @@ import Link from "next/link";
 import {
   FaArrowRightLong,
   FaBriefcase,
+  FaClock,
   FaLocationDot,
   FaUserTie,
 } from "react-icons/fa6";
 import { FormApply } from "./FormApply";
+import FavoriteJobButton from "@/components/buttons/FavoriteJobButton";
 
 export const metadata: Metadata = {
   title: "Chi tiết công việc",
@@ -31,6 +33,7 @@ export default async function JobDetailPage({
 
   if (data.code == "success") {
     jobDetail = data.result;
+    
     jobDetail.position = positionList.find(
       (item:any) => item.value == jobDetail.position
     )?.label;
@@ -61,12 +64,15 @@ export default async function JobDetailPage({
                     {jobDetail.salaryMin.toLocaleString("vi-VN")}$ -{" "}
                     {jobDetail.salaryMax.toLocaleString("vi-VN")}$
                   </div>
-                  <Link
-                    href="#formApply"
-                    className="bg-[#0088FF] rounded-[4px] font-[700] text-[16px] text-white flex items-center justify-center h-[48px] mb-[20px]"
-                  >
-                    Ứng tuyển
-                  </Link>
+                <div className="flex justify-around items-center gap-[10px] mb-[20px]">
+    <Link
+        href="#formApply"
+        className="bg-[#0088FF] rounded-[4px] font-[700] text-[16px] text-white flex items-center justify-center flex-1 h-[48px] "
+    >
+        Ứng tuyển
+    </Link>
+    <FavoriteJobButton jobDetail={jobDetail}/>
+</div>
                   <div className="flex items-center gap-[8px] font-[400] text-[14px] text-[#121212] mb-[10px]">
                     <FaUserTie className="text-[16px]" /> {jobDetail.position}
                   </div>
@@ -100,6 +106,9 @@ export default async function JobDetailPage({
                       )
                     )}
                   </div>
+                   <div className="ml-[-33px] mt-[5px] flex justify-start items-center gap-[8px]  text-[16px] text-gray-500"> 
+                    <span className="text-black  flex justify-start items-center gap-[8px] "><FaClock className="text-[16px]" /> Hạn nộp:</span> {jobDetail.deadline}
+                  </div>
                 </div>
                 {/* Hết Thông tin công việc */}
 
@@ -124,7 +133,7 @@ export default async function JobDetailPage({
                   <div className="flex gap-[12px]">
                     <div className="w-[100px]">
                       <img
-                        src={jobDetail.companyLogo}
+                        src={jobDetail.employer.logo}
                         alt={jobDetail.companyName}
                         className="aspect-square object-cover rounded-[4px]"
                       />
@@ -134,7 +143,7 @@ export default async function JobDetailPage({
                         {jobDetail.companyName}
                       </div>
                       <Link
-                        href={`/company/detail/${jobDetail.companyId}`}
+                        href={`/company/detail/${jobDetail.employer.employerId}`}
                         className="flex items-center gap-[8px] font-[400] text-[16px] text-[#0088FF]"
                       >
                         Xem công ty <FaArrowRightLong className="" />
@@ -145,25 +154,25 @@ export default async function JobDetailPage({
                     <div className="flex flex-wrap justify-between font-[400] text-[16px]">
                       <div className="text-[#A6A6A6]">Mô hình công ty</div>
                       <div className="text-[#121212]">
-                        {jobDetail.companyModel}
+                        {jobDetail.employer.companyModel}
                       </div>
                     </div>
                     <div className="flex flex-wrap justify-between font-[400] text-[16px]">
                       <div className="text-[#A6A6A6]">Quy mô công ty</div>
                       <div className="text-[#121212]">
-                        {jobDetail.companyEmployees}
+                        {jobDetail.employer.companyEmployees}
                       </div>
                     </div>
                     <div className="flex flex-wrap justify-between font-[400] text-[16px]">
                       <div className="text-[#A6A6A6]">Thời gian làm việc</div>
                       <div className="text-[#121212]">
-                        {jobDetail.companyWorkingTime}
+                        {jobDetail.employer.workingTime}
                       </div>
                     </div>
                     <div className="flex flex-wrap justify-between font-[400] text-[16px]">
                       <div className="text-[#A6A6A6]">Làm việc ngoài giờ</div>
                       <div className="text-[#121212]">
-                        {jobDetail.companyWorkOvertime}
+                        {jobDetail.employer.workingOvertime}
                       </div>
                     </div>
                   </div>
