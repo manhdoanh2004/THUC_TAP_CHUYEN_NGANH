@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaBriefcase, FaCircleCheck, FaUserTie } from "react-icons/fa6"
 
-export const CVList = () => {
+export const FavoriteJobList = () => {
   const [listCV, setListCV] = useState<any[]>([]);
   const [page,setPage]=useState(1);
   const [totalPage,setTotalPage]=useState(1);
@@ -26,7 +26,7 @@ export const CVList = () => {
     }, [isLogin]);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/get-applied`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/get-liked`, {
       method: "POST",
       credentials: "include", // Gửi kèm cookie
     })
@@ -50,7 +50,7 @@ export const CVList = () => {
   return (
     <>
       <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-[20px]">
-      
+        
             {/* Item */}
             {listCV.length>0?(<>
              {listCV.map(item => (
@@ -63,7 +63,7 @@ export const CVList = () => {
            })}
             </>)}
            
-        
+         
       </div>
 
       <div className="mt-[30px]">

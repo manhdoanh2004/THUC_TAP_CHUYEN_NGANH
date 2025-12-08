@@ -23,14 +23,15 @@ export default async function CompanyDetailPage({
   let jobList=[];
 
 
-  const res =await fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/detail/${slug}`);
+  const res =await fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/${slug}`);
   const data = await res.json();
  
 
   if(data.code==="success")
   {
-      companyDetail=data.companyDetail;
-      jobList=data.jobList;
+      companyDetail=data.result;
+    
+      jobList=data.result.jobs;
   }
 
   return (
@@ -44,7 +45,7 @@ export default async function CompanyDetailPage({
               <div className="w-[100px]">
                 <img 
                   src={companyDetail.logo} 
-                  alt={companyDetail.fullName}
+                  alt={companyDetail.companyName}
                   className="w-[100%] aspect-square object-cover rounded-[4px]"
                 />
               </div>
@@ -79,7 +80,7 @@ export default async function CompanyDetailPage({
               <div className="font-[400] text-[16px] text-[#A6A6A6]">
                 Làm việc ngoài giờ:
                 <span className="text-[#121212]">
-                {companyDetail.workOvertime}
+                {companyDetail.workingOvertime}
                 </span>
               </div>
             </div>

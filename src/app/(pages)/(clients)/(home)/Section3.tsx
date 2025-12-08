@@ -21,6 +21,7 @@ export const Section3 = () => {
         //    setCompanyList(data.companyList);
         // }
         setCompanyList(data.content);
+        console.log(data)
       })
   }, []);
 

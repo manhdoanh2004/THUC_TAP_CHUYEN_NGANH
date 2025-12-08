@@ -53,12 +53,17 @@ export const HeaderAccount = () => {
                   </li>
                   <li className="py-[10px] px-[16px] rounded-[4px] flex items-center justify-between hover:bg-[#000096] relative group/sub-2">
                     <Link href="/user-manage/cv/list" className="text-white font-[600] text-[16px]">
-                      Quản lý CV đã gửi
+                      Việc làm đã  đã gửi
+                    </Link>
+                  </li>
+                  <li className="py-[10px] px-[16px] rounded-[4px] flex items-center justify-between hover:bg-[#000096] relative group/sub-2">
+                    <Link href="/user-manage/favoriteJob" className="text-white font-[600] text-[16px]">
+                      Việc làm yêu thích
                     </Link>
                   </li>
                   <li className="py-[10px] px-[16px] rounded-[4px] flex
                    items-center justify-between hover:bg-[#000096] relative group/sub-2 cursor-pointer"
-                    onClick={()=>handleLogout("/user/login")}>
+                    onClick={()=>handleLogout("/login")}>
                     Đăng xuất
                   </li>
                 </ul>
@@ -96,7 +101,7 @@ export const HeaderAccount = () => {
               </li>
               <li className="py-[10px] px-[16px] rounded-[4px] flex items-center
                justify-between hover:bg-[#000096] relative group/sub-2 cursor-pointer "
-               onClick={()=>handleLogout("/company/login")}
+               onClick={()=>handleLogout("/login")}
                >
                  Đăng xuất
               </li>
