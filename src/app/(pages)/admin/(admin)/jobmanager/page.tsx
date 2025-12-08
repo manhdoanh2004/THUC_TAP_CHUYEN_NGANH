@@ -395,7 +395,7 @@ const ToastNotification = ({ message }:{message:any}) => {
                       </td>
                       {/* Tên công ty */}
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {row.employerName}
+                        {row.employer.companyName}
                       </td>
                       {/* Ngày Ngày đăng */}
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">

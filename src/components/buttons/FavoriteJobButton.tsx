@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-import React, { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import React, { useEffect, useState } from 'react';
 
 // Sử dụng Lucide Icons (Heart) cho ví dụ này
 const Heart = (props: React.SVGProps<SVGSVGElement> & { filled: boolean }) => {
@@ -28,20 +29,31 @@ const Heart = (props: React.SVGProps<SVGSVGElement> & { filled: boolean }) => {
 };
 interface FavoriteJobProps {
   jobDetail: any; // Thay 'any' bằng kiểu chính xác của jobDetail
-  // Nếu bạn không cần props, hãy bỏ nó đi
+  likedJobId?:boolean
   props?: any; 
 }
 
-const FavoriteJobButton: React.FC<FavoriteJobProps> = ({ jobDetail })=>{
+const FavoriteJobButton: React.FC<FavoriteJobProps> =  ({ jobDetail})=>{
   // State để quản lý trạng thái Đã lưu (true) hay Chưa lưu (false)
   const [isFavorite, setIsFavorite] = useState(false);
-console.log(jobDetail)
+const { infoUser} =  useAuth();
+  useEffect(()=>{
+    if(infoUser)
+    {
+ if(infoUser.likedJobIds?.includes(jobDetail.jobId))
+      {
+        setIsFavorite(true)
+      }
+      else setIsFavorite(false)
+    }
+     
+  },[infoUser])
   /**
    * Xử lý khi click vào nút
    * Thường là nơi gọi API để lưu/hủy lưu công việc.
    */
   const handleToggleFavorite = async () => {
-    setIsFavorite(prev => !prev);
+   
     // Trong môi trường thực tế, bạn sẽ gọi API ở đây:
     if (!isFavorite) {
         const form=new FormData();
@@ -56,10 +68,23 @@ console.log(jobDetail)
   const data = await res.json();
   if(data.code=="success")
   {
-    setIsFavorite(prev => !prev);
+    setIsFavorite(true);
   }
     } else {
-      console.log('Đang gọi API để HỦY LƯU công việc...');
+         const form=new FormData();
+        form.append("jobId",jobDetail.jobId)
+      const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/user/unliked-job`,{
+        method:"POST",
+        body:form,
+        credentials:"include"
+    }
+  );
+  const data = await res.json();
+  if(data.code=="success")
+  {
+    setIsFavorite(false);
+  }
     }
   };
 

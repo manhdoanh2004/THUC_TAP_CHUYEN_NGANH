@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { FaBriefcase, FaCircleCheck, FaUserTie } from "react-icons/fa6"
 
 export const FavoriteJobList = () => {
-  const [listCV, setListCV] = useState<any[]>([]);
+  const [listCV, setListCV] = useState<any[]|null>(null);
   const [page,setPage]=useState(1);
   const [totalPage,setTotalPage]=useState(1);
   const { infoUser, isLogin } = useAuth();
@@ -52,7 +52,7 @@ export const FavoriteJobList = () => {
       <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-[20px]">
         
             {/* Item */}
-            {listCV.length>0?(<>
+            {listCV?(<>
              {listCV.map(item => (
               <CardJobItem key={item.jobId} item={item} />
             ))}

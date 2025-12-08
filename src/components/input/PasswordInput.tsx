@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { LuEye, LuEyeClosed } from 'react-icons/lu'; // Giả định bạn đã cài đặt react-icons
 
 type PasswordInput={
-    isResending?:boolean
+    isResending?:boolean,
+    idPassword?:string
 }
-const PasswordInput = ({isResending}:PasswordInput) => {
+const PasswordInput = ({isResending,idPassword}:PasswordInput) => {
     // 1. Khai báo state để quản lý trạng thái ẩn/hiện
     const [showPassword, setShowPassword] = useState(false);
 
+    console.log(idPassword)
     // Hàm xử lý sự kiện click
     const togglePasswordVisibility = () => {
         setShowPassword(prevShowPassword => !prevShowPassword);
@@ -26,7 +28,7 @@ const PasswordInput = ({isResending}:PasswordInput) => {
                 // 2. Cập nhật type dựa trên state showPassword
                 type={showPassword ? 'text' : 'password'} 
                 name="password"
-                id="password"
+                id={`${idPassword?idPassword:"password"}`}
                 // Tùy chỉnh padding-right để không che icon
                 className=" text-black shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 w-[100%]  h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] pr-10" 
             />

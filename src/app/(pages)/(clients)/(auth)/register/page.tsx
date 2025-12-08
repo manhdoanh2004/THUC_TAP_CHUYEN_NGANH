@@ -9,16 +9,11 @@ export const metadata: Metadata = {
 export default function UserRegisterPage() {
   return (
     <>
-      <div className="py-[60px]">
-        <div className="container mx-auto px-[16px]">
-          <div className="border border-[#DEDEDE] rounded-[8px] py-[50px] px-[20px] max-w-[602px] mx-auto">
-            <h1 className="font-[700] text-[20px] text-black text-center mb-[20px]">
-              Đăng ký 
-            </h1>
-            <FormRegiter />
-          </div>
+      <div className="flex items-center justify-center my-[2%] p-4 font-sans min-h-screen">
+            <div className="w-full max-w-xl bg-white p-8 rounded-2xl shadow-2xl border border-gray-200">
+                <FormRegiter />
+            </div>
         </div>
-      </div>
     </>
   )
 }

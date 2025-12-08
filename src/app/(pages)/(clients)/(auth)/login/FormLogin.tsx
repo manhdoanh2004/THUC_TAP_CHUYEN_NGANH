@@ -1,9 +1,10 @@
 'use client'
 import PasswordInput from '@/components/input/PasswordInput';
+import JustValidate from 'just-validate';
 import { useRouter, useSearchParams } from 'next/navigation';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { toast, Toaster } from 'sonner';
 
 
@@ -19,7 +20,7 @@ const FormLogin = () => {
     const [isResending, setIsResending] = useState(false);
     const [message, setMessage] = useState<any|null>(null);
   const searchParams=useSearchParams();
-
+const validatorRef = useRef<typeof JustValidate | null>(null);
   const userId=searchParams.get('userId');
   useEffect(()=>{
       if(userId)
@@ -33,7 +34,62 @@ const FormLogin = () => {
     
      const router = useRouter()
 
-    // --- LOGIC VALIDATION TRÍCH XUẤT TỪ JustValidate ---
+useEffect(() => {
+        // 1. Dọn dẹp validator cũ trước khi khởi tạo cái mới (nếu có)
+        // JustValidate không có phương thức destroy chính thức, 
+        // nhưng chúng ta có thể đảm bảo nó chỉ hoạt động trên form hiện tại.
+        // Hủy các sự kiện cũ trên form trước khi khởi tạo lại (ít nhất là về mặt logic)
+        
+        // 2. Xác định form và id tương ứng
+        const formId = activeForm === FormType.CANDIDATE ? "#candidateLoginForm" : "#companyLoginForm";
+        const emailId = activeForm === FormType.CANDIDATE ? "#emailCandidate" : "#emailCompany";
+        const passwordId = activeForm === FormType.CANDIDATE ? "#passwordCandidate" : "#passwordCompany";
+
+        // 3. Khởi tạo Validator MỚI cho form hiện tại
+        const validator = new JustValidate(formId);
+
+        validator
+            .addField(emailId, [
+                {
+                    rule: "required",
+                    errorMessage: "Vui lòng nhập email của bạn!",
+                },
+                {
+                    rule: "email",
+                    errorMessage: "Email không đúng định dạng!",
+                },
+            ])
+            .addField(passwordId, [
+                {
+                    rule: "required",
+                    errorMessage: "Vui lòng nhập mật khẩu!",
+                },
+                {
+                    validator: (value: string) => value.length >= 8,
+                    errorMessage: "Mật khẩu phải chứa ít nhất 8 ký tự!",
+                },
+                // ... các quy tắc validation mật khẩu khác ...
+            ])
+            // JustValidate sẽ chặn submit nếu validation thất bại
+            // Nếu thành công, nó gọi hàm onSuccess
+            .onSuccess((e: any) => handleLoginSubmit(e)); 
+        
+        // 4. Lưu đối tượng validator vào ref
+        validatorRef.current = validator;
+
+        // 5. Cleanup function: quan trọng nhất! 
+        // Mặc dù JustValidate không có hàm hủy, nhưng việc để useEffect này 
+        // chạy lại khi activeForm thay đổi sẽ khởi tạo validator mới cho đúng form.
+        // Đây là phương pháp phổ biến khi sử dụng JustValidate trong React.
+        return () => {
+            // Do JustValidate 4.x không có phương thức destroy() công khai, 
+            // chúng ta có thể reset trạng thái hoặc để nó được garbage collected.
+            // Điều quan trọng là chúng ta không sử dụng lại đối tượng cũ.
+            validatorRef.current = null;
+        };
+
+    // 💡 Dependency array: Khởi tạo lại validator MỖI KHI form thay đổi
+    }, [activeForm]);
     // Hàm này mô phỏng lại toàn bộ các quy tắc validation của bạn
     const validateForm = (email:any, password:any) => {
         // 1. Kiểm tra Email
@@ -93,13 +149,13 @@ const FormLogin = () => {
             console.error("Không tìm thấy form với ID:", formId);
         }
         // Bắt đầu Validation
-        const validationError = validateForm(email, password);
+        // const validationError = validateForm(email, password);
         
-        if (validationError) {
-             setMessage({ type: 'error', text: validationError });
-             setIsResending(false);
-             return;
-        }
+        // if (validationError) {
+        //      setMessage({ type: 'error', text: validationError });
+        //      setIsResending(false);
+        //      return;
+        // }
 
         const dataFinal = { email, password };
         const endpoint = activeForm === FormType.CANDIDATE 
@@ -165,8 +221,8 @@ const FormLogin = () => {
     };
 
     // Component dùng chung cho cả hai form (để tránh lặp lại cấu trúc HTML)
-    const CommonForm = ({ id, onSubmit, isResending, type }:{id:string,onSubmit:(e:any)=>void,isResending:boolean,type:string}) => (
-        <form id={id} onSubmit={onSubmit} className="grid grid-cols-1 gap-y-[15px]">
+    const CommonForm = ({ id, isResending, type ,idPassword,idEmail}:{idEmail:string,idPassword:string,id:string,isResending:boolean,type:string}) => (
+        <form id={id}  className="grid grid-cols-1 gap-y-[15px]">
             <div className="">
                 <label htmlFor="email" className="block font-[500] text-[14px] text-black mb-[5px]">
                     Email *
@@ -175,14 +231,14 @@ const FormLogin = () => {
                     readOnly={isResending}
                     type="email" 
                     name="email" 
-                    id="email" 
+                    id={`${idEmail?idEmail:"email"}`} 
                     // THÊM HIỆU ỨNG INPUT MỚI
                     className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                     required
                 />
             </div>
             
-            <PasswordInput  isResending={isResending} />
+            <PasswordInput idPassword={idPassword} isResending={isResending} />
 
             <div className="">
                 <button 
@@ -263,9 +319,11 @@ const FormLogin = () => {
                     <div className={`transition-opacity duration-500 ${activeForm === FormType.CANDIDATE ? 'opacity-100 relative' : 'opacity-0 absolute top-0 left-0 w-full pointer-events-none'}`}>
                         <CommonForm 
                             id="candidateLoginForm" 
-                            onSubmit={handleLoginSubmit} 
+                         
                             isResending={isResending && activeForm === FormType.CANDIDATE} 
                             type={FormType.CANDIDATE}
+                               idPassword={"passwordCandidate"}
+                               idEmail="emailCandidate"
                         />
                     </div>
                     
@@ -273,9 +331,11 @@ const FormLogin = () => {
                     <div className={`transition-opacity duration-500 ${activeForm === FormType.COMPANY ? 'opacity-100 relative' : 'opacity-0 absolute top-0 left-0 w-full pointer-events-none'}`}>
                         <CommonForm 
                             id="companyLoginForm" 
-                            onSubmit={handleLoginSubmit} 
+                           
                             isResending={isResending && activeForm === FormType.COMPANY} 
                             type={FormType.COMPANY}
+                            idPassword={"passwordCompany"}
+                             idEmail="emailCompany"
                         />
                     </div>
                 </div>
