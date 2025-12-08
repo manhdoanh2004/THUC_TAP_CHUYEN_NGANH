@@ -1,6 +1,7 @@
 'use client'
 import PasswordInput from '@/components/input/PasswordInput';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react';
@@ -31,9 +32,7 @@ const FormLogin = () => {
       }
   },[])
     
-    const router = {
-        push: (path:any) => console.log(`NAVIGATING TO: ${path}`),
-    };
+    const router = useRouter()
 
     // --- LOGIC VALIDATION TRÍCH XUẤT TỪ JustValidate ---
     // Hàm này mô phỏng lại toàn bộ các quy tắc validation của bạn
@@ -133,7 +132,7 @@ const FormLogin = () => {
             if(data.code === "success") {
                 toast.success('Thông báo', { description: data.message || 'Đăng nhập thành công!' , duration: 3000, // Thông báo sẽ tự đóng sau 3 giây
                 });
-                router.push("/"); // Giả lập chuyển hướng
+                setTimeout(()=>{ router.push("/");},1000);
             }
            
           })
