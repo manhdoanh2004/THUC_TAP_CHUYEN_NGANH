@@ -3,6 +3,7 @@
 'use client'
 import { useAuth } from '@/hooks/useAuth';
 import React, { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 
 // Sử dụng Lucide Icons (Heart) cho ví dụ này
 const Heart = (props: React.SVGProps<SVGSVGElement> & { filled: boolean }) => {
@@ -31,12 +32,14 @@ interface FavoriteJobProps {
   jobDetail: any; // Thay 'any' bằng kiểu chính xác của jobDetail
   likedJobId?:boolean
   props?: any; 
+  isLogin:boolean,
+  infoUser:any
 }
 
-const FavoriteJobButton: React.FC<FavoriteJobProps> =  ({ jobDetail})=>{
+const FavoriteJobButton: React.FC<FavoriteJobProps> =  ({ jobDetail,isLogin,infoUser})=>{
   // State để quản lý trạng thái Đã lưu (true) hay Chưa lưu (false)
   const [isFavorite, setIsFavorite] = useState(false);
-const { infoUser} =  useAuth();
+
   useEffect(()=>{
     if(infoUser)
     {
@@ -94,8 +97,9 @@ const { infoUser} =  useAuth();
     : "bg-white hover:bg-gray-100 text-gray-700 border border-gray-300";
 
   return (
-    // Đã loại bỏ div bọc ngoài (p-4, bg-gray-50, shadow-lg) để component chỉ là nút bấm.
-    <button
+  <>
+      {isLogin?(<>
+       <button
       onClick={handleToggleFavorite}
       className={`
         flex items-center justify-center 
@@ -112,6 +116,33 @@ const { infoUser} =  useAuth();
       />
       {isFavorite ? 'Đã Lưu' : 'Lưu Công Việc'}
     </button>
+      </>):(<>
+       <button
+      onClick={()=>{ Swal.fire({
+        icon: "error",
+        title: "Bạn chưa đăng nhập!",
+        text: "Vui lòng đăng nhập để Lưu công việc!",
+        footer: `<a href="/login">Đăng nhập ngay?</a>`
+      });}}
+      className={`
+        flex items-center justify-center 
+        px-6 h-[48px] rounded-[4px] font-semibold text-[16px] transition-all duration-200 ease-in-out
+        shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
+        ${buttonClass}
+      `}
+    >
+      <Heart 
+        filled={isFavorite} 
+        className={`w-4 h-4 mr-2 transition-colors duration-200 
+          ${isFavorite ? 'text-white' : 'text-red-500'}
+        `} 
+      />
+     Lưu Công Việc
+    </button>
+      </>)}
+   
+  </>
+    
   );
 };
 

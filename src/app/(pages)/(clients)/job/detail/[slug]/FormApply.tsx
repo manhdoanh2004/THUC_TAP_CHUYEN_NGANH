@@ -3,9 +3,10 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
+import Swal from 'sweetalert2'
 import { useAuth } from "@/hooks/useAuth";
 import JustValidate from "just-validate";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaFilePdf } from "react-icons/fa6";
 import { Toaster, toast } from 'sonner';
 import { IoClose } from "react-icons/io5"; 
@@ -18,14 +19,16 @@ import {
   FaUserTie,
 } from "react-icons/fa6";
 import FavoriteJobButton from "@/components/buttons/FavoriteJobButton";
+import JobDetailSkeleton from "@/components/card/JobDetailSkeleton";
  const FormApply = (props:{
     jobId:string;
     isLogin:boolean
+    setIsSubmitApplied:React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-   const {jobId,isLogin}=props;
+   const {jobId,isLogin,setIsSubmitApplied}=props;
   
-  console.log(jobId)
- 
+
+
    // Thêm state để lưu tên file
     const [fileName, setFileName] = useState<string>('');
 
@@ -73,6 +76,11 @@ import FavoriteJobButton from "@/components/buttons/FavoriteJobButton";
             if (data.code === "error") {
                 throw new Error(data.message);
             }
+            else
+            {
+                    setIsSubmitApplied(true);
+            }
+           
             return data;
         });
 
@@ -171,7 +179,7 @@ import FavoriteJobButton from "@/components/buttons/FavoriteJobButton";
     };
     return (
         <>
-        {isLogin?(<>
+       
             <Toaster richColors position="top-right" />
              <div className="border border-[#DEDEDE] rounded-[8px] p-[20px] mt-[20px]">
             <h2 className="font-[700] text-[20px] text-black mb-[20px]">
@@ -276,8 +284,7 @@ import FavoriteJobButton from "@/components/buttons/FavoriteJobButton";
                 </button>
             </form>
             </div>
-        </>):(<></>)}
-        
+      
         </>
     )
 }
@@ -286,26 +293,36 @@ export const JobDetail=(props:{
     jobDetail:any
 })=>
 {
+  const [isLoading,setIsLoading]=useState(true);
+  const [isSubmitApplied,setIsSubmitApplied]=useState(false);
+
+  
      const {jobDetail}=props;
-     console.log(jobDetail.jobId)
+  
+
      const [isApplied, setIsApplied] = useState(false);
       const { isLogin,infoUser} = useAuth();
+
+
       useEffect(()=>{
     if(infoUser)
     {
+        setTimeout(()=>{ setIsLoading(false)},1000)
  if(infoUser.appliedIds?.includes(jobDetail.jobId))
       {
         setIsApplied(true)
       }
       else setIsApplied(false)
     }
-     
+    
+     setTimeout(()=>{ setIsLoading(false)},1000)
   },[infoUser])
-console.log(isApplied)
   
     return(
         <>
-          {jobDetail && (
+        {
+          isLoading==false?(<>
+            {jobDetail? (
         <div className="pt-[30px] pb-[60px]">
           <div className="container mx-auto px-[16px]">
             {/* Wrap */}
@@ -325,14 +342,32 @@ console.log(isApplied)
                     {jobDetail.salaryMax.toLocaleString("vi-VN")}$
                   </div>
                 <div className="flex justify-around items-center gap-[10px] mb-[20px]">
-    <Link
-        href="#formApply"
+                  {isLogin?(<>
+                    <Link
+        href={`${isApplied?"#":"#formApply"}`}
         
-        className={`${isApplied?"bg-gray cursor-alias ": "bg-[#0088FF] cursor-pointer" } rounded-[4px] font-[700] text-[16px] text-white flex items-center justify-center flex-1 h-[48px] `}
+        className={`${isApplied?" bg-gray-500 cursor-default ": "bg-[#0088FF] cursor-pointer" } rounded-[4px] font-[700] text-[16px] text-white flex items-center justify-center flex-1 h-[48px] `}
     >
       {isApplied? "Đã ứng tuyển":"Ứng tuyển"}  
     </Link>
-    <FavoriteJobButton jobDetail={jobDetail}/>
+                  </>):(<>
+                    <button
+  onClick={()=>{
+    Swal.fire({
+  icon: "error",
+  title: "Bạn chưa đăng nhập!",
+  text: "Vui lòng đăng nhập để ứng tuyển công việc!",
+  footer: `<a href="/login">Đăng nhập ngay?</a>`
+});
+  }}
+        
+        className={` bg-[#0088FF] cursor-pointer  rounded-[4px] font-[700] text-[16px] text-white flex items-center justify-center flex-1 h-[48px] `}
+    >
+      Ứng tuyển
+    </button>
+                  </>)}
+  
+    <FavoriteJobButton infoUser={infoUser} isLogin={isLogin} jobDetail={jobDetail}/>
 </div>
                   <div className="flex items-center gap-[8px] font-[400] text-[14px] text-[#121212] mb-[10px]">
                     <FaUserTie className="text-[16px]" /> {jobDetail.position}
@@ -374,16 +409,22 @@ console.log(isApplied)
                 {/* Hết Thông tin công việc */}
 
                 {/* Mô tả chi tiết */}
-                <div className="border border-[#DEDEDE] rounded-[8px] p-[20px] mt-[20px]">
+                {jobDetail.description?(<>
+                  <div className="border border-[#DEDEDE] rounded-[8px] p-[20px] mt-[20px]">
                   <div
                     dangerouslySetInnerHTML={{ __html: jobDetail.description }}
                   />
                 </div>
+                </>):(<></>)}
+              
                 {/* Hết Mô tả chi tiết */}
 
                 {/* Form ứng tuyển */}
                
-               {isApplied?(<></>):(<FormApply jobId={jobDetail.jobId} isLogin={isLogin}/>)}
+               {isLogin?(<>
+                   {isApplied|| isSubmitApplied?(<></>):(<FormApply  setIsSubmitApplied={setIsSubmitApplied} jobId={jobDetail.jobId} isLogin={isLogin}/>)}
+               </>):(<></>)}
+           
                     
               
                 {/* Hết Form ứng tuyển */}
@@ -444,7 +485,12 @@ console.log(isApplied)
             </div>
           </div>
         </div>
-      )}
+            ):(<></>)}
+          </>):(<>
+          <JobDetailSkeleton />
+          </>)
+        }
+        
         </>
     )
 }

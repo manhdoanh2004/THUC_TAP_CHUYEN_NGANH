@@ -16,6 +16,7 @@ const FormType = {
 
 const FormLogin = () => {
     // State quản lý form đang hiển thị
+    
     const [activeForm, setActiveForm] = useState(FormType.CANDIDATE);
     const [isResending, setIsResending] = useState(false);
     const [message, setMessage] = useState<any|null>(null);
@@ -91,47 +92,9 @@ useEffect(() => {
     // 💡 Dependency array: Khởi tạo lại validator MỖI KHI form thay đổi
     }, [activeForm]);
     // Hàm này mô phỏng lại toàn bộ các quy tắc validation của bạn
-    const validateForm = (email:any, password:any) => {
-        // 1. Kiểm tra Email
-        if (!email || !/\S+@\S+\.\S+/.test(email)) {
-            return 'Email không đúng định dạng!';
-        }
 
-        // 2. Kiểm tra Mật khẩu (Min 8 ký tự)
-        if (!password) {
-            return 'Vui lòng nhập mật khẩu!';
-        }
-        if (password.length < 8) {
-            return 'Mật khẩu phải chứa ít nhất 8 ký tự!';
-        }
-
-        // 3. Kiểm tra chữ hoa
-        if (!/[A-Z]/.test(password)) {
-            return 'Mật khẩu phải chứa ít nhất một chữ cái in hoa!';
-        }
-
-        // 4. Kiểm tra chữ thường
-        if (!/[a-z]/.test(password)) {
-            return 'Mật khẩu phải chứa ít nhất một chữ cái thường!';
-        }
-
-        // 5. Kiểm tra chữ số
-        if (!/\d/.test(password)) {
-            return 'Mật khẩu phải chứa ít nhất một chữ số!';
-        }
-
-        // 6. Kiểm tra ký tự đặc biệt
-        if (!/[@$!%*?&]/.test(password)) {
-            return 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt (@$!%*?&)!';
-        }
-
-        return null; // Không có lỗi
-    };
-    // --- KẾT THÚC LOGIC VALIDATION ---
-
-    // Hàm xử lý validation và submit
+    // Hàm xử lý submit
     const handleLoginSubmit = async (e:any) => {
-        e.preventDefault();
         setMessage(null);
         setIsResending(true);
 
@@ -148,15 +111,6 @@ useEffect(() => {
         } else {
             console.error("Không tìm thấy form với ID:", formId);
         }
-        // Bắt đầu Validation
-        // const validationError = validateForm(email, password);
-        
-        // if (validationError) {
-        //      setMessage({ type: 'error', text: validationError });
-        //      setIsResending(false);
-        //      return;
-        // }
-
         const dataFinal = { email, password };
         const endpoint = activeForm === FormType.CANDIDATE 
             ?` ${process.env.NEXT_PUBLIC_API_URL}/user/login` // Giả lập endpoint ứng viên
@@ -175,7 +129,6 @@ useEffect(() => {
           .then(res => res.json())
           .then(data => {
             setIsResending(false)
-           setIsResending(false);
 
             if(data.code === "error") {
                 toast.error('Lỗi', {
@@ -185,13 +138,10 @@ useEffect(() => {
             }
             
             if(data.code === "success") {
-                toast.success('Thông báo', { description: data.message || 'Đăng nhập thành công!' , duration: 3000, // Thông báo sẽ tự đóng sau 3 giây
-                });
-                if(data.code === "success") {
+
                 toast.success('Thông báo', { description: data.message || 'Đăng nhập thành công!' , duration: 3000, // Thông báo sẽ tự đóng sau 3 giây
                 });
                 setTimeout(()=>{ router.push("/");},1000);
-            }
            
             }
            
@@ -318,8 +268,9 @@ useEffect(() => {
                     {/* Form Ứng viên */}
                     <div className={`transition-opacity duration-500 ${activeForm === FormType.CANDIDATE ? 'opacity-100 relative' : 'opacity-0 absolute top-0 left-0 w-full pointer-events-none'}`}>
                         <CommonForm 
+                        key={FormType.CANDIDATE}
                             id="candidateLoginForm" 
-                         
+                      
                             isResending={isResending && activeForm === FormType.CANDIDATE} 
                             type={FormType.CANDIDATE}
                                idPassword={"passwordCandidate"}
@@ -330,8 +281,9 @@ useEffect(() => {
                     {/* Form Nhà tuyển dụng */}
                     <div className={`transition-opacity duration-500 ${activeForm === FormType.COMPANY ? 'opacity-100 relative' : 'opacity-0 absolute top-0 left-0 w-full pointer-events-none'}`}>
                         <CommonForm 
-                            id="companyLoginForm" 
-                           
+                        key={FormType.COMPANY}
+                        id="companyLoginForm" 
+                        
                             isResending={isResending && activeForm === FormType.COMPANY} 
                             type={FormType.COMPANY}
                             idPassword={"passwordCompany"}

@@ -35,9 +35,7 @@ export default async function JobDetailPage({
 
   return (
     <>
-      {/* Chi tiết công việc */}
     <JobDetail jobDetail={jobDetail}/>
-      {/* Hết Chi tiết công việc */}
     </>
   );
 }

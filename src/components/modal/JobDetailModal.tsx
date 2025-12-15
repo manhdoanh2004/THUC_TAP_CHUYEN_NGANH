@@ -76,14 +76,16 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
     );
 }
 
-// =======================================================
-// INTERFACE CỦA JOB (GIỮ NGUYÊN)
-// =======================================================
+interface Employer{
+   employerId: string;
+  companyName: string; 
+}
+
 interface Job {
   jobId: string;
   title: string;
-  employerId: string;
-  employerName: string; 
+  
+  employer:Employer;
   description: string;
   salaryMin: number;
   salaryMax: number;
@@ -163,7 +165,7 @@ const JobDetailModal: React.FC<JobDetailModalProps> = ({ job, isOpen, onClose })
                   </div>
 
                   <div className="font-[400] text-[16px] text-[#414042] mb-[10px]">
-                    {jobDetail.employerName}
+                    {jobDetail.employer?.companyName}
                   </div>
                   <div className="font-[700] text-[20px] text-[#0088FF] sm:mb-[20px] mb-[10px]">
                     {jobDetail.salaryMin.toLocaleString("vi-VN")}$ -{" "}
@@ -226,7 +228,7 @@ const JobDetailModal: React.FC<JobDetailModalProps> = ({ job, isOpen, onClose })
                     
                     <ReadonlyInput 
                       label="Công ty" 
-                      value={jobDetail.employerName} 
+                      value={jobDetail?.employer?.companyName} 
                     />
                     
                     <ReadonlyInput 

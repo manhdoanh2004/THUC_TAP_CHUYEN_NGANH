@@ -12,10 +12,10 @@ export const Section2 = () => {
   const [companyList, setCompanyList] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs/approved`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/all/job?page=1&size=6`)
       .then(res => res.json())
       .then(data => {
-        
+        console.log("công ty",data)
         if(data.code == "success") {
           
           // setCompanyList(data.companyList);

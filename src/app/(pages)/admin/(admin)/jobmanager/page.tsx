@@ -36,19 +36,23 @@ const STATUS_MAP:any = {
 };
 
 
-// Định nghĩa kiểu dữ liệu cho Công việc
+interface Employer{
+   employerId: string;
+  companyName: string; 
+}
+
 interface Job {
   jobId: string;
   title: string;
-  employerId: string;
-  employerName: string; // Tên công ty mới
+  
+  employer:Employer;
   description: string;
   salaryMin: number;
   salaryMax: number;
   position: string;
   technologies: string[];
-  deadline: string; // Thêm trường deadline
-  status: string;
+  deadline: string;
+  status: string; // Đã có trường status
 }
 
 // Định nghĩa header cho bảng
