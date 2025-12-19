@@ -3,7 +3,7 @@
 import { CardJobItem } from "@/components/card/CardJobItem";
 import JobCardSkeleton from "@/components/card/JobCartSkeleton";
 import MultiCitySelect from "@/components/select/MultiCitySelect";
-import { positionList, workingFromList } from "@/config/variables";
+import { positionList, salaryList, workingFromList } from "@/config/variables";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 
@@ -22,6 +22,7 @@ export const SearchContainer = () => {
     const keyword = searchParams.get("keyword") || "";
     const position = searchParams.get("position") || "";
     const workingForm = searchParams.get("workingForm") || "";
+    const salaryRange = searchParams.get("salaryRange") || "";
     
     // city là mảng, dùng useMemo để tránh re-render không cần thiết
     const city = useMemo(() => {
@@ -32,7 +33,7 @@ export const SearchContainer = () => {
         return  [];
     }, [searchParams]);
 
-    console.log(city)
+    
     // Trạng thái
     const [jobList, setJobList] = useState<Job[] | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -64,8 +65,10 @@ export const SearchContainer = () => {
         workingFrom: workingForm,
         position: position,
         keyword: keyword,
-        salaryRange: '',
-        location: city 
+        salaryRange: salaryRange,
+        location: city ,
+        page: page,
+        size: 10,
     };
     
     // 2. Định nghĩa hàm fetch
@@ -86,8 +89,9 @@ export const SearchContainer = () => {
     .then(data => {
         if (data.code === "success") {
             setJobList(data.result?.content || []);
-            setTotalPage(data.totalPages || 0);
-            setTotalRecord(data.totalElements);
+            console.log(data)
+            setTotalPage(data.result.totalPages || 0);
+            setTotalRecord(data.result?.content.length||0);
         } else {
              setJobList([]);
              setTotalPage(0);
@@ -104,11 +108,15 @@ export const SearchContainer = () => {
         setIsLoading(false);
     });
     
-}, [language, city, keyword, position, workingForm, page]); // Dependencies vẫn giữ nguyên
+}, [language, city, keyword, position, workingForm, page,salaryRange]); // Dependencies vẫn giữ nguyên
     // Handlers
     const handleFilterPosition = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setPage(1); // Reset page về 1 khi lọc
         updateSearchParams("position", event.target.value || null);
+    }
+    const handleFilterSalary = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setPage(1); // Reset page về 1 khi lọc
+        updateSearchParams("salaryRange", event.target.value || null);
     }
 
     const handleFilterWorkingForm = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -147,6 +155,8 @@ export const SearchContainer = () => {
                         boxShadow: "0px 4px 20px 0px #0000000F"
                     }}
                 >
+
+                
                     <select 
                         className="border border-[#DEDEDE] rounded-[20px] h-[36px] px-[18px] font-[400] text-[16px] text-[#414042]"
                         onChange={handleFilterPosition}
@@ -157,6 +167,19 @@ export const SearchContainer = () => {
                             <option key={index} value={item.value}>{item.label}</option>
                         ))}
                     </select>
+
+
+                         <select 
+                        className="border border-[#DEDEDE] rounded-[20px] h-[36px] px-[18px] font-[400] text-[16px] text-[#414042]"
+                        onChange={handleFilterSalary}
+                        value={salaryRange} // Sử dụng 'value' thay vì 'defaultValue' để kiểm soát state
+                    >
+                        <option value="">Lương($)</option>
+                        {salaryList.map((item, index) => (
+                            <option key={index} value={item.value}>{item.label}</option>
+                        ))}
+                    </select>
+
                     <select 
                         className="border border-[#DEDEDE] rounded-[20px] h-[36px] px-[18px] font-[400] text-[16px] text-[#414042]"
                         onChange={handleFilterWorkingForm}
@@ -188,7 +211,7 @@ export const SearchContainer = () => {
                     )}
                 </div>
 
-                {totalPage > 1 && ( // Chỉ hiển thị khi có nhiều hơn 1 trang
+                {totalPage > 0 && ( // Chỉ hiển thị khi có nhiều hơn 1 trang
                     <div className="mt-[30px]">
                         <select 
                             className="border border-[#DEDEDE] rounded-[8px] py-[12px] px-[18px] font-[400] text-[16px] text-[#414042]"

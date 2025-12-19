@@ -24,6 +24,20 @@ export const positionList=[
         value:"manager"
     },
 ]
+export const salaryList=[
+    {
+        label:"0-500",
+        value:"0-500"
+    },
+    {
+        label:"500-1500",
+        value:"500-1500"
+    },
+    {
+        label:">1500",
+        value:"1500-10000"
+    },
+]
 
 export const workingFromList=[
     {

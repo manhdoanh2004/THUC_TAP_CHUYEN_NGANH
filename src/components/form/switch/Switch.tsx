@@ -19,6 +19,7 @@ const Switch: React.FC<SwitchProps> = ({
   const [isChecked, setIsChecked] = useState(defaultChecked);
 
   const handleToggle = () => {
+    
     if (disabled) return;
     const newCheckedState = !isChecked;
     setIsChecked(newCheckedState);
@@ -48,13 +49,14 @@ const Switch: React.FC<SwitchProps> = ({
 
   return (
     <label
-      className={`flex cursor-pointer select-none items-center gap-3 text-sm font-medium ${
+      className={`flex  select-none items-emd justify-end gap-3 text-sm font-medium ${
         disabled ? "text-gray-400" : "text-gray-700 dark:text-gray-400"
       }`}
-      onClick={handleToggle} // Toggle when the label itself is clicked
+      // Toggle when the label itself is clicked
     >
-      <div className="relative">
+      <div className="relative cursor-pointer "  onClick={handleToggle}>
         <div
+        
           className={`block transition duration-150 ease-linear h-6 w-11 rounded-full ${
             disabled
               ? "bg-gray-100 pointer-events-none dark:bg-gray-800"

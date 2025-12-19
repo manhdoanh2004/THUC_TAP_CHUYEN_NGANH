@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
@@ -17,6 +18,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { EditorMCE } from "@/components/editor/EditorMCE";
 import DatePicker from "@/components/form/date-picker";
+import Switch from "@/components/form/switch/Switch";
 
 // Đăng ký plugins
 registerPlugin(
@@ -28,6 +30,8 @@ export const FormCreate = () => {
   const editorRef = useRef(null);
   const [isValid, setIsValid] = useState(false);
   const [datePickerValue, setDatePickerValue] = useState<any | null>(null);
+  
+  const [checkSalary,setCheckSalary]=useState(false);
 
     const { infoUser, isLogin } = useAuth();
      const router = useRouter();
@@ -76,12 +80,19 @@ export const FormCreate = () => {
       });
   }, []);
 
+  const handleChangeSwitchInput=(checked:boolean)=>{
+    
+    setCheckSalary(checked);
+
+  }
+
+
   const handleSubmit = async (event: any) => {
     event.preventDefault();
 
     const title = event.target.title.value;
-    const salaryMin = event.target.salaryMin.value;
-    const salaryMax = event.target.salaryMax.value;
+    let salaryMin = event.target.salaryMin.value;
+    let salaryMax = event.target.salaryMax.value;
     const position = event.target.position.value;
     const workingFrom = event.target.workingForm.value;
     const technologies = event.target.technologies.value;
@@ -90,11 +101,12 @@ export const FormCreate = () => {
     if (editorRef.current) {
       description = (editorRef.current as any).getContent();
     }
+
   
     if(isValid) {
   
     
-      const dataFinal={
+      let dataFinal={
         title:title
         ,salaryMin:salaryMin,
         salaryMax:salaryMax,
@@ -102,10 +114,19 @@ export const FormCreate = () => {
         workingFrom:workingFrom,
         description:description,
         technologies:technologies.split(",").map((tech:any)=> tech.trim()),
-        deadline:datePickerValue
+        deadline:datePickerValue,
+        checkSalary:false
       }
 
-      console.log("dataFinal",dataFinal);
+      
+    if(checkSalary)
+    {
+      dataFinal.salaryMin=0;
+      dataFinal.salaryMax=0;  
+      dataFinal.checkSalary=true;  
+    }
+
+     
       const promise = fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs`, {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
@@ -147,11 +168,15 @@ export const FormCreate = () => {
             className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
           />
         </div>
+        <div className="col-span-full col-span-2">
+              <Switch defaultChecked={false} label={"Lương thỏa thuận"} onChange={handleChangeSwitchInput} />
+        </div>
         <div className="">
           <label htmlFor="salaryMin" className="block font-[500] text-[14px] text-black mb-[5px]">
             Mức lương tối thiểu ($)
           </label>
           <input 
+          disabled={checkSalary}
             type="number" 
             name="salaryMin" 
             id="salaryMin" 
@@ -163,12 +188,14 @@ export const FormCreate = () => {
             Mức lương tối đa ($)
           </label>
           <input 
+            disabled={checkSalary}
             type="number" 
             name="salaryMax" 
             id="salaryMax" 
             className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
           />
         </div>
+    
         <div className="">
           <label htmlFor="position" className="block font-[500] text-[14px] text-black mb-[5px]">
             Cấp bậc 
