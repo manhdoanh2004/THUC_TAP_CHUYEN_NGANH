@@ -8,8 +8,6 @@ type PasswordInput={
 const PasswordInput = ({isResending,idPassword}:PasswordInput) => {
     // 1. Khai báo state để quản lý trạng thái ẩn/hiện
     const [showPassword, setShowPassword] = useState(false);
-
-    console.log(idPassword)
     // Hàm xử lý sự kiện click
     const togglePasswordVisibility = () => {
         setShowPassword(prevShowPassword => !prevShowPassword);

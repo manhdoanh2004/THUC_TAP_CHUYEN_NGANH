@@ -9,16 +9,16 @@ import { useEffect, useState } from "react";
 
 
 export const Section2 = () => {
-  const [companyList, setCompanyList] = useState<any[]>([]);
+  const [companyList, setCompanyList] = useState<any[]|undefined>(undefined);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/all/job?page=1&size=6`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/all/job?page=0&size=6`)
       .then(res => res.json())
       .then(data => {
         console.log("công ty",data)
         if(data.code == "success") {
           
-          // setCompanyList(data.companyList);
+            setCompanyList(data.result.content);
         
         }
       })
@@ -34,16 +34,22 @@ export const Section2 = () => {
           {/* Wrap */}
           <div className="grid lg:grid-cols-3 grid-cols-2 sm:gap-[20px] gap-x-[10px] gap-y-[20px]">
             {/* Item */}
-            {companyList.length>0?(<>
+            {companyList?(<>
+            
+              {companyList.length>0?(<>
              {companyList.map(item => (
-              <CardCompanyItem key={item.id} item={item} />
+              <CardCompanyItem key={item.employerId} item={item} />
             ))}
             </>):(<>
-           { Array(6).fill("").map((item:any,index:any)=>{
+         
+            </>)}
+            </>):(<>
+              { Array(6).fill("").map((item:any,index:any)=>{
             return ( <CompanyCardSkeleton key={index}/>)
            
            })}
             </>)}
+          
            
           </div>
         </div>

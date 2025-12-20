@@ -43,7 +43,7 @@ export const CardCompanyItem = (props:{
            {item.cityName}
           </div>
           <div className="inline-flex items-center gap-x-[6px] font-[400] sm:text-[14px] text-[12px] text-[#121212]">
-            <FaUserTie className="text-[16px] text-[#000096]" /> {item.totalJob} Việc làm
+            <FaUserTie className="text-[16px] text-[#000096]" /> {item.createdJobs} Việc làm
           </div>
         </div>
       </Link>
