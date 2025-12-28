@@ -1,6 +1,7 @@
 import { Footer } from "@/components/footer/Footer";
 import { Header } from "@/components/header/client/Header";
 import { SidebarLayout } from "@/components/sider/client/Sidebar";
+import { NotificationProvider } from "@/context/NotificationContext";
 
 export default function ClientLayout({
   children,
@@ -9,7 +10,8 @@ export default function ClientLayout({
 }) {
   return (
     <>
-    <SidebarLayout>
+    <NotificationProvider>
+  <SidebarLayout>
 
   <Header />
      
@@ -17,6 +19,9 @@ export default function ClientLayout({
      
                    <Footer />
     </SidebarLayout>
+
+    </NotificationProvider>
+  
          
     </>
   );

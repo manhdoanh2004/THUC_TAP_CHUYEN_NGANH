@@ -32,14 +32,33 @@ export const FormRegiter = () => {
   };
 
   // --- HÀM XỬ LÝ GỬI LẠI EMAIL ---
-  const handleResendEmail = () => {
+  const handleResendEmail =  async (event: any) => {
     if (isResending) return; 
     setIsResending(true);
-    setTimeout(() => {
-      toast.success('Thông báo', { description: "Đã gửi lại liên kết xác minh mới!" });
+     const form = event.target as HTMLFormElement;
+    const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+      try {
+      const response = await fetch(` ${process.env.NEXT_PUBLIC_API_URL}/user/resend`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({email:email}),
+      });
+      const resData = await response.json();
+
+      setIsResending(false);
+      if (resData.code === "error") {
+        toast.error('Lỗi', { description: resData.message });
+      } else {
+          toast.success('Thông báo', { description: "Đã gửi lại liên kết xác minh mới!" });
       setIsResending(false);
       setResetTimerSignal(prev => prev + 1); 
-    }, 2000);
+        form.reset();
+      }
+    } catch (error) {
+      setIsResending(false);
+      toast.error('Lỗi', { description: "Lỗi kết nối máy chủ!" });
+    }
+   
   };
 
   // --- LOGIC JUSTVALIDATE ---

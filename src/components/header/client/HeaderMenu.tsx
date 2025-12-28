@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 
+import { useNotifications } from "@/context/NotificationContext";
 import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
 import { FaAngleDown, FaAngleRight } from "react-icons/fa6"
@@ -12,7 +13,8 @@ export const HeaderMenu = (
   }
 ) => {
   const { showMenu,onMenu } = props;
-
+const { notifications, status } = useNotifications();
+console.log(notifications,status)
     // const {isLogin}=useAuth();
  const menuList = [
     {

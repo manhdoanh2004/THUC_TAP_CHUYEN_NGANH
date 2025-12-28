@@ -188,7 +188,7 @@ const ToastNotification = ({ message }:{message:any}) => {
         },
         body: JSON.stringify({
            jobId: selectedIds||[],
-             jobStatus: bulkStatusChange
+          jobStatus: bulkStatusChange
         }),
         credentials: "include", // Gửi kèm cookie
       })

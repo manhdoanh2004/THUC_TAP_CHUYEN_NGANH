@@ -1,7 +1,7 @@
 "use client";
 
 import { useSidebar } from "@/context/SidebarContext";
-import { useAuth } from "@/hooks/useAuth";
+import {  useAuthAdmin } from "@/hooks/useAuth";
 import AppHeader from "@/layout/AppHeader";
 import AppSidebar from "@/layout/AppSidebar";
 import Backdrop from "@/layout/Backdrop";
@@ -14,7 +14,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
- const {  isLogin } = useAuth();
+ const {  isLogin } = useAuthAdmin();
      const router = useRouter();
      useEffect(() => {
 

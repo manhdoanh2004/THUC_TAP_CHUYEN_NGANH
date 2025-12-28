@@ -51,3 +51,35 @@ export const useAuth = () => {
 
   return { isLogin ,infoUser,infoCompany,infoAdmin};
 }
+export const useAuthAdmin = () => {
+  const [isLogin, setIsLogin] = useState<any>();
+ const[infoAdmin,setInfoAdmin]=useState<any>(null);
+  const pathname = usePathname(); // Lấy URL hiện tại
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/check-admin`, {
+      method:"GET",
+      // headers:{
+      //     "Content-Type":"application/json"
+      // },
+      credentials: "include", // Gửi kèm cookie,,
+      // body:JSON.stringify({})
+    
+    })
+      .then(res => res.json())
+      .then(data => {
+        if(data.code == "error") {
+          setIsLogin(false);
+        }
+        else{
+          setIsLogin(true);
+         
+        
+              setInfoAdmin(data.result);
+         
+        }
+      });
+  }, [pathname]);
+
+  return { isLogin ,infoAdmin};
+}

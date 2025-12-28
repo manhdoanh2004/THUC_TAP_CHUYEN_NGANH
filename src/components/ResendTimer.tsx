@@ -8,7 +8,7 @@ const INITIAL_TIME_SECONDS = 60;
 
 interface ResendTimerProps {
     data: any; 
-    handleResendEmail: () => void;
+    handleResendEmail: (e:any) => void;
     shouldReset: number; // State báo hiệu reset (thay thế boolean bằng number để trigger useEffect)
 }
 

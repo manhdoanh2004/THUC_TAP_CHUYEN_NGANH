@@ -16,7 +16,7 @@ const PasswordInput = ({isResending,idPassword}:PasswordInput) => {
     return (
        <div className="relative"> 
             <label
-                htmlFor="password"
+              htmlFor={idPassword || "password"}
                 className="block font-[500] text-[14px] text-black mb-[5px]"
             >
                 Mật khẩu *
