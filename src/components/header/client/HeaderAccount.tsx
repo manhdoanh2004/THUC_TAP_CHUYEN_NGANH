@@ -12,6 +12,7 @@ export const HeaderAccount = () => {
   const { isLogin, infoUser, infoCompany } = useAuth();
   const router = useRouter();
 
+
   const handleLogout = (url: any) => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {
       credentials: "include",
@@ -30,7 +31,7 @@ export const HeaderAccount = () => {
       {isLogin ? (
         <>
           {/* Chuông nằm riêng, không nằm trong group hover của menu */}
-          <NotificationBell />
+          <NotificationBell userId={infoUser?.email||infoCompany?.email} />
 
           {/* Cụm USER: Chỉ group này mới kích hoạt dropdown */}
           {infoUser && (

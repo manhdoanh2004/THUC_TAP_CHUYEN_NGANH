@@ -46,7 +46,8 @@ useEffect(() => {
 
   eventSource.onmessage = (event) => {
     console.log(" Dữ liệu mới:", event.data);
-    const newNode = JSON.parse(event.data);
+    const newNode =event.data;
+    // const newNode = JSON.parse(event.data);
     setNotifications((prev) => [newNode, ...prev]);
   };
 

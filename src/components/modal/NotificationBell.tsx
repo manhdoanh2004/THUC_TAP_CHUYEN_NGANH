@@ -3,6 +3,7 @@
 'use client'
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Bell, Check, Plus, Loader2 } from 'lucide-react';
+import { useNotifications } from '@/context/NotificationContext';
 
 interface Notification {
   id: string;
@@ -11,17 +12,47 @@ interface Notification {
   createdAt: number;
 }
 interface NotificationBellProps {
-  userId?: string | number | null;
+  userId?: string ;
 }
 /**
  * Hàm tiện ích để chuyển đổi timestamp sang thời gian tương đối
- * @param timestamp - Thời gian tính bằng miliseconds
+ *  - Thời gian tính bằng miliseconds
  */
-const formatRelativeTime = (timestamp: number): string => {
+/**
+ * Chuyển đổi chuỗi "DD/MM/YYYY HH:mm:ss" hoặc timestamp sang thời gian tương đối
+ */
+const formatRelativeTime = (dateInput: number | string): string => {
+  let timestamp: number;
+
+  if (typeof dateInput === 'string') {
+    // Phân tách chuỗi "28/12/2025 19:50:48"
+    // parts[0] = "28/12/2025", parts[1] = "19:50:48"
+    const parts = dateInput.split(' ');
+    const dateParts = parts[0].split('/'); // [28, 12, 2025]
+    const timeParts = parts[1].split(':'); // [19, 50, 48]
+
+    // Lưu ý: Tháng trong JS bắt đầu từ 0 (Tháng 1 là 0, Tháng 12 là 11)
+    const dateObj = new Date(
+      parseInt(dateParts[2]), // Năm
+      parseInt(dateParts[1]) - 1, // Tháng
+      parseInt(dateParts[0]), // Ngày
+      parseInt(timeParts[0]), // Giờ
+      parseInt(timeParts[1]), // Phút
+      parseInt(timeParts[2])  // Giây
+    );
+    
+    timestamp = dateObj.getTime();
+  } else {
+    timestamp = dateInput;
+  }
+
   const now = Date.now();
   const diffInSeconds = Math.floor((now - timestamp) / 1000);
 
-  if (diffInSeconds < 60) return 'Vừa xong';
+  // Nếu thời gian ở tương lai hoặc do lệch giây hệ thống
+  if (diffInSeconds < 5) return 'Vừa xong';
+
+  if (diffInSeconds < 60) return `${diffInSeconds} giây trước`;
 
   const diffInMinutes = Math.floor(diffInSeconds / 60);
   if (diffInMinutes < 60) return `${diffInMinutes} phút trước`;
@@ -40,8 +71,10 @@ const formatRelativeTime = (timestamp: number): string => {
 
 const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) =>{
     console.log(userId)
+      const {notifications, status}=useNotifications();
+
   const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notification, setNotification] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isRinging, setIsRinging] = useState(false);
@@ -49,8 +82,40 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) =>{
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const unreadCount = useMemo(() => {
-    return notifications.filter((n) => !n.isRead).length;
-  }, [notifications]);
+    return notification.filter((n) => !n.isRead).length;
+  }, [notification]);
+
+
+  // Lắng nghe thông báo mới từ SSE Context
+useEffect(() => {
+  if (notifications && notifications.length > 0) {
+    // Lấy thông báo mới nhất (giả sử BE đẩy về từng object lẻ)
+    //const latestNoti = notifications[0]; 
+
+    const newNoti={
+        id: ""+Math.random().toString(36).substr(2, 9),
+        content: notifications[0],
+        isRead: false,
+        createdAt: Date.now() 
+    }
+
+    // Kiểm tra xem thông báo này đã tồn tại trong list chưa để tránh trùng lặp
+    setNotification((prev:any ) => {
+      // const isExisted = prev.some((n:any) => n.id === latestNoti.id);
+      // if (isExisted) return prev;
+      
+      // Thêm vào đầu danh sách và kích hoạt hiệu ứng rung chuông
+      const updatedList = [newNoti, ...prev];
+      return updatedList;
+    });
+
+    // Kích hoạt hiệu ứng rung chuông
+    setIsRinging(true);
+    const timer = setTimeout(() => setIsRinging(false), 500);
+    
+    return () => clearTimeout(timer);
+  }
+}, [notifications]); // Chạy lại mỗi khi context nhận được tin nhắn mới
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -79,14 +144,26 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) =>{
         //   },
         // ];
         const formData=new FormData();
-        formData.append('userId','');
+        formData.append('userId',userId||"");
         const res=await fetch(`${process.env.NEXT_PUBLIC_API_URL}/noti`,{
             method:"POST",
             credentials:"include",
             body:formData
         })
 
-      //  setNotifications(mockData);
+        const data=await res.json();
+        console.log("THông báo",data.result.content)
+        const newNotifiList=data.result.content.map((noty:any)=>{
+          return {
+            
+                id: noty.notiId,
+                content:noty.content,
+                isRead: noty.isRead,
+                createdAt:noty.createdAt
+    }
+          
+        })
+        setNotification(newNotifiList);
         setError(null);
       } catch (err:unknown) {
         console.log(err)
@@ -97,7 +174,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) =>{
     };
 
     fetchNotifications();
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -125,14 +202,38 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) =>{
 //     }, 10);
 //   };
 
-  const markAsRead = (id: string) => {
-    setNotifications((prev) =>
+  const markAsRead =async (id: string) => {
+     const res=await fetch(`${process.env.NEXT_PUBLIC_API_URL}/noti/read`,{
+            method:"POST",
+            headers: {'Content-Type':'application/json'},
+            credentials:"include",
+            body:JSON.stringify({
+              notiIds:[id],
+               isRead:true
+            })
+        });
+
+        const data=await res.json();
+        console.log("Đánh dấu đã đọc:",data);
+    setNotification((prev) =>
       prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
     );
   };
 
-  const markAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+  const markAllAsRead = async() => {
+      const res=await fetch(`${process.env.NEXT_PUBLIC_API_URL}/noti/read`,{
+            method:"POST",
+            headers: {'Content-Type':'application/json'},
+            credentials:"include",
+            body:JSON.stringify({
+              notiIds:[...notification.filter(n=>!n.isRead).map(n=>n.id)],
+               isRead:true
+            })
+        });
+
+        const data=await res.json();
+        console.log("Đánh dấu đã đọc:",data);
+    setNotification((prev) => prev.map((n) => ({ ...n, isRead: true })));
   };
 
 
@@ -207,8 +308,8 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) =>{
                 <Loader2 size={30} className="animate-spin text-[#000071] mb-2" />
                 <p className="text-sm">Đang tải...</p>
               </div>
-            ) : notifications.length > 0 ? (
-              notifications.map((notif) => (
+            ) : notification.length > 0 ? (
+              notification.map((notif) => (
                 <div
                   key={notif.id}
                   onClick={() => markAsRead(notif.id)}
