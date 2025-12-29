@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
-import { MdOutlineWork } from "react-icons/md";
+import { MdDesignServices, MdOutlineWork } from "react-icons/md";
 import { FaUserGroup } from "react-icons/fa6";
 import {
   BoxCubeIcon,
@@ -108,6 +108,11 @@ const navItems: NavItem[] = [
     icon:<MdOutlineWork />,
     name: "Job Manager",
     path: `/${pathname.split("/")[1]}/jobmanager`,
+  },
+  {
+    icon:<MdDesignServices />,
+    name: "Service Manager",
+    path: `/${pathname.split("/")[1]}/servicemanager`,
   },
 
  

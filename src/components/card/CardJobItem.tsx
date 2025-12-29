@@ -62,7 +62,7 @@ export const CardJobItem = (props:{
         </div>
         <div className={`mt-[12px] ${item.salaryMax<0||item.salaryMin<0?" mb-[10px] ":"mb-[20px]"}  mx-[16px] items-center flex flex-wrap justify-center gap-[4px]`}>
             <FaLocationDot className="text-[16px]" />
-          {item.employer.city?.map((itemTech: string, indexTech: number) => (
+          {item.employer?.city?.map((itemTech: string, indexTech: number) => (
             <div 
               className="border border-[#DEDEDE] rounded-[20px] py-[6px] px-[16px] font-[400] text-[12px] text-[#414042]"
               key={indexTech}

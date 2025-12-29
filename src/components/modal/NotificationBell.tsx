@@ -205,12 +205,12 @@ useEffect(() => {
 
   const markAsRead =async (notiId: string) => {
      const res=await fetch(`${process.env.NEXT_PUBLIC_API_URL}/noti/read`,{
-            method:"POST",
+            method:"PUT",
             headers: {'Content-Type':'application/json'},
             credentials:"include",
             body:JSON.stringify({
               notiIds:[notiId],
-               isRead:true
+              
             })
         });
 
@@ -223,12 +223,12 @@ useEffect(() => {
 
   const markAllAsRead = async() => {
       const res=await fetch(`${process.env.NEXT_PUBLIC_API_URL}/noti/read`,{
-            method:"POST",
+            method:"PUT",
             headers: {'Content-Type':'application/json'},
             credentials:"include",
             body:JSON.stringify({
               notiIds:[...notification.filter(n=>!n.isRead).map(n=>n.notiId)],
-               isRead:true
+            
             })
         });
 
