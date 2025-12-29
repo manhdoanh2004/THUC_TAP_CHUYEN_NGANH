@@ -6,6 +6,7 @@ import { Bell, Check, Plus, Loader2 } from 'lucide-react';
 import { useNotifications } from '@/context/NotificationContext';
 
 interface Notification {
+  notiId:any,
   id: string;
   content: string;
   isRead: boolean;
@@ -70,7 +71,7 @@ const formatRelativeTime = (dateInput: number | string): string => {
 };
 
 const NotificationBell: React.FC<NotificationBellProps> = ({ userId }) =>{
-    console.log(userId)
+    
       const {notifications, status}=useNotifications();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -93,7 +94,7 @@ useEffect(() => {
     //const latestNoti = notifications[0]; 
 
     const newNoti={
-        id: ""+Math.random().toString(36).substr(2, 9),
+        notiId: ""+Math.random().toString(36).substr(2, 9),
         content: notifications[0],
         isRead: false,
         createdAt: Date.now() 
@@ -156,7 +157,7 @@ useEffect(() => {
         const newNotifiList=data.result.content.map((noty:any)=>{
           return {
             
-                id: noty.notiId,
+                notiId: noty.notiId,
                 content:noty.content,
                 isRead: noty.isRead,
                 createdAt:noty.createdAt
@@ -202,13 +203,13 @@ useEffect(() => {
 //     }, 10);
 //   };
 
-  const markAsRead =async (id: string) => {
+  const markAsRead =async (notiId: string) => {
      const res=await fetch(`${process.env.NEXT_PUBLIC_API_URL}/noti/read`,{
             method:"POST",
             headers: {'Content-Type':'application/json'},
             credentials:"include",
             body:JSON.stringify({
-              notiIds:[id],
+              notiIds:[notiId],
                isRead:true
             })
         });
@@ -216,7 +217,7 @@ useEffect(() => {
         const data=await res.json();
         console.log("Đánh dấu đã đọc:",data);
     setNotification((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+      prev.map((n) => (n.notiId === notiId ? { ...n, isRead: true } : n))
     );
   };
 
@@ -226,7 +227,7 @@ useEffect(() => {
             headers: {'Content-Type':'application/json'},
             credentials:"include",
             body:JSON.stringify({
-              notiIds:[...notification.filter(n=>!n.isRead).map(n=>n.id)],
+              notiIds:[...notification.filter(n=>!n.isRead).map(n=>n.notiId)],
                isRead:true
             })
         });
@@ -311,8 +312,8 @@ useEffect(() => {
             ) : notification.length > 0 ? (
               notification.map((notif) => (
                 <div
-                  key={notif.id}
-                  onClick={() => markAsRead(notif.id)}
+                  key={notif.notiId}
+                  onClick={() => markAsRead(notif.notiId)}
                   className={`flex items-start px-5 py-4 border-b border-gray-50 last:border-0 cursor-pointer transition-colors ${
                     !notif.isRead ? 'bg-blue-50/30' : 'bg-white hover:bg-gray-50'
                   }`}

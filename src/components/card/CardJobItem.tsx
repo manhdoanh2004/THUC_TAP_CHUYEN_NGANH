@@ -47,16 +47,20 @@ export const CardJobItem = (props:{
         <div className="mt-[6px] text-center font-[400] text-[14px] text-[#121212]">
           {item.companyName}
         </div>
-        <div className="mt-[12px] text-center font-[600] text-[16px] text-[#0088FF]">
-          {item.salaryMin.toLocaleString("vi-VN")}$ - {item.salaryMax.toLocaleString("vi-VN")}$
-        </div>
+           {item.salaryMax<0||item.salaryMin<0?(<>
+                     
+                      </>):(<>
+                       <div className="mt-[12px] text-center font-[600] text-[16px] text-[#0088FF]">
+                      {item.salaryMin.toLocaleString("vi-VN")}$ -   {item.salaryMax.toLocaleString("vi-VN")}$
+                    </div>
+                      </>)}
         <div className="mt-[6px] flex justify-center items-center gap-[8px] font-[400] text-[14px] text-[#121212]">
           <FaUserTie className="text-[16px]" /> {position}
         </div>
         <div className="mt-[6px] flex justify-center items-center gap-[8px] font-[400] text-[14px] text-[#121212]">
           <FaBriefcase className="text-[16px]" /> {workingForm}
         </div>
-        <div className="mt-[12px] mb-[20px] mx-[16px] items-center flex flex-wrap justify-center gap-[4px]">
+        <div className={`mt-[12px] ${item.salaryMax<0||item.salaryMin<0?" mb-[10px] ":"mb-[20px]"}  mx-[16px] items-center flex flex-wrap justify-center gap-[4px]`}>
             <FaLocationDot className="text-[16px]" />
           {item.employer.city?.map((itemTech: string, indexTech: number) => (
             <div 
@@ -66,9 +70,16 @@ export const CardJobItem = (props:{
               {itemTech}
             </div>
           ))}
-
-       
+  {item.salaryMax<0||item.salaryMin<0?(<>
+                       <div
+      
+        className=" mx-auto mb-[5px] max-w-[122px] border border-[#DEDEDE] rounded-[20px] py-[6px] px-[16px] font-[400] text-[12px] text-[#414042]">
+            {"Lương thỏa thuận"}
+          </div>
+                      </>):(<></>)}
+      
         </div>
+         
       </Link>
 
     </>

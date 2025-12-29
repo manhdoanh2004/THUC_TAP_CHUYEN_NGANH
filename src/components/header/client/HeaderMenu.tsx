@@ -13,9 +13,7 @@ export const HeaderMenu = (
   }
 ) => {
   const { showMenu,onMenu } = props;
-const { notifications, status } = useNotifications();
-console.log(notifications,status)
-    // const {isLogin}=useAuth();
+
  const menuList = [
     {
       name: "Việc Làm IT",

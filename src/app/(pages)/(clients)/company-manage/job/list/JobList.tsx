@@ -43,7 +43,7 @@ export const JobList = () => {
   const [page,Setpage]=useState<number>(1);
   const [count,Setcount]=useState<number>(1);
   const { infoCompany, isLogin } = useAuth();
-  console.log(infoCompany)
+
   const router = useRouter();
 
      useEffect(() => {
@@ -59,11 +59,10 @@ export const JobList = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-         console.log(data)
+      
         if (data.code == "success") {
           setJobList(data.result);
-          // settotalPage(data.totalPage);
-          console.log(data)
+       
         }
       });
       
@@ -93,7 +92,7 @@ export const JobList = () => {
                const statusInfo = getStatusInfo(item.status);
               const ipos=positionList.find((itemPos)=>itemPos.value==item.position)?.label
               const iwork=workingFromList.find((itemWok)=>itemWok.value==item.workingFrom)?.label
-              console.log(item)
+          
               return (
                 
                   <div
@@ -127,9 +126,18 @@ export const JobList = () => {
                     <div className="mt-[6px] text-center font-[400] text-[14px] text-[#121212]">
                       {infoCompany?.companyName}
                     </div>
-                    <div className="mt-[12px] text-center font-[600] text-[16px] text-[#0088FF]">
+                    {item.salaryMax<0||item.salaryMin<0?(<>
+                       <div
+                      
+                        className="border border-[#DEDEDE] rounded-[20px] py-[6px] px-[16px] font-[400] text-[12px] text-[#414042]">
+                            {"Lương thỏa thuận"}
+                          </div>
+                      </>):(<>
+                       <div className="mt-[12px] text-center font-[600] text-[16px] text-[#0088FF]">
                       {item.salaryMin.toLocaleString("vi-VN")}$ -   {item.salaryMax.toLocaleString("vi-VN")}$
                     </div>
+                      </>)}
+                   
                     <div className="mt-[6px] flex justify-center items-center gap-[8px] font-[400] text-[14px] text-[#121212]">
                       <FaUserTie className="text-[16px]" /> {ipos}
                     </div>

@@ -337,10 +337,16 @@ export const JobDetail=(props:{
                   <div className="font-[400] text-[16px] text-[#414042] mb-[10px]">
                     {jobDetail.companyName}
                   </div>
-                  <div className="font-[700] text-[20px] text-[#0088FF] sm:mb-[20px] mb-[10px]">
+                    {jobDetail.salaryMax<0||jobDetail.salaryMin<0?(<>
+                     
+                      </>):(<>
+                      <div className="font-[700] text-[20px] text-[#0088FF] sm:mb-[20px] mb-[10px]">
                     {jobDetail.salaryMin.toLocaleString("vi-VN")}$ -{" "}
                     {jobDetail.salaryMax.toLocaleString("vi-VN")}$
                   </div>
+                      </>)}
+      
+                  
                 <div className="flex justify-around items-center gap-[10px] mb-[20px]">
                   {isLogin?(<>
                     <Link
@@ -405,6 +411,15 @@ export const JobDetail=(props:{
                    <div className="ml-[-33px] mt-[5px] flex justify-start items-center gap-[8px]  text-[16px] text-gray-500"> 
                     <span className="text-black  flex justify-start items-center gap-[8px] "><FaClock className="text-[16px]" /> Hạn nộp:</span> {jobDetail.deadline}
                   </div>
+           {jobDetail.salaryMax<0||jobDetail.salaryMin<0?(<>
+                       <div
+      
+        className=" my-[5px] max-w-[150px] border border-[#DEDEDE] rounded-[20px] py-[6px] px-[16px] font-[400] text-[12px] text-[#414042]">
+            {"Lương thỏa thuận"}
+          </div>
+                      </>):(<>
+                    
+                      </>)}
                 </div>
                 {/* Hết Thông tin công việc */}
 

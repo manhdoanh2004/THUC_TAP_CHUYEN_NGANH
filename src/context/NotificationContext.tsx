@@ -40,12 +40,12 @@ useEffect(() => {
   });
 
   eventSource.onopen = () => {
-    console.log(" Kết nối SSE thành công!");
+ 
     setStatus('connected');
   };
 
   eventSource.onmessage = (event) => {
-    console.log(" Dữ liệu mới:", event.data);
+
     const newNode =event.data;
     // const newNode = JSON.parse(event.data);
     setNotifications((prev) => [newNode, ...prev]);
@@ -57,16 +57,16 @@ useEffect(() => {
     setStatus('error');
     // Đừng close ngay lập tức, SSE có cơ chế tự retry. 
     // Nếu bạn close() ở đây, nó sẽ không bao giờ kết nối lại được.
-    console.log("Trạng thái kết nối (readyState):", eventSource.readyState);
+  
   // readyState = 0: Đang kết nối lại
   // readyState = 2: Kết nối bị đóng vĩnh viễn
   if (eventSource.readyState === EventSource.CLOSED) {
-    console.error("❌ Kết nối đã bị đóng hoàn toàn.");
+  
   }
   };
 
   return () => {
-    console.log("🔌 Đóng kết nối SSE (Cleanup)");
+  
     eventSource.close();
   };
 }, [isLogin]);

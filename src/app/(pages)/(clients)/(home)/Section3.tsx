@@ -16,12 +16,9 @@ export const Section3 = () => {
       .then(res => res.json())
       .then(data => {
          
-        // if(data.code == "success") {
-          
-        //    setCompanyList(data.companyList);
-        // }
+     
         setCompanyList(data.content);
-        console.log(data)
+       
       })
   }, []);
 
