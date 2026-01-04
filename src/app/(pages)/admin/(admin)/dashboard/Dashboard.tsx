@@ -1,7 +1,7 @@
 'use client';
+import { OrderCharts } from "@/components/charts/OrderCharts";
 import { EcommerceMetrics } from "@/components/ecommerce/EcommerceMetrics"
 import RecentOrders from "@/components/ecommerce/RecentOrders"
-import StatisticsChart from "@/components/ecommerce/StatisticsChart"
 
 
 export const Dashboard = () => {
@@ -20,10 +20,10 @@ export const Dashboard = () => {
               </div> */}
         
               <div className="col-span-12">
-                <StatisticsChart />
+                <OrderCharts />
               </div>
         
-              <div className="col-span-12 xl:col-span-7">
+              <div className="col-span-12 space-y-6">
                 <RecentOrders />
               </div>
             </div>

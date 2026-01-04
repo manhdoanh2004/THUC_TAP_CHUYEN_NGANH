@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // contexts/NotificationContext.tsx
 "use client";
 
@@ -53,7 +54,7 @@ useEffect(() => {
 
 
   eventSource.onerror = (err) => {
-    console.error("❌ Lỗi SSE:", err);
+ 
     setStatus('error');
     // Đừng close ngay lập tức, SSE có cơ chế tự retry. 
     // Nếu bạn close() ở đây, nó sẽ không bao giờ kết nối lại được.

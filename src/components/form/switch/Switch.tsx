@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface SwitchProps {
   label: string;
@@ -18,6 +18,9 @@ const Switch: React.FC<SwitchProps> = ({
 }) => {
   const [isChecked, setIsChecked] = useState(defaultChecked);
 
+  useEffect(()=>{
+setIsChecked(defaultChecked)
+  },[defaultChecked])
   const handleToggle = () => {
     
     if (disabled) return;

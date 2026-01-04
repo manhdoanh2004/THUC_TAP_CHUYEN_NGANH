@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -12,12 +13,9 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { Toaster, toast } from 'sonner'
 import { useRouter } from "next/navigation";
-import DatePicker from 'react-datepicker'; 
-// 2. Import CSS (Quan trọng!)
-import "react-datepicker/dist/react-datepicker.css"; 
-// 3. Import locale Tiếng Việt (tùy chọn)
-import { vi } from 'date-fns/locale';
+import DatePicker from "@/components/form/date-picker";
 import RadioButton from "@/components/input/RadioButtons";
+import Switch from "@/components/form/switch/Switch";
 // Đăng ký plugins
 registerPlugin(
   FilePondPluginFileValidateType,
@@ -32,11 +30,19 @@ const GENDER_OPTIONS = [
 export const FormProfile=()=>
 {
     const { infoUser, isLogin } = useAuth();
+   
     const [avatars, setAvatars] = useState<any[]>([]);
     const [isValid, setIsValid] = useState(false);
     const router = useRouter();
-    const [dateOfBirth,setDateOfBirth]=useState<any|Date>(null);
+      const [dateOfBirth, setDateOfBirth] = useState<any | null>(null);
 const [genderdefault, setGender] = useState('');
+ const [isPrivate,setIsPrivate]=useState(true);
+const handleChangeSwitchInput=(checked:boolean)=>{
+    
+  
+    setIsPrivate(!checked);
+
+  }
     useEffect(() => {
       if(isLogin === false) {
         router.push("/");
@@ -50,6 +56,7 @@ const [genderdefault, setGender] = useState('');
         {
    setDateOfBirth(infoUser.dateOfBirth)
    setGender(infoUser.gender)
+   setIsPrivate(infoUser.private)
           if(infoUser.avatar)
           {
             setAvatars([{
@@ -101,12 +108,6 @@ const [genderdefault, setGender] = useState('');
         }
  
   }, [infoUser]);
-const handleChange = (e:any) => {
-  const localDate= new Date(e)
-  console.log(localDate)
-  setDateOfBirth(localDate.toLocaleDateString())
-    
-  };
 
   const handleSubmit=(event:any)=>
   {
@@ -114,11 +115,14 @@ const handleChange = (e:any) => {
      event.preventDefault();
 
     const fullName = event.target.fullName.value;
-    const email = event.target.email.value;
     const phone = event.target.phone.value;
+    const softSkill = event.target.softSkill.value;
+    const experience = event.target.experience.value;
+    const desiredSalary = event.target.desiredSalary.value;
+    const technologies = event.target.technologies.value;
     const gender =genderdefault;
   
-    const address = event.target.phone.value;
+    const address = event.target.address.value;
     let avatar=null;
    
     if(avatars.length>0)
@@ -126,7 +130,7 @@ const handleChange = (e:any) => {
       
          avatar=avatars[0].file;
 
-        if(infoUser.avatar&&infoUser.avatar.includes(avatar.name))
+        if(infoUser.avatar&&infoUser.avatar.includes(avatar?.name))
         {
           avatar=null;
         }
@@ -139,29 +143,35 @@ const handleChange = (e:any) => {
            // Tạo FormData
       const formData = new FormData();
       formData.append("fullname", fullName);
-      formData.append("email", email);
       formData.append("phone", phone);
-      if (avatars.length > 0 && avatars[0].file) {
+      if (avatar) {
           // Kiểm tra xem file có thực sự tồn tại không trước khi append
           formData.append("avatar", avatars[0].file);
       }
       formData.append("address", address);
       formData.append("gender", gender);
       formData.append("dateOfBirth", dateOfBirth||"");
-      console.log(formData)
+      formData.append("softSkill", softSkill||"");
+      formData.append("experience", experience||"");
+      formData.append("isPrivate", `${isPrivate}`||"");
+      formData.append("desiredSalary", desiredSalary+""||"");
+      formData.append("technologies", technologies+""||"");
+   
+   
     
        const promise = fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/update`, {
         method: "PATCH",
         body: formData,
+        
         credentials: "include", // Gửi kèm cookie
       })
-         .then(async (res) => {
-          const data = await res.json();
-          if (data.code === "error") {
-            throw new Error(data.message);
-          }
-          return data;
-        });
+        .then(async res => {
+const text = await res.text();
+let data;
+try { data = JSON.parse(text); } catch { data = { message: text }; }
+if (!res.ok) throw new Error(data.message ||  `${res.status}`);
+return data;
+});
 
       toast.promise(promise, {
         loading: 'Đang cập nhật...',
@@ -179,6 +189,7 @@ const handleChange = (e:any) => {
         />
         {infoUser &&   
                 (<>
+                 <Switch defaultChecked={!isPrivate} label={"Trạng thái tìm việc"} onChange={handleChangeSwitchInput} />
                 <form onSubmit={(event)=>handleSubmit(event)} id="profileForm" className="grid sm:grid-cols-2 grid-cols-1 gap-x-[20px] gap-y-[15px]">
               <div className="sm:col-span-2">
                 <label htmlFor="fullName" className="block font-[500] text-[14px] text-black mb-[5px]">
@@ -192,6 +203,12 @@ const handleChange = (e:any) => {
                   className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
                 />
               </div>
+                         <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Giới tính:
+          </label>
+          <RadioButton  arrayButtonRadio={GENDER_OPTIONS||[]} buttonRadioDefault={genderdefault} setButtonRadio={setGender} />
+        </div>
               <div className="sm:col-span-2">
                 <label htmlFor="avatar" className="block font-[500] text-[14px] text-black mb-[5px]">
                   Avatar
@@ -209,7 +226,7 @@ const handleChange = (e:any) => {
               </div>
               <div className="">
                 <label htmlFor="email" className="block font-[500] text-[14px] text-black mb-[5px]">
-                  Email *
+                  Email <span className="text-red-600">*</span>
                 </label>
                 <input readOnly
                   type="email" 
@@ -221,7 +238,7 @@ const handleChange = (e:any) => {
               </div>
               <div className="">
                 <label htmlFor="phone" className="block font-[500] text-[14px] text-black mb-[5px]">
-                  Số điện thoại
+                  Số điện thoại :
                 </label>
                 <input 
                   type="text" 
@@ -233,47 +250,78 @@ const handleChange = (e:any) => {
               </div>
               <div className="">
                 <label htmlFor="address" className="block font-[500] text-[14px] text-black mb-[5px]">
-                  Địa chỉ 
+                  Địa chỉ :
                 </label>
                 <input 
                   type="text" 
                   name="address" 
                   id="address" 
-                  defaultValue={infoUser.address}
+                  defaultValue={infoUser?.address}
                   className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
                 />
               </div>
               <div className="">
-               <label >Ngày tháng năm sinh:</label>
-          <DatePicker
-            selected={dateOfBirth} // Giá trị ngày được chọn
-            onChange={(date) => handleChange(date)} // Hàm xử lý khi ngày thay đổi
-            
-            // --- Cấu hình quan trọng cho việc chọn ngày sinh ---
-            showYearDropdown // Cho phép chọn năm từ dropdown
-            showMonthDropdown // Cho phép chọn tháng từ dropdown
-            dropdownMode="select" // Đảm bảo dropdown hoạt động trên mọi trình duyệt
-            placeholderText="Chọn ngày tháng năm sinh"
-            dateFormat="dd/MM/yyyy" // Định dạng hiển thị
-            maxDate={new Date()} // Không cho phép chọn ngày trong tương lai (Ngày sinh)
-            locale={vi} // (Tùy chọn) Sử dụng ngôn ngữ Tiếng Việt cho lịch
-            // --- End Cấu hình ---
-            
-            required
-            customInput={
-                // Style cho input hiển thị
+                <label htmlFor="technologies" className="block font-[500] text-[14px] text-black mb-[5px]">
+                Các công nghệ sử dụng :
+                </label>
                 <input 
-                    style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer' }}
+                  type="text" 
+                  name="technologies" 
+                  id="technologies" 
+                  defaultValue={infoUser?.technologies}
+                  className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
                 />
-            }
-          />
               </div>
-              <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Giới tính:
-          </label>
-          <RadioButton  arrayButtonRadio={GENDER_OPTIONS||[]} buttonRadioDefault={genderdefault} setButtonRadio={setGender} />
-        </div>
+              <div className="">
+                <label htmlFor="experience" className="block font-[500] text-[14px] text-black mb-[5px]">
+                 Kinh nghiệm làm việc :
+                </label>
+                <input 
+                  type="text" 
+                  name="experience" 
+                  id="experience" 
+                  defaultValue={infoUser?.experience}
+                  className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
+                />
+              </div>
+              <div className="">
+                <label htmlFor="softSkill" className="block font-[500] text-[14px] text-black mb-[5px]">
+                  Kĩ năng mềm :
+                </label>
+                <input 
+                  type="text" 
+                  name="softSkill" 
+                  id="softSkill" 
+                  defaultValue={infoUser?.softSkill}
+                  className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
+                />
+              </div>
+              <div className="">
+                <label htmlFor="desiredSalary" className="block font-[500] text-[14px] text-black mb-[5px]">
+                  Mức lương mong muốn :
+                </label>
+                <input 
+                  type="number" 
+                  name="desiredSalary" 
+                  id="desiredSalary" 
+                  defaultValue={infoUser.address}
+                  className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
+                />
+              </div>
+               <div className="sm:col-span-2">
+                      <DatePicker
+                      minDate="today"
+                          id="datePicker"
+                          label="Ngày sinh"
+                          placeholder="Chọn thời gian"
+                         defaultDate={dateOfBirth}
+                          required={true}
+                          onChange={(dates, currentDateString) => {
+                            setDateOfBirth(currentDateString);
+                            //  console.log({ dates, currentDateString });
+                          }}
+                        />
+                      </div>
               <div className="sm:col-span-2">
                 <button className="bg-[#0088FF] rounded-[4px] h-[48px] px-[20px] font-[700] text-[16px] text-white">
                   Cập nhật
