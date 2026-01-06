@@ -15,12 +15,10 @@ const PasswordInput = ({isResending,idPassword}:PasswordInput) => {
 
     return (
        <div className="relative"> 
-            <label
-              htmlFor={idPassword || "password"}
-                className="block font-[500] text-[14px] text-black mb-[5px]"
-            >
-                Mật khẩu *
-            </label>
+
+            <label  htmlFor={idPassword || "password"} className="block font-[500] text-[14px] text-black mb-[5px]">
+    Mật khẩu <span className="text-red-500">*</span>
+  </label>
             <input
                 readOnly={isResending}
                 // 2. Cập nhật type dựa trên state showPassword
@@ -28,7 +26,7 @@ const PasswordInput = ({isResending,idPassword}:PasswordInput) => {
                 name="password"
                 id={`${idPassword?idPassword:"password"}`}
                 // Tùy chỉnh padding-right để không che icon
-                className=" text-black shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 w-[100%]  h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] pr-10" 
+                className=" text-black shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#000073] transition duration-200 w-[100%]  h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] pr-10" 
             />
             
             {/* 3. Icon chuyển đổi */}

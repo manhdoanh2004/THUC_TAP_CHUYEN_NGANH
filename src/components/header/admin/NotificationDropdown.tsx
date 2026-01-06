@@ -1,15 +1,21 @@
 "use client";
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
+import { useAdminNotifications } from "@/context/NotificationAdminContext";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 
 export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [notifying, setNotifying] = useState(true);
+const {notifications,status} =useAdminNotifications();
 
+useEffect(()=>{
+console.log(notifications,status)
+console.log("Có dữ liệu mới")
+},[notifications,status])
   function toggleDropdown() {
     setIsOpen(!isOpen);
   }

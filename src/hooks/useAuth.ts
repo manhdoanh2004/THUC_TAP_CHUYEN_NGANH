@@ -50,7 +50,9 @@ export const useAuth = () => {
   }, [pathname]);
 
   return { isLogin ,infoUser,infoCompany,infoAdmin};
-}
+};
+
+
 export const useAuthAdmin = () => {
   const [isLogin, setIsLogin] = useState<any>();
  const[infoAdmin,setInfoAdmin]=useState<any>(null);

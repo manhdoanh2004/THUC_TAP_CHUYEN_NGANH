@@ -35,6 +35,7 @@ import './globals.css';
 
 import { SidebarProvider } from '@/context/SidebarContext';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { NotificationProvider } from '@/context/NotificationAdminContext';
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -48,9 +49,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${outfit.className} dark:bg-gray-900`}>
-        <ThemeProvider>
+        <NotificationProvider>
+ <ThemeProvider>
           <SidebarProvider>{children}</SidebarProvider>
         </ThemeProvider>
+
+        </NotificationProvider>
+       
       </body>
     </html>
   );

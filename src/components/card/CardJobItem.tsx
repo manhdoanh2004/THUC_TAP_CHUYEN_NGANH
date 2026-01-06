@@ -60,25 +60,28 @@ export const CardJobItem = (props:{
         <div className="mt-[6px] flex justify-center items-center gap-[8px] font-[400] text-[14px] text-[#121212]">
           <FaBriefcase className="text-[16px]" /> {workingForm}
         </div>
-        <div className={`mt-[12px] ${item.salaryMax<0||item.salaryMin<0?" mb-[10px] ":"mb-[20px]"}  mx-[16px] items-center flex flex-wrap justify-center gap-[4px]`}>
-            <FaLocationDot className="text-[16px]" />
-          {item.employer?.city?.map((itemTech: string, indexTech: number) => (
-            <div 
-              className="border border-[#DEDEDE] rounded-[20px] py-[6px] px-[16px] font-[400] text-[12px] text-[#414042]"
-              key={indexTech}
-            >
-              {itemTech}
-            </div>
-          ))}
-  {item.salaryMax<0||item.salaryMin<0?(<>
-                       <div
-      
-        className=" mx-auto mb-[5px] max-w-[122px] border border-[#DEDEDE] rounded-[20px] py-[6px] px-[16px] font-[400] text-[12px] text-[#414042]">
-            {"Lương thỏa thuận"}
-          </div>
-                      </>):(<></>)}
-      
-        </div>
+<div className={`mt-[12px] ${item.salaryMax < 0 || item.salaryMin < 0 ? "mb-[10px]" : "mb-[20px]"} mx-[16px] flex flex-col items-center gap-[4px]`}>
+  
+  {/* Kiểm tra nếu có address thì mới hiển thị cả icon và text */}
+  {item.employer?.address && (
+    <div className="flex items-center justify-center gap-[4px] w-full text-center">
+      <FaLocationDot className="text-[16px] flex-shrink-0" />
+      <span 
+        className="text-[14px] text-gray-600 truncate max-w-[250px]" 
+        title={item.employer.address}
+      >
+        {item.employer.address}
+      </span>
+    </div>
+  )}
+
+  {/* Phần Lương thỏa thuận */}
+  {(item.salaryMax < 0 || item.salaryMin < 0) && (
+    <div className="mt-[4px] border border-[#DEDEDE] rounded-[20px] py-[6px] px-[16px] font-[400] text-[12px] text-[#414042]">
+      Lương thỏa thuận
+    </div>
+  )}
+</div>
          
       </Link>
 

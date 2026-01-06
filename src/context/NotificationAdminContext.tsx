@@ -2,7 +2,7 @@
 // contexts/NotificationContext.tsx
 "use client";
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth, useAuthAdmin } from '@/hooks/useAuth';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface Notification {
@@ -15,16 +15,16 @@ interface NotificationContextType {
   status: 'connecting' | 'connected' | 'error';
 }
 
-const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
+const NotificationAdminContext = createContext<NotificationContextType | undefined>(undefined);
 
 export const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
-  const {isLogin}=useAuth();
+  const {isLogin}=useAuthAdmin();
 
 
 useEffect(() => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/sse/subscribe/`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/sse/subscribe/admin`;
 
 
   if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -40,7 +40,7 @@ useEffect(() => {
     withCredentials:true
   });
 
-  eventSource.onopen = () => {
+   eventSource.onopen = () => {
  
     console.log("đã kết nối ")
     setStatus('connected');
@@ -56,6 +56,7 @@ useEffect(() => {
     console.log(newNode)
     setNotifications((prev) => [newNode, ...prev]);
   }) 
+
 
   eventSource.onerror = (err) => {
  
@@ -76,15 +77,15 @@ useEffect(() => {
   };
 }, [isLogin]);
   return (
-    <NotificationContext.Provider value={{ notifications, status }}>
+    <NotificationAdminContext.Provider value={{ notifications, status }}>
       {children}
-    </NotificationContext.Provider>
+    </NotificationAdminContext.Provider>
   );
 };
 
 // Hook để các trang con sử dụng
-export const useNotifications = () => {
-  const context = useContext(NotificationContext);
+export const useAdminNotifications = () => {
+  const context = useContext(NotificationAdminContext);
   if (!context) throw new Error("useNotifications must be used within NotificationProvider");
   return context;
 };

@@ -93,9 +93,9 @@ useEffect(() => {
     // Lấy thông báo mới nhất (giả sử BE đẩy về từng object lẻ)
     //const latestNoti = notifications[0]; 
 
-    const newNoti={
-        notiId: ""+Math.random().toString(36).substr(2, 9),
-        content: notifications[0],
+    const newNoti:any={
+        notiId:  notifications[0].notiId,
+        content: notifications[0].content,
         isRead: false,
         createdAt: Date.now() 
     }

@@ -30,10 +30,9 @@ export const HeaderAccount = () => {
     <div className="inline-flex items-center gap-x-5 text-white font-[600] sm:text-[16px] text-[12px] relative">
       {isLogin ? (
         <>
-          {/* Chuông nằm riêng, không nằm trong group hover của menu */}
-          <NotificationBell userId={infoUser?.email||infoCompany?.email} />
+          <NotificationBell userId={infoUser?.email || infoCompany?.email} />
 
-          {/* Cụm USER: Chỉ group này mới kích hoạt dropdown */}
+          {/* Cụm USER */}
           {infoUser && (
             <div className="relative group/user flex items-center gap-x-3 cursor-pointer">
               <div className="w-10 h-10 overflow-hidden rounded-full border border-gray-300 flex-shrink-0">
@@ -45,9 +44,15 @@ export const HeaderAccount = () => {
                   className="object-cover w-full h-full"
                 />
               </div>
-              <span className="whitespace-nowrap">{infoUser.fullName}</span>
+              
+              {/* CSS CẮT CHỮ: Cố định độ rộng tối đa */}
+              <span 
+                className="inline-block max-w-[80px] sm:max-w-[150px] truncate align-middle whitespace-nowrap" 
+                title={infoUser.fullName}
+              >
+                {infoUser.fullName}
+              </span>
 
-              {/* Dropdown Menu - Chỉ hiện khi hover vào cụm /user */}
               <ul className="absolute top-full right-0 w-[200px] bg-[#000065] hidden group-hover/user:block z-[999] shadow-xl pt-2">
                 <li className="py-[10px] px-[16px] hover:bg-[#000096]">
                   <Link href="/user-manage/profile" className="block text-white">Thông tin cá nhân</Link>
@@ -65,7 +70,7 @@ export const HeaderAccount = () => {
             </div>
           )}
 
-          {/* Cụm COMPANY: Chỉ group này mới kích hoạt dropdown */}
+          {/* Cụm COMPANY */}
           {infoCompany && (
             <div className="relative group/company flex items-center gap-x-3 cursor-pointer">
               <div className="w-10 h-10 overflow-hidden rounded-full border border-gray-300 flex-shrink-0">
@@ -77,9 +82,15 @@ export const HeaderAccount = () => {
                   className="object-cover w-full h-full"
                 />
               </div>
-              <span className="whitespace-nowrap">{infoCompany.companyName}</span>
 
-              {/* Dropdown Menu - Chỉ hiện khi hover vào cụm /company */}
+              {/* CSS CẮT CHỮ: Áp dụng tương tự cho công ty */}
+              <span 
+                className="inline-block max-w-[80px] sm:max-w-[150px] truncate align-middle whitespace-nowrap"
+                title={infoCompany.companyName}
+              >
+                {infoCompany.companyName}
+              </span>
+
               <ul className="absolute top-full right-0 w-[200px] bg-[#000065] hidden group-hover/company:block z-[999] shadow-xl pt-2">
                 <li className="py-[10px] px-[16px] hover:bg-[#000096]">
                   <Link href="/company-manage/profile" className="block text-white">Thông tin công ty</Link>
