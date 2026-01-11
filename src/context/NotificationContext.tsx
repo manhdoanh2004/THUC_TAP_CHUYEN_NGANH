@@ -41,8 +41,6 @@ useEffect(() => {
   });
 
   eventSource.onopen = () => {
- 
-    console.log("đã kết nối ")
     setStatus('connected');
   };
 
@@ -52,8 +50,6 @@ useEffect(() => {
     content: event.data
     }
   
-    console.log(event.lastEventId)
-    console.log(newNode)
     setNotifications((prev) => [newNode, ...prev]);
   }) 
 

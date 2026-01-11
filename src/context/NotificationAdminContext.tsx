@@ -2,7 +2,7 @@
 // contexts/NotificationContext.tsx
 "use client";
 
-import { useAuth, useAuthAdmin } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface Notification {
@@ -20,7 +20,7 @@ const NotificationAdminContext = createContext<NotificationContextType | undefin
 export const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
-  const {isLogin}=useAuthAdmin();
+  const {isLogin}=useAuth();
 
 
 useEffect(() => {
@@ -51,9 +51,7 @@ useEffect(() => {
     notiId:event.lastEventId,
     content: event.data
     }
-  
-    console.log(event.lastEventId)
-    console.log(newNode)
+
     setNotifications((prev) => [newNode, ...prev]);
   }) 
 

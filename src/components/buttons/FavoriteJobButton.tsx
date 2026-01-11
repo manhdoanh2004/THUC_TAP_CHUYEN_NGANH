@@ -57,7 +57,7 @@ const FavoriteJobButton: React.FC<FavoriteJobProps> =  ({ jobDetail,isLogin,info
    */
   const handleToggleFavorite = async () => {
    
-    // Trong môi trường thực tế, bạn sẽ gọi API ở đây:
+   
     if (!isFavorite) {
         const form=new FormData();
         form.append("jobId",jobDetail.jobId)
@@ -69,11 +69,12 @@ const FavoriteJobButton: React.FC<FavoriteJobProps> =  ({ jobDetail,isLogin,info
     }
   );
   const data = await res.json();
-  if(data.code=="success")
+  if(data.code=="error")
   {
     setIsFavorite(true);
   }
-    } else {
+    } 
+    else {
          const form=new FormData();
         form.append("jobId",jobDetail.jobId)
       const res = await fetch(
@@ -87,6 +88,7 @@ const FavoriteJobButton: React.FC<FavoriteJobProps> =  ({ jobDetail,isLogin,info
   if(data.code=="success")
   {
     setIsFavorite(false);
+ 
   }
     }
   };

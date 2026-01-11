@@ -17,7 +17,8 @@ export const CvList=()=>
      const [totalPage, setTotalPage] = useState(0);
      const [page, setPage] = useState(1);
 
-      const { infoUser, isLogin } = useAuth();
+      const { infoUser,infoCompany, isLogin } = useAuth();
+      console.log("infoCompany",infoCompany?.employerId);
        const router = useRouter();
     
         useEffect(() => {
@@ -27,21 +28,28 @@ export const CvList=()=>
         }, [isLogin]);
     useEffect(()=>
     {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/cv/list?page=${page}`,{
-            method:"GET",
-            credentials:"include"
+      if(!infoCompany) return;
+      const form=new FormData();
+      form.append("id",infoCompany.employerId as string);
+      form.append("page",`${page-1}`);
+      form.append("limit","6"); 
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/applications/job`,{
+            method:"POST",
+            credentials:"include",
+            body:form
         })
             .then(res=>res.json())
             .then(data=>{
                 if(data.code=="success")
                 {
                   
-                    setListCv(data.cvList);
-                    setTotalPage(data.totalPage);
+                    // setListCv(data.cvList);
+                    // setTotalPage(data.totalPage);
                 }
+                  console.log(data)
             })
-
-    },[page]);
+          
+    },[page,infoCompany]);
 
      const handleDeleteSuccess=(id:string)=>{
           setListCv((prev:any) => prev.filter((cv:any) => cv.id !== id));

@@ -15,7 +15,7 @@ export const CompanyDetail = () => {
   useEffect(() => {
     const fetchCompanyData = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/get-jobs`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/info/public`, {
           credentials: "include",
         });
         const data = await res.json();
@@ -25,6 +25,7 @@ export const CompanyDetail = () => {
           setCompanyDetail(data.result);
           setJobList(data.result.jobs || []);
         }
+        console.log(data)
       } catch (error) {
         console.error("Lỗi khi gọi API:", error);
       } finally {

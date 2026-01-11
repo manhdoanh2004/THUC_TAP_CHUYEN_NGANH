@@ -20,6 +20,7 @@ import {
   TableIcon,
   UserCircleIcon,
 } from "../icons/index";
+import { Bell } from "lucide-react";
 
 
 type NavItem = {
@@ -95,11 +96,6 @@ const navItems: NavItem[] = [
     // subItems: [{ name: "Ecommerce", path: "/", pro: false }],
   },
   {
-    icon: <UserCircleIcon />,
-    name: "User Profile",
-    path: `/${pathname.split("/")[1]}/profile`,
-  },
-  {
     icon:<FaUserGroup />,
     name: "User Manager",
     path: `/${pathname.split("/")[1]}/usermanager`,
@@ -113,6 +109,11 @@ const navItems: NavItem[] = [
     icon:<MdDesignServices />,
     name: "Service Manager",
     path: `/${pathname.split("/")[1]}/servicemanager`,
+  },
+  {
+    icon:<Bell className="w-4 h-4" />,
+    name: "Notify Manager",
+    path: `/${pathname.split("/")[1]}/notifymanager`,
   },
 
  
@@ -332,7 +333,7 @@ const navItems: NavItem[] = [
             <>
               <Image
                 className="dark:hidden"
-                src="/images/logo/logo.svg"
+                src="/assets/images/logo/logo.svg"
                 alt="Logo"
                 width={150}
                 height={40}

@@ -2,7 +2,7 @@
 "use client";
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
-import {  useAuthAdmin } from "@/hooks/useAuth";
+import {  useAuth } from "@/hooks/useAuth";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,7 +11,7 @@ import React, { useState } from "react";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-const {infoAdmin} = useAuthAdmin();
+const {infoAdmin} = useAuth();
 
 const router = useRouter();
 function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {

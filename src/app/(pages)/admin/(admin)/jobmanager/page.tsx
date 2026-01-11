@@ -337,7 +337,7 @@ const ToastNotification = ({ message }:{message:any}) => {
 
           {/* TABLE (Desktop) */}
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 hidden md:table">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table">
               <thead className="bg-gray-50 dark:bg-gray-700/50">
                 <tr>
                   {/* Cột Checkbox "Chọn tất cả" */}
@@ -446,45 +446,7 @@ const ToastNotification = ({ message }:{message:any}) => {
             )}
           </div>
 
-          {/* Danh sách Thẻ (Mobile) */}
-          <div className="md:hidden divide-y divide-gray-200 dark:divide-gray-700">
-           {candidates?(<>
-              {candidates.map((row:any) => {
-                const statusInfo = getStatusInfo(row.status);
-                const isChecked = selectedIds.includes(row.jobId);
-                return (
-                  <div key={row.jobId} className="p-4 bg-white dark:bg-gray-800 flex flex-col gap-2">
-                      <div className="flex justify-between items-start">
-                          <div className="flex items-center gap-2">
-                            {/* Checkbox trong Mobile View */}
-                            <input
-                                id={`mobile-checkbox-${row.jobId}`}
-                                type="checkbox"
-                                className="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"
-                                checked={isChecked}
-                                onChange={(e) => handleSelectRow(row.jobId, e)}
-                            />
-                            <label htmlFor={`mobile-checkbox-${row.jobId}`} className="text-lg font-bold text-gray-900 dark:text-white">
-                                {row.name}
-                            </label>
-                          </div>
-                          <span
-                            className={`inline-flex items-center px-3 py-1 justify-center rounded-full font-semibold text-xs ${statusInfo.bg} ${statusInfo.textColor}`}
-                          >
-                            {statusInfo.label}
-                          </span>
-                      </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">
-                        <span className="font-medium">Công ty:</span> {row.company}
-                      </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-500">
-                        <span className="font-medium">Ngày đăng :</span> {row.appliedDate}
-                      </div>
-                     
-                  </div>
-                );
-              })}</>):(<></>)}
-          </div>
+       
           {candidates?.length === 0 && (
                 <div className="md:hidden p-10 text-center text-gray-500 dark:text-gray-400">
                     <p className="font-semibold text-lg">Không tìm thấy công việc nào.</p>

@@ -3,6 +3,7 @@
 import { Section1 } from "./Section1";
  import { Section2 } from "./Section2";
 import { Section3 } from "./Section3";
+import ServicePackages from "./ServicePackage";
 
 export default function Home() {
   return (
@@ -16,6 +17,9 @@ export default function Home() {
       {/* End Section 2 */}
       {/* Section 2 */}
       <Section2/>
+      {/* End Section 2 */}
+      {/* Section 2 */}
+      <ServicePackages/>
       {/* End Section 2 */}
     </>
   );

@@ -2,10 +2,12 @@
 "use client";
 
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
-import NotificationDropdown from "@/components/header/admin/NotificationDropdown";
+
 import UserDropdown from "@/components/header/admin/UserDropdown";
+import NotificationBellAdmin from "@/components/modal/admin/NotificationBellAdmin";
 import { useAdminNotifications } from "@/context/NotificationAdminContext";
 import { useSidebar } from "@/context/SidebarContext";
+import { useAuth } from "@/hooks/useAuth";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState ,useEffect,useRef} from "react";
@@ -14,7 +16,8 @@ const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
-
+const {infoAdmin}=useAuth();
+console.log(infoAdmin)
   const handleToggle = () => {
     if (window.innerWidth >= 1024) {
       toggleSidebar();
@@ -135,7 +138,7 @@ const AppHeader: React.FC = () => {
             <ThemeToggleButton />
             {/* <!-- Dark Mode Toggler --> */}
 
-           <NotificationDropdown /> 
+           <NotificationBellAdmin userId={infoAdmin?.email || ""}/> 
             {/* <!-- Notification Menu Area --> */}
           </div>
           {/* <!-- User Area --> */}

@@ -100,6 +100,7 @@ useEffect(() => {
         createdAt: Date.now() 
     }
 
+    console.log(newNoti)
     // Kiểm tra xem thông báo này đã tồn tại trong list chưa để tránh trùng lặp
     setNotification((prev:any ) => {
       // const isExisted = prev.some((n:any) => n.id === latestNoti.id);
@@ -153,7 +154,7 @@ useEffect(() => {
         })
 
         const data=await res.json();
-        console.log("THông báo",data.result.content)
+     
         const newNotifiList=data.result.content.map((noty:any)=>{
           return {
             

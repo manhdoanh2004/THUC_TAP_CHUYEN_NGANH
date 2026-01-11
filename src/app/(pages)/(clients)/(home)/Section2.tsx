@@ -15,7 +15,6 @@ export const Section2 = () => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/all/job?page=0&size=6`)
       .then(res => res.json())
       .then(data => {
-        console.log("công ty",data)
         if(data.code == "success") {
           
             setCompanyList(data.result.content);
