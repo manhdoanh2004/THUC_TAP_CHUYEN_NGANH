@@ -238,7 +238,7 @@ export const FormCreate = () => {
             id="datePicker"
             label="Hạn nộp hồ sơ"
             placeholder="Chọn thời gian"
-           
+           minDate={"today"}
             required={true}
             onChange={(dates, currentDateString) => {
               setDatePickerValue(currentDateString);
