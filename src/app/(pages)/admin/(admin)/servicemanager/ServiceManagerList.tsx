@@ -26,6 +26,7 @@ interface ServicePackage {
   price: number;
   description: string;
   isActive: boolean; 
+  weeklyPostLimit?: number;
 }
 
 const apiKey = ""; 
@@ -55,6 +56,7 @@ export default function ServiceManagerList() {
     price: 0,
     description: '',
     isActive: true,
+    weeklyPostLimit:0
   });
 
   // --- API Helpers ---
@@ -419,6 +421,17 @@ export default function ServiceManagerList() {
                   </div>
                 </div>
 
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Số lượng bài đăng</label>
+                  <input 
+                    required
+                    disabled={isLoading}
+                    type="number" 
+                    className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none disabled:bg-slate-50"
+                    value={formData.weeklyPostLimit}
+                    onChange={(e) => setFormData({...formData, weeklyPostLimit: parseInt(e.target.value)})}
+                  />
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Giá dịch vụ (VNĐ)</label>
                   <input 
