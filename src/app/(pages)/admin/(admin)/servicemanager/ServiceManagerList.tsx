@@ -422,7 +422,7 @@ export default function ServiceManagerList() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Số lượng bài đăng</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Số lượng bài đăng trong tuần </label>
                   <input 
                     required
                     disabled={isLoading}
@@ -516,6 +516,14 @@ export default function ServiceManagerList() {
                    </div>
                 </div>
 
+                <div>
+                   <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2 mb-2">
+                      <Search size={16} className="text-blue-500" /> Số lượng bài đăng trong tuần 
+                   </h4>
+                   <p className="text-slate-600 text-sm leading-relaxed">
+                      {viewingPackage.weeklyPostLimit || "0 "} bài đăng
+                   </p>
+                </div>
                 <div>
                    <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2 mb-2">
                       <Search size={16} className="text-blue-500" /> Mô tả dịch vụ
