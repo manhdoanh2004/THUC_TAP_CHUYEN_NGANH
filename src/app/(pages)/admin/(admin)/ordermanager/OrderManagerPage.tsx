@@ -111,6 +111,24 @@ export const OrderManagerPage=()=>
     }
   ]);
 
+
+  useEffect(()=>{
+
+    const fetchOrderList=async()=>{
+
+     const res=await fetch(`http://localhost:8080/api/dashboard/order-stats`,{
+        credentials:"include",
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            startDate:'',
+            endDate:''
+        })
+    });
+    }
+  },[])
   const [searchTerm, setSearchTerm] = useState('');
   const [isSwalLoaded, setIsSwalLoaded] = useState(false);
   
@@ -240,7 +258,7 @@ export const OrderManagerPage=()=>
                 <p class="text-slate-800 text-base font-medium">${order.employer.companyName}</p>
               </div>
               <div>
-                <p class="text-slate-500 text-[11px] tracking-tight">Mã ID</p>
+                <p class="text-slate-500 text-[11px] tracking-tight">Mã công ty :</p>
                 <p class="font-mono text-xs">${order.employer.employerId}</p>
               </div>
               <div>
@@ -248,11 +266,6 @@ export const OrderManagerPage=()=>
                 <p class="text-blue-600 underline">${order.employer.email}</p>
               </div>
             </div>
-          </div>
-
-          <div class="mt-8 pt-4 border-t border-dashed flex items-center justify-between text-[10px] text-slate-400 font-mono tracking-widest">
-             <div class="flex items-center gap-1"><History size={10}/> Cập nhật lần cuối: ${order.updateAt}</div>
-             <div>ID: ${order.id}</div>
           </div>
         </div>
       `,
@@ -271,7 +284,7 @@ export const OrderManagerPage=()=>
     if (!swal) return;
     swal.fire({
       title: 'Xác nhận xóa?',
-      text: "Dữ liệu đơn hàng sẽ bị gỡ bỏ khỏi hệ thống đối soát.",
+      text: "Dữ liệu đơn hàng sẽ bị xóa vĩnh viễn!.",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Xóa',
@@ -324,8 +337,7 @@ export const OrderManagerPage=()=>
             <p className="text-slate-500 text-sm mt-1">Đối soát thanh toán dịch vụ nhà tuyển dụng</p>
           </div>
           <div className="bg-white border border-slate-200 px-5 py-2.5 rounded-2xl text-sm shadow-sm flex items-center gap-3">
-             <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
-            <span className="text-slate-500 text-[10px] tracking-widest">Hệ thống:</span> 
+            <span className="text-slate-500 text-[10px] tracking-widest">Tổng đơn hàng :</span> 
             <span className="text-blue-600 font-medium">{orders.length} đơn hàng</span>
           </div>
         </div>
@@ -387,13 +399,13 @@ export const OrderManagerPage=()=>
                         <div className="flex items-center justify-end gap-2">
                           <button 
                             onClick={() => handleViewDetail(order)}
-                            className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-white hover:shadow-md rounded-xl transition-all border border-transparent hover:border-slate-100"
+                            className="p-2.5 text-slate-400 hover:text-blue-600 transition-all"
                           >
                             <Eye size={18} />
                           </button>
                           <button 
                             onClick={() => handleDeleteOrder(order)}
-                            className="p-2.5 text-slate-400 hover:text-red-600 hover:bg-white hover:shadow-md rounded-xl transition-all border border-transparent hover:border-slate-100"
+                            className="p-2.5 text-slate-400 hover:text-red-600   transition-all "
                           >
                             <Trash2 size={18} />
                           </button>

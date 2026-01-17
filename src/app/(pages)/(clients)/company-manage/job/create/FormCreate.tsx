@@ -14,11 +14,12 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { Toaster, toast } from 'sonner';
 import { positionList ,workingFromList} from "@/config/variables";
-import { useAuth } from "@/hooks/useAuth";
+
 import { useRouter } from "next/navigation";
 import { EditorMCE } from "@/components/editor/EditorMCE";
 import DatePicker from "@/components/form/date-picker";
 import Switch from "@/components/form/switch/Switch";
+import { useAuth } from "@/context/AuthContext";
 
 // Đăng ký plugins
 registerPlugin(

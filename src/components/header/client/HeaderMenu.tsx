@@ -2,7 +2,7 @@
 
 
 import { useNotifications } from "@/context/NotificationContext";
-import { useAuth } from "@/hooks/useAuth";
+
 import Link from "next/link";
 import { FaAngleDown, FaAngleRight } from "react-icons/fa6"
 

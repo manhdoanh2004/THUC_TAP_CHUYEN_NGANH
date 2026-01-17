@@ -3,7 +3,6 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import JustValidate from "just-validate";
 import { FilePond, registerPlugin } from "react-filepond";
@@ -18,15 +17,10 @@ import { useRouter } from "next/navigation";
 import { EditorMCE } from "@/components/editor/EditorMCE";
 import MultiSelect from "@/components/form/MultiSelect";
 import {cityList} from "../../../../../config/variables"
+import { useAuth } from "@/context/AuthContext";
 // Đăng ký plugins
 registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview);
-  const multiOptions = [
-    { value: "1", text: "Option 1", selected: false },
-    { value: "2", text: "Option 2", selected: false },
-    { value: "3", text: "Option 3", selected: false },
-    { value: "4", text: "Option 4", selected: false },
-    { value: "5", text: "Option 5", selected: false },
-  ];
+
 export const FormProfile = () => {
 
   

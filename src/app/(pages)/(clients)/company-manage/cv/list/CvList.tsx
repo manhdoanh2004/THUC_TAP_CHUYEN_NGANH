@@ -8,11 +8,12 @@ import { useEffect, useState } from "react"
 import { FaBriefcase, FaCircleCheck, FaEnvelope, FaEye, FaPhone, FaUserTie } from "react-icons/fa6"
 import {workingFromList,positionList,cvStatusList} from "../../../../../../config/variables"
 import { CvItem } from "./CvItem"
-import { useAuth } from "@/hooks/useAuth"
+
 import { useRouter } from "next/navigation"
 import CardCVSkeleton from "@/components/card/CardCVSkeleton"
 import { ModalCVDetail } from "@/components/modal/ModalCVDetail"
 import { toast, Toaster } from "sonner";
+import { useAuth } from "@/context/AuthContext"
 export const CvList=()=>
 {
     const [listCv,setListCv]=useState<any>(null);

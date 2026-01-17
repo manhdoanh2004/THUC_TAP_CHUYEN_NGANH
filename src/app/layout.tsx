@@ -1,4 +1,5 @@
 // /* eslint-disable react/jsx-no-undef */
+import { AuthenProvider } from '@/context/AuthContext';
 import './globals.css';
 
 import { SidebarProvider } from '@/context/SidebarContext';
@@ -21,10 +22,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${beVietnamPro.className} dark:bg-gray-900`}>
        
- <ThemeProvider>
+       <AuthenProvider>
+
+        <ThemeProvider>
           <SidebarProvider>{children}</SidebarProvider>
         </ThemeProvider>
 
+       </AuthenProvider>
+ 
       
        
       </body>

@@ -5,8 +5,8 @@
 "use client";
 import { CardJobItem } from "@/components/card/CardJobItem";
 import JobCardSkeleton from "@/components/card/JobCartSkeleton";
-import { cvStatusList, positionList, workingFromList } from "@/config/variables";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/context/AuthContext";
+
 import Link from "next/link"
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -20,10 +20,10 @@ export const FavoriteJobList = () => {
    const router = useRouter();
 
     useEffect(() => {
-      if(isLogin === false) {
+      if(!infoUser) {
         router.push("/");
       }
-    }, [isLogin]);
+    }, [infoUser]);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/get-liked`, {

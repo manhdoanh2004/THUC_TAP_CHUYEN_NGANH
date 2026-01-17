@@ -3,7 +3,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
-import { useAuth } from "@/hooks/useAuth"
+
 import { useEffect, useState } from "react";
 import JustValidate from "just-validate";
 import { FilePond, registerPlugin } from 'react-filepond';
@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import DatePicker from "@/components/form/date-picker";
 import RadioButton from "@/components/input/RadioButtons";
 import Switch from "@/components/form/switch/Switch";
+import { useAuth } from "@/context/AuthContext";
 // Đăng ký plugins
 registerPlugin(
   FilePondPluginFileValidateType,

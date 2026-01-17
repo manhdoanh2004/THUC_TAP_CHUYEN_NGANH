@@ -1,8 +1,9 @@
 "use client";
 
+import { useAuth } from "@/context/AuthContext";
 import { NotificationProvider } from "@/context/NotificationAdminContext";
 import { useSidebar } from "@/context/SidebarContext";
-import { useAuth } from "@/hooks/useAuth";
+
 import AppHeader from "@/layout/AppHeader";
 import AppSidebar from "@/layout/AppSidebar";
 import Backdrop from "@/layout/Backdrop";
@@ -15,14 +16,14 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
- const {  isLogin } = useAuth();
+ const {  isLogin , infoAdmin} = useAuth();
      const router = useRouter();
      useEffect(() => {
 
-        if(isLogin === false) {
+        if(!infoAdmin) {
             router.push("/admin/login");
         }
-     }, [isLogin]);
+     }, [infoAdmin]);
 
    
   

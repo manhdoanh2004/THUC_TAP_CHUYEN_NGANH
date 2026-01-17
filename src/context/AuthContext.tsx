@@ -1,10 +1,13 @@
+'use client'
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 
-export const useAuth = () => {
-  const [isLogin, setIsLogin] = useState<boolean | null>(null);
+import { usePathname } from "next/navigation";
+import { createContext, useContext, useEffect, useState } from "react";
+
+const useAuthContext = createContext<any | undefined>(undefined);
+
+export const AuthenProvider=({children}:{children:React.ReactNode})=>{
+const [isLogin, setIsLogin] = useState<boolean | null>(null);
   const [infoUser, setInfoUser] = useState<any>(null);
   const [infoCompany, setInfoCompany] = useState<any>(null);
   const [infoAdmin, setInfoAdmin] = useState<any>(null);
@@ -53,5 +56,18 @@ export const useAuth = () => {
       .catch(() => setIsLogin(false));
   }, [pathname]); // Chỉ chạy lại khi đổi trang
 
-  return { isLogin, infoUser, infoCompany, infoAdmin, role };
+     return (
+    <useAuthContext.Provider value={{ isLogin, infoUser, infoCompany, infoAdmin, role }}>
+      {children}
+    </useAuthContext.Provider>
+  );
+}
+
+
+
+
+export const useAuth = () => {
+  const context = useContext(useAuthContext);
+  if (!context) throw new Error("useNotifications must be used within UseAuthProvider");
+  return context;
 };

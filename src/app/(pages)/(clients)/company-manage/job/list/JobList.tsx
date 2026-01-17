@@ -8,9 +8,10 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaBriefcase, FaLocationDot, FaUserTie } from "react-icons/fa6";
 import { positionList, workingFromList } from "@/config/variables";
-import { useAuth } from "@/hooks/useAuth";
+
 import { useRouter } from "next/navigation";
 import { ButtonDelete } from "@/components/buttons/ButtonDelete";
+import { useAuth } from "@/context/AuthContext";
 
 export const JobList = () => {
   const STATUS_MAP: any = {

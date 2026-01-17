@@ -115,6 +115,11 @@ const navItems: NavItem[] = [
     name: "Notify Manager",
     path: `/${pathname.split("/")[1]}/notifymanager`,
   },
+  {
+    icon:<Bell className="w-4 h-4" />,
+    name: "Order Manager",
+    path: `/${pathname.split("/")[1]}/ordermanager`,
+  },
 
  
 ];

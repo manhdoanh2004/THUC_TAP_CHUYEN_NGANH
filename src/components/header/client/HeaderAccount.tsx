@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useAuth } from "@/hooks/useAuth"
+
 import Image from "next/image";
 import Link from "next/link"
 import { useRouter } from "next/navigation";
 import { usePathname } from 'next/navigation';
 import avatarDefault from "../../../../public/avatarDefault.png"
 import NotificationBell from "@/components/modal/NotificationBell";
+import { useAuth } from "@/context/AuthContext";
 
 export const HeaderAccount = () => {
   const pathname = usePathname();

@@ -12,8 +12,9 @@ import {
   Briefcase,
   ChevronRight
 } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 
 const CandidateSearchPage = () => {
   const BRAND_COLOR = "#000073";

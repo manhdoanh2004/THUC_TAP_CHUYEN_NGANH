@@ -4,8 +4,9 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, Check, Zap, Crown, ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
+
 import ServiceSkeleton from '@/components/card/ServiceSkeleton';
+import { useAuth } from '@/context/AuthContext';
 
 // Giả định dữ liệu API trả về
 const MOCK_DATA = [

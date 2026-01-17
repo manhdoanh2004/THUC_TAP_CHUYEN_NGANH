@@ -5,9 +5,9 @@ import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 
 import UserDropdown from "@/components/header/admin/UserDropdown";
 import NotificationBellAdmin from "@/components/modal/admin/NotificationBellAdmin";
-import { useAdminNotifications } from "@/context/NotificationAdminContext";
+import { useAuth } from "@/context/AuthContext";
+
 import { useSidebar } from "@/context/SidebarContext";
-import { useAuth } from "@/hooks/useAuth";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState ,useEffect,useRef} from "react";

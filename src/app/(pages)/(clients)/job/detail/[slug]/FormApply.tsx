@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import Swal from 'sweetalert2'
-import { useAuth } from "@/hooks/useAuth";
+
 import JustValidate from "just-validate";
 import React, { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash, FaFilePdf, FaSpinner } from "react-icons/fa6";
@@ -18,6 +18,7 @@ import {
 } from "react-icons/fa6";
 import FavoriteJobButton from "@/components/buttons/FavoriteJobButton";
 import JobDetailSkeleton from "@/components/card/JobDetailSkeleton";
+import { useAuth } from '@/context/AuthContext';
 
 // const FormApply = ({ jobId, isLogin, setIsSubmitApplied,isSubmitApplied,oldCv,setIsApplied }: any) => {
 //   const [fileName, setFileName] = useState<string>('');

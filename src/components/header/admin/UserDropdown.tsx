@@ -2,7 +2,8 @@
 "use client";
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
-import {  useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/context/AuthContext";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

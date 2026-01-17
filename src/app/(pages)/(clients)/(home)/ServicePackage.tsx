@@ -10,9 +10,10 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
+
 import Link from 'next/link';
 import { MdKeyboardArrowRight, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
+import { useAuth } from '@/context/AuthContext';
 
 /** * TYPES & INTERFACES 
  */

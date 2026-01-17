@@ -2,8 +2,9 @@
 // contexts/NotificationContext.tsx
 "use client";
 
-import { useAuth } from '@/hooks/useAuth';
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useAuth } from './AuthContext';
+
 
 interface Notification {
   notiId?: string;

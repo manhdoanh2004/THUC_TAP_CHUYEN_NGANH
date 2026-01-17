@@ -2,8 +2,9 @@
 // contexts/NotificationContext.tsx
 "use client";
 
-import { useAuth } from '@/hooks/useAuth';
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useAuth } from './AuthContext';
 
 interface Notification {
   notiId?: string;
@@ -21,6 +22,7 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
   const {isLogin,infoCompany,infoUser}=useAuth();
+  
 
 
 useEffect(() => {

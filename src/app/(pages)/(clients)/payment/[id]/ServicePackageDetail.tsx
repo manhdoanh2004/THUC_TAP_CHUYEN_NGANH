@@ -2,7 +2,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import { PaymentSkeleton } from '@/components/card/PaymentSkeleton';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/context/AuthContext';
+
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
