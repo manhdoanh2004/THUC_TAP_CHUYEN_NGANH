@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 export default function CompanyManageCVListPage() {
   return (
     <>
-      <div className="py-[60px]">
-        <div className="container mx-auto px-[16px]">
+      <div className="py-[60px] ">
+        <div className="container mx-auto px-[16px] relative ">
           <h2 className="font-[700] sm:text-[28px] text-[24px] sm:w-auto w-[100%] text-[#121212] mb-[20px]">
             Quản lý CV
           </h2>

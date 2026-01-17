@@ -30,7 +30,7 @@ export const Section3 = () => {
           Công việc mới nhất
           </h2>
           {/* Wrap */}
-          <div className="grid lg:grid-cols-3 grid-cols-2 sm:gap-[20px] gap-x-[10px] gap-y-[20px]">
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 sm:gap-[20px] gap-x-[10px] gap-y-[20px]">
             {/* Item */}
             {companyList?(<>
               {companyList.map(item => (

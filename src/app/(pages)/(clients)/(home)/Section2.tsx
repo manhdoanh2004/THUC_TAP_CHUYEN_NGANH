@@ -31,7 +31,7 @@ export const Section2 = () => {
             Nhà tuyển dụng hàng đầu
           </h2>
           {/* Wrap */}
-          <div className="grid lg:grid-cols-3 grid-cols-2 sm:gap-[20px] gap-x-[10px] gap-y-[20px]">
+          <div className="grid md:grid-cols-2 grid-cols-1 sm:gap-[20px] gap-x-[10px] gap-y-[20px]">
             {/* Item */}
             {companyList?(<>
             

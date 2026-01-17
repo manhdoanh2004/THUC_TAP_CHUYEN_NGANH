@@ -12,10 +12,7 @@ export const ButtonDelete=( props:{
 
 })=>
 {
-
     const {api,item,onDeleteSuccess,content=""}=props;
-
-    console.log("xóa công việc",item)
     const handleDelete=()=>
     {
         const confirm=window.confirm(content +( item.title|| item.jobTitle))
@@ -26,9 +23,6 @@ export const ButtonDelete=( props:{
             headers:{
                 "Content-Type":"application/json"
             },
-            body:JSON.stringify({
-                ids:[item.jobId]
-            }),
             credentials:'include'
            })
             .then(res=>res.json())
@@ -36,8 +30,8 @@ export const ButtonDelete=( props:{
             {
                 if(data.code=="success")
                 {
-                      toast.success(data.message);
-                        onDeleteSuccess(item.JobId);
+                     
+                        onDeleteSuccess(item.applicationId || item.id);
                 }
                  else if(data.code == "error") {
                     toast.error(data.message);

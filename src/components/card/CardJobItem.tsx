@@ -19,7 +19,7 @@ export const CardJobItem = (props:{
     <>
       <Link 
         href={`/job/detail/${item.jobId}`}
-        className="border border-[#DEDEDE] rounded-[8px] flex flex-col relative truncate"
+        className="border border-[#DEDEDE] rounded-[8px] flex flex-col relative truncate shadow-sm hover:shadow-2xl transition-all duration-500"
         style={{
           background: "linear-gradient(180deg, #F6F6F6 2.38%, #FFFFFF 70.43%)"
         }}

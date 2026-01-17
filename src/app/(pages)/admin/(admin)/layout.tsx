@@ -1,5 +1,6 @@
 "use client";
 
+import { NotificationProvider } from "@/context/NotificationAdminContext";
 import { useSidebar } from "@/context/SidebarContext";
 import { useAuth } from "@/hooks/useAuth";
 import AppHeader from "@/layout/AppHeader";
@@ -35,7 +36,8 @@ export default function AdminLayout({
   return (
     <>
     {isLogin?(<>
-     <div className="min-h-screen xl:flex">
+     <NotificationProvider>
+        <div className="min-h-screen xl:flex">
       {/* Sidebar and Backdrop */}
       <AppSidebar />
       <Backdrop />
@@ -46,9 +48,12 @@ export default function AdminLayout({
         {/* Header */}
         <AppHeader />
         {/* Page Content */}
+        
         <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">{children}</div>
       </div>
     </div>
+     </NotificationProvider>
+   
     </>):(<></>)}
     </>
    

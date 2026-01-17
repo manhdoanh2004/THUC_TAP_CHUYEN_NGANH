@@ -22,7 +22,6 @@ export default async function CompanyManageJobEditPage({
     credentials: 'include', // Gửi kèm cookie
   });
   const data = await res.json();
- console.log("data",data);
   return (
     <>
       <div className="py-[60px]">

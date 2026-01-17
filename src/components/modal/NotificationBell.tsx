@@ -216,7 +216,6 @@ useEffect(() => {
         });
 
         const data=await res.json();
-        console.log("Đánh dấu đã đọc:",data);
     setNotification((prev) =>
       prev.map((n) => (n.notiId === notiId ? { ...n, isRead: true } : n))
     );
@@ -234,7 +233,7 @@ useEffect(() => {
         });
 
         const data=await res.json();
-        console.log("Đánh dấu đã đọc:",data);
+       
     setNotification((prev) => prev.map((n) => ({ ...n, isRead: true })));
   };
 

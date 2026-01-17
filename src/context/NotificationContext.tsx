@@ -20,12 +20,11 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 export const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [status, setStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
-  const {isLogin}=useAuth();
+  const {isLogin,infoCompany,infoUser}=useAuth();
 
 
 useEffect(() => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/sse/subscribe/`;
-
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/sse/subscribe/?email=${infoUser?.email||infoCompany?.email}`;
 
   if (!process.env.NEXT_PUBLIC_API_URL) {
 

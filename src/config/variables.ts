@@ -123,18 +123,23 @@ export const cityList=[
 
 export const cvStatusList = [
   {
-    label: "Chưa duyệt",
-    value: "initial",
+    label: "Chưa xem",
+    value: "PENDING",
     color: "#121212"
   },
   {
+    label: "Đã xem",
+    value: "REVIEWING",
+    color: "#FFA500"
+  },
+  {
     label: "Đã duyệt",
-    value: "approved",
+    value: "APPROVED",
     color: "#47BE02"
   },
   {
     label: "Từ chối",
-    value: "rejected",
+    value: "REJECTED",
     color: "#FF5100"
   }
 ];

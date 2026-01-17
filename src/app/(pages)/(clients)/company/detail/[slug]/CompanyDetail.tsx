@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6"; // Đảm bảo bạn đã cài react-icons
 
 
-export const CompanyDetail = () => {
+export const CompanyDetail = ({slug}:{slug:string}) => {
   // 1. Khai báo state để lưu dữ liệu
   const [companyDetail, setCompanyDetail] = useState<any>(null);
   const [jobList, setJobList] = useState<any[]>([]);
@@ -15,17 +15,20 @@ export const CompanyDetail = () => {
   useEffect(() => {
     const fetchCompanyData = async () => {
       try {
+        const form=new FormData();
+        form.append("companyName",slug);
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/info/public`, {
-          credentials: "include",
+          method: "POST",
+          body: form
         });
         const data = await res.json();
-        console.log("Dữ liệu API:", data);
+    
 
         if (data.code === "success") {
           setCompanyDetail(data.result);
-          setJobList(data.result.jobs || []);
+          setJobList(data.result.jobList || []);
         }
-        console.log(data)
+    
       } catch (error) {
         console.error("Lỗi khi gọi API:", error);
       } finally {

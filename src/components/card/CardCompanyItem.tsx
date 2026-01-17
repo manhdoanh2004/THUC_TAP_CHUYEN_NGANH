@@ -9,11 +9,12 @@ export const CardCompanyItem = (props:{
 }) => {
   
   const {item}=props;
+
   return (
     <>
       <Link 
-        href={`/company/detail/${item.id}`}
-        className="border border-[#DEDEDE] rounded-[8px] flex flex-col relative truncate"
+        href={`/company/detail/${item.companyName}`}
+        className="border border-[#DEDEDE] rounded-[8px] flex flex-col relative truncate shadow-sm hover:shadow-2xl transition-all duration-500 "
         style={{
           background: "linear-gradient(180deg, #F6F6F6 2.38%, #FFFFFF 70.43%)"
         }}

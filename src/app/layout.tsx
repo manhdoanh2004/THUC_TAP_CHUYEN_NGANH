@@ -3,11 +3,8 @@ import './globals.css';
 
 import { SidebarProvider } from '@/context/SidebarContext';
 import { ThemeProvider } from '@/context/ThemeContext';
-import { NotificationProvider } from '@/context/NotificationAdminContext';
 
-// const outfit = Outfit({
-//   subsets: ["latin"],
-// });
+
 import { Be_Vietnam_Pro } from 'next/font/google';
 
 const beVietnamPro = Be_Vietnam_Pro({
@@ -23,12 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${beVietnamPro.className} dark:bg-gray-900`}>
-        <NotificationProvider>
+       
  <ThemeProvider>
           <SidebarProvider>{children}</SidebarProvider>
         </ThemeProvider>
 
-        </NotificationProvider>
+      
        
       </body>
     </html>
