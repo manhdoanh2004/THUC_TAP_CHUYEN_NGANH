@@ -20,6 +20,7 @@ import {
 // --- Types ---
 interface ServicePackage {
   id?: any;
+  code?:string;
   name: string;
   durationDays: number; // Ngày sử dụng
   jobPostDurationDays: number; // Ngày tồn tại bài đăng
@@ -56,7 +57,8 @@ export default function ServiceManagerList() {
     price: 0,
     description: '',
     isActive: true,
-    weeklyPostLimit:0
+    weeklyPostLimit:0,
+    code:'',
   });
 
   // --- API Helpers ---
@@ -133,6 +135,7 @@ export default function ServiceManagerList() {
       price: 0,
       description: '',
       isActive: true,
+      code:""
     });
     setIsModalOpen(true);
   };
@@ -148,6 +151,7 @@ export default function ServiceManagerList() {
       price: pkg.price,
       description: pkg.description,
       isActive: pkg.isActive,
+      code:pkg.code||""
     });
     setIsModalOpen(true);
   };
@@ -396,6 +400,19 @@ export default function ServiceManagerList() {
                   />
                 </div>
 
+                <div className="">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Mã gói dịch vụ</label>
+                    <input 
+                      required
+                      disabled={isLoading}
+                      type="text" 
+                      className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none disabled:bg-slate-50"
+                      value={formData.code}
+                      onChange={(e) => setFormData({...formData, code:e.target.value})}
+                    />
+                  </div>
+                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Hạn sử dụng (Ngày)</label>
@@ -518,7 +535,7 @@ export default function ServiceManagerList() {
 
                 <div>
                    <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2 mb-2">
-                      <Search size={16} className="text-blue-500" /> Số lượng bài đăng trong tuần 
+               Số lượng bài đăng trong tuần 
                    </h4>
                    <p className="text-slate-600 text-sm leading-relaxed">
                       {viewingPackage.weeklyPostLimit || "0 "} bài đăng
@@ -526,7 +543,7 @@ export default function ServiceManagerList() {
                 </div>
                 <div>
                    <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2 mb-2">
-                      <Search size={16} className="text-blue-500" /> Mô tả dịch vụ
+                      Mô tả dịch vụ
                    </h4>
                    <p className="text-slate-600 text-sm leading-relaxed">
                       {viewingPackage.description || "Không có mô tả cho gói này."}
@@ -552,7 +569,7 @@ export default function ServiceManagerList() {
                   onClick={() => setIsDetailOpen(false)}
                   className="w-full py-3 bg-blue-500 text-white rounded-xl font-bold hover:bg-blue-600 transition-colors shadow-lg active:scale-95"
                 >
-                  Đóng lại
+                  Đóng 
                 </button>
              </div>
           </div>
