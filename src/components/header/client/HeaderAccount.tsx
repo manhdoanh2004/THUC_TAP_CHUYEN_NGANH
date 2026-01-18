@@ -102,6 +102,9 @@ export const HeaderAccount = () => {
                 <li className="py-[10px] px-[16px] hover:bg-[#000096]">
                   <Link href="/company-manage/cv/list" className="block text-white">Quản lý CV</Link>
                 </li>
+                <li className="py-[10px] px-[16px] hover:bg-[#000096]">
+                  <Link href="/candidatesearch" className="block text-white">Tìm kiếm ứng viên </Link>
+                </li>
                 <li className="py-[10px] px-[16px] hover:bg-[#000096] border-t border-white/10" onClick={() => handleLogout("/login")}>
                   Đăng xuất
                 </li>

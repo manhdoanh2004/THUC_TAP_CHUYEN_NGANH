@@ -66,74 +66,56 @@ interface Order {
   bankCode: string;
   orderInfo: string;
   paymentMethod: 'VNPAY' | 'MOMO' | 'ZALOPAY' | string;
+};
+
+const statusOrder:{[key: string]: string }={
+  'PENDING':"Chờ xử lý",
+  'SUCCESS':"Thanh toán thành công",
+ 
 }
 export const OrderManagerPage=()=>
 {
-    const [orders, setOrders] = useState<Order[]>([
-    {
-      "createdAt": "02/01/2026 16:13:44",
-      "updateAt": "02/01/2026 16:14:50",
-      "id": 1,
-      "code": "4f4df82a-e1c4-4292-a8f0-5544beee1e99",
-      "employer": {
-        "createdAt": "02/01/2026 15:27:46",
-        "updateAt": "05/01/2026 20:27:06",
-        "email": "hunghung2k4123@gmail.com",
-        "isLocked": false,
-        "employerId": "EMPL2E00C07A",
-        "companyName": "Công ty TNHH công nghệ ABC",
-        "city": [],
-        "address": null,
-        "enabled": true,
-        "phone": "0987654321"
-      },
-      "vipPackage": {
-        "createdAt": "02/01/2026 16:13:11",
-        "updateAt": "02/01/2026 16:13:11",
-        "id": 2,
-        "code": "VIP01",
-        "name": "Gói vip 1",
-        "price": 30.0,
-        "durationDays": 2,
-        "postLimit": 10,
-        "weeklyPostLimit": null,
-        "jobPostDurationDays": 30,
-        "description": "Gói dịch vụ đăng bài cơ bản cho doanh nghiệp nhỏ",
-        "isActive": true
-      },
-      "amount": 10000.0,
-      "status": "SUCCESS",
-      "vnpTxnRef": "7cbcc955-c71f-4df8-8308-f6c4fcd5e642",
-      "vnpTransactionNo": "15378591",
-      "bankCode": "NCB",
-      "orderInfo": "Thanh toán gói dịch vụ VIP 01",
-      "paymentMethod": "VNPAY"
-    }
-  ]);
+    const [orders, setOrders] = useState<Order[]|any>(null);
+    const [totalPages, setTotalPages] = useState<number>(1);
+    const [totalElements, setTotalElements] = useState<number>(0);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isSwalLoaded, setIsSwalLoaded] = useState(false);
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
+  const fetchOrderList=async()=>{
 
-  useEffect(()=>{
-
-    const fetchOrderList=async()=>{
-
-     const res=await fetch(`http://localhost:8080/api/dashboard/order-stats`,{
+     const res=await fetch(`http://localhost:8080/api/orders/filter`,{
         credentials:"include",
         method:"POST",
         headers:{
             "Content-Type":"application/json"
         },
         body:JSON.stringify({
-            startDate:'',
-            endDate:''
+          page: currentPage-1,
+          size: 10,
+      
         })
     });
+
+    const data= await res.json();
+
+ 
+    if(data.code=="success")
+    {
+      setOrders(data.result.content)
+      setTotalPages(data.result.totalPages)
+      setTotalElements(data.result.totalElements)
     }
-  },[])
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isSwalLoaded, setIsSwalLoaded] = useState(false);
-  
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+    }
+
+ // call api lấy danh sách đơn hàng
+  useEffect(()=>{
+
+   
+    fetchOrderList();
+  },[currentPage])
 
   useEffect(() => {
     if ((window as any).Swal) {
@@ -154,7 +136,7 @@ export const OrderManagerPage=()=>
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
   };
 
-  const getPaymentMethodStyle = (method: string) => {
+  const getPaymentMethodStyle = (method= 'VNPAY') => {
     switch (method) {
       case 'VNPAY': return 'bg-blue-50 text-blue-700 border-blue-200';
       case 'MOMO': return 'bg-pink-50 text-pink-700 border-pink-200';
@@ -188,7 +170,7 @@ export const OrderManagerPage=()=>
               <div>
                 <p class="text-slate-500 text-[11px] tracking-tight">Trạng thái</p>
                 <p class="${order.status === 'SUCCESS' ? 'text-green-600' : 'text-amber-600'} flex items-center gap-1">
-                  ${order.status === 'SUCCESS' ? '● Thành công' : '● Đang chờ'}
+                  ${order.status === 'SUCCESS' ? ' Thành công' : ' Đang chờ'}
                 </p>
               </div>
               <div>
@@ -197,7 +179,7 @@ export const OrderManagerPage=()=>
               </div>
               <div>
                 <p class="text-slate-500 text-[11px] tracking-tight">Phương thức</p>
-                <p class="text-indigo-700">${order.paymentMethod}</p>
+                <p class="text-indigo-700">VNPAY</p>
               </div>
               <div>
                 <p class="text-slate-500 text-[11px] tracking-tight">Mã tham chiếu</p>
@@ -226,7 +208,7 @@ export const OrderManagerPage=()=>
               </div>
               <div class="bg-white p-3 rounded-xl border border-amber-100 shadow-sm text-center">
                 <p class="text-slate-500 text-[10px]">Tổng bài đăng</p>
-                <p class="text-slate-800">${pkg.postLimit} bài</p>
+                <p class="text-slate-800">${pkg.postLimit?`${pkg.postLimit}`:" Không giới hạn bài đăng"} </p>
               </div>
               <div class="bg-white p-3 rounded-xl border border-amber-100 shadow-sm text-center">
                 <p class="text-slate-500 text-[10px]">Giới hạn/Tuần</p>
@@ -269,7 +251,7 @@ export const OrderManagerPage=()=>
           </div>
         </div>
       `,
-      confirmButtonText: 'Đóng lại',
+      confirmButtonText: 'Đóng',
       confirmButtonColor: '#1e293b',
       customClass: {
         popup: 'rounded-[2rem] border-none shadow-2xl',
@@ -279,7 +261,11 @@ export const OrderManagerPage=()=>
     });
   }, []);
 
-  const handleDeleteOrder = useCallback((order: Order) => {
+
+
+
+
+  const handleDeleteOrder = useCallback(  (order: Order) => {
     const swal = getSwal();
     if (!swal) return;
     swal.fire({
@@ -291,9 +277,18 @@ export const OrderManagerPage=()=>
       cancelButtonText: 'Hủy',
       confirmButtonColor: '#ef4444',
       customClass: { popup: 'rounded-2xl' }
-    }).then((result: any) => {
+    }).then( async (result: any) => {
       if (result.isConfirmed) {
-        setOrders(prev => prev.filter(o => o.id !== order.id));
+
+          const res =await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/${order.id}`,{
+            method:"DELETE",
+            credentials:"include"
+          });
+          const data= await res.json();
+        if(data.code=="success")
+          {
+              await fetchOrderList();
+          }    
       }
     });
   }, []);
@@ -307,42 +302,38 @@ export const OrderManagerPage=()=>
   };
 
   const filteredOrders = useMemo(() => {
-    return orders.filter(order => 
+   if(orders) return orders.filter((order:any) => 
       order.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.employer.companyName.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    else return null;
   }, [orders, searchTerm]);
 
-  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
-  
-  const paginatedOrders = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return filteredOrders.slice(startIndex, startIndex + itemsPerPage);
-  }, [filteredOrders, currentPage]);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm]);
 
+  if(!orders) return  <div className="flex items-center justify-center min-h-[200px] w-full">
+        <div className="w-10 h-10 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+      </div>
   return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-900 font-normal">
+    <>
+     <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-900 font-normal">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
           <div>
             <h1 className="text-2xl text-slate-900 tracking-tighter flex items-center gap-2 font-medium">
-              <div className="bg-blue-600 p-1.5 rounded-lg text-white"><FileText size={24}/></div>
-              Quản lý giao dịch VIP
+           
+              Quản lý đơn hàng
               {!isSwalLoaded && <span className="animate-pulse h-2 w-2 rounded-full bg-amber-400"></span>}
             </h1>
-            <p className="text-slate-500 text-sm mt-1">Đối soát thanh toán dịch vụ nhà tuyển dụng</p>
+          
           </div>
           <div className="bg-white border border-slate-200 px-5 py-2.5 rounded-2xl text-sm shadow-sm flex items-center gap-3">
             <span className="text-slate-500 text-[10px] tracking-widest">Tổng đơn hàng :</span> 
-            <span className="text-blue-600 font-medium">{orders.length} đơn hàng</span>
+            <span className="text-blue-600 font-medium">{totalElements} đơn hàng</span>
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm mb-6 flex items-center gap-4 focus-within:ring-4 focus-within:ring-blue-50 transition-all">
+        {/* <div className="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm mb-6 flex items-center gap-4 focus-within:ring-4 focus-within:ring-blue-50 transition-all">
           <Search className="text-slate-400" size={20} />
           <input 
             type="text" 
@@ -351,7 +342,7 @@ export const OrderManagerPage=()=>
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-        </div>
+        </div> */}
 
         <div className="bg-white rounded-[2rem] border border-slate-200 shadow-xl shadow-slate-200/50 overflow-hidden mb-6">
           <div className="overflow-x-auto">
@@ -367,8 +358,7 @@ export const OrderManagerPage=()=>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {paginatedOrders.length > 0 ? (
-                  paginatedOrders.map((order) => (
+                {orders?(<>{ filteredOrders.map((order:any) => (
                     <tr key={order.id} className="hover:bg-blue-50/30 transition-all group">
                       <td className="p-5">
                         <div className="flex flex-col">
@@ -377,8 +367,8 @@ export const OrderManagerPage=()=>
                         </div>
                       </td>
                       <td className="p-5">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[9px] border tracking-wider ${getPaymentMethodStyle(order.paymentMethod)}`}>
-                          {order.paymentMethod}
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[9px] border tracking-wider ${getPaymentMethodStyle('VNPAY')}`}>
+                          {'VNPAY'}
                         </span>
                       </td>
                       <td className="p-5">
@@ -392,7 +382,53 @@ export const OrderManagerPage=()=>
                       </td>
                       <td className="p-5 text-center">
                         <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] border shadow-sm ${getStatusStyle(order.status)}`}>
-                          {order.status}
+                          {statusOrder[order?.status] || "Không xác định"}
+                        </span>
+                      </td>
+                      <td className="p-5 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button 
+                            onClick={() => handleViewDetail(order)}
+                            className="p-2.5 text-slate-400 hover:text-blue-600 transition-all"
+                          >
+                            <Eye size={18} />
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteOrder(order)}
+                            className="p-2.5 text-slate-400 hover:text-red-600   transition-all "
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}</>):(<></>)}
+                {/* {paginatedOrders.length > 0 ? (
+                  paginatedOrders.map((order) => (
+                    <tr key={order.id} className="hover:bg-blue-50/30 transition-all group">
+                      <td className="p-5">
+                        <div className="flex flex-col">
+                          <span className="font-mono text-xs text-blue-600">#{order.code.substring(0, 8)}</span>
+                          <span className="text-slate-400 text-[10px] mt-0.5">{order.createdAt.split(' ')[0]}</span>
+                        </div>
+                      </td>
+                      <td className="p-5">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[9px] border tracking-wider ${getPaymentMethodStyle('VNPAY')}`}>
+                          {'VNPAY'}
+                        </span>
+                      </td>
+                      <td className="p-5">
+                        <div className="flex flex-col max-w-[220px]">
+                          <span className="text-slate-800 text-sm truncate tracking-tight font-medium uppercase">{order.employer.companyName}</span>
+                          <span className="text-slate-400 text-[10px] truncate">{order.employer.email}</span>
+                        </div>
+                      </td>
+                      <td className="p-5 text-right">
+                        <span className="text-slate-900 text-sm tracking-tighter">{formatCurrency(order.amount)}</span>
+                      </td>
+                      <td className="p-5 text-center">
+                        <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] border shadow-sm ${getStatusStyle(order.status)}`}>
+                          {statusOrder[order?.status] || "Không xác định"}
                         </span>
                       </td>
                       <td className="p-5 text-right">
@@ -415,7 +451,7 @@ export const OrderManagerPage=()=>
                   ))
                 ) : (
                   <tr><td colSpan={6} className="p-20 text-center text-slate-300 tracking-widest text-xs">Dữ liệu trống</td></tr>
-                )}
+                )} */}
               </tbody>
             </table>
           </div>
@@ -423,8 +459,8 @@ export const OrderManagerPage=()=>
 
         {totalPages > 1 && (
           <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-            <div className="text-xs text-slate-500 italic">
-              Hiển thị {((currentPage - 1) * itemsPerPage) + 1} - {Math.min(currentPage * itemsPerPage, filteredOrders.length)} trong số {filteredOrders.length} đơn hàng
+            <div className="text-xs text-slate-500 ">
+              Hiển thị {((currentPage - 1) * itemsPerPage) + 1} - {Math.min(currentPage * itemsPerPage, itemsPerPage+filteredOrders.length)} trong số {totalElements} đơn hàng
             </div>
             <div className="flex items-center gap-2">
               <button 
@@ -465,5 +501,7 @@ export const OrderManagerPage=()=>
         .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
       `}</style>
     </div>
+    </>
+   
   )
 }

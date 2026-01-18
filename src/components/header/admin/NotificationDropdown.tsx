@@ -13,8 +13,6 @@ export default function NotificationDropdown() {
 const {notifications,status} =useAdminNotifications();
 
 useEffect(()=>{
-console.log(notifications,status)
-console.log("Có dữ liệu mới")
 },[notifications,status])
   function toggleDropdown() {
     setIsOpen(!isOpen);

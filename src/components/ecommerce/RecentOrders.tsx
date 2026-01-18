@@ -236,7 +236,7 @@ export default function App() {
 
             <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
               {orders?(<>
-                 {orders.map((order:any) => {
+                 {orders.slice(0,4).map((order:any) => {
                 const statusInfo = getStatusInfo(order.status);
                 return (
                   <TableRow key={order.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">

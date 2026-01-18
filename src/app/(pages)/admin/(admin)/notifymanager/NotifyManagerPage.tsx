@@ -119,6 +119,14 @@ export default function NotificationManagement() {
 
   }, [notifications, filter, searchTerm]);
 
+
+   const unRead= useMemo(() => {
+
+    return notifications.filter((n)=> n.isRead==false).length;
+
+  }, [notifications]);
+
+
     const markAsRead =async (notiId: string) => {
      const res=await fetch(`${process.env.NEXT_PUBLIC_API_URL}/noti/read`,{
             method:"PUT",
@@ -131,7 +139,6 @@ export default function NotificationManagement() {
         });
 
         const data=await res.json();
-        console.log("Đánh dấu đã đọc:",data);
     setNotifications((prev) =>
       prev.map((n) => (n.notiId === notiId ? { ...n, isRead: true } : n))
     );
@@ -149,8 +156,7 @@ export default function NotificationManagement() {
         });
 
         const data=await res.json();
-        console.log("Đánh dấu đã đọc:",data);
-    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
   };
   return (
     <div className="min-h-screen ">
@@ -163,13 +169,16 @@ export default function NotificationManagement() {
               Xem và quản lý các cập nhật từ hệ thống
             </p>
           </div>
-          <button 
+          {unRead>0?(<>
+                <button 
             onClick={markAllAsRead}
             className="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 transition-all shadow-sm active:scale-95"
           >
             <CheckCheck className="w-4 h-4 text-orange-600" />
             Đánh dấu tất cả đã đọc
           </button>
+          </>):(<></>)}
+    
         </div>
 
         {/* Filters & Search */}

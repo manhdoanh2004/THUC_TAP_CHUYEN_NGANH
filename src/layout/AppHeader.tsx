@@ -17,7 +17,6 @@ const AppHeader: React.FC = () => {
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 const {infoAdmin}=useAuth();
-console.log(infoAdmin)
   const handleToggle = () => {
     if (window.innerWidth >= 1024) {
       toggleSidebar();

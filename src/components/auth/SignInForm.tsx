@@ -5,6 +5,7 @@ import Checkbox from "@/components/form/input/Checkbox";
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
+import { useAuth } from "@/context/AuthContext";
 import {  EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -15,7 +16,7 @@ export default function SignInForm() {
   const [isChecked, setIsChecked] = useState(false);
 const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
+const {checkAuth}=useAuth()
     const [isResending, setIsResending] = useState(false);
     const router=useRouter();
   const handleLogin=async (event:any)=>{
@@ -32,6 +33,7 @@ const [email, setEmail] = useState('');
 
     const data=await res.json();
     if(data.code=='success'){
+     await checkAuth()
       router.push('/admin/dashboard');
     }
     else{

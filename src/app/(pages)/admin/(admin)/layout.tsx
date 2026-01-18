@@ -16,14 +16,13 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
- const {  isLogin , infoAdmin} = useAuth();
+ const {  isLogin , infoAdmin,isLoading} = useAuth();
      const router = useRouter();
-     useEffect(() => {
-
-        if(!infoAdmin) {
-            router.push("/admin/login");
-        }
-     }, [infoAdmin]);
+    useEffect(() => {
+  if (!isLoading && infoAdmin === null) {
+    router.push("/admin/login");
+  }
+}, [infoAdmin, isLoading, router]);
 
    
   
@@ -33,7 +32,9 @@ export default function AdminLayout({
     : isExpanded || isHovered
     ? "lg:ml-[290px]"
     : "lg:ml-[90px]";
-
+     if(!infoAdmin) return <><div className="flex items-center justify-center min-h-[200px] w-full">
+        <div className="w-10 h-10 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+      </div></>
   return (
     <>
     {isLogin?(<>

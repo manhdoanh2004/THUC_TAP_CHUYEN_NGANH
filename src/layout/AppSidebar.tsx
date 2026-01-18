@@ -3,24 +3,21 @@
 import React, { useEffect, useRef, useState,useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
 import { MdDesignServices, MdOutlineWork } from "react-icons/md";
 import { FaUserGroup } from "react-icons/fa6";
 import {
-  BoxCubeIcon,
+
   CalenderIcon,
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
-  ListIcon,
-  PageIcon,
-  PieChartIcon,
-  PlugInIcon,
-  TableIcon,
   UserCircleIcon,
 } from "../icons/index";
 import { Bell } from "lucide-react";
+import { FaBoxOpen } from "react-icons/fa";
+import { useAuth } from "@/context/AuthContext";
 
 
 type NavItem = {
@@ -87,7 +84,13 @@ const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const pathname = usePathname();
 
-
+const {  isLogin , infoAdmin,isLoading} = useAuth();
+     const router = useRouter();
+     useEffect(() => {
+        if(!infoAdmin&& !isLoading) {
+             router.push("/admin/login");
+        }
+     }, [infoAdmin]);
 const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
@@ -116,7 +119,7 @@ const navItems: NavItem[] = [
     path: `/${pathname.split("/")[1]}/notifymanager`,
   },
   {
-    icon:<Bell className="w-4 h-4" />,
+    icon: <FaBoxOpen className="w-4 h-4" />,
     name: "Order Manager",
     path: `/${pathname.split("/")[1]}/ordermanager`,
   },

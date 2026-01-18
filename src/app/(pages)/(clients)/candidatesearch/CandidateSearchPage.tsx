@@ -19,7 +19,7 @@ import { useAuth } from '@/context/AuthContext';
 const CandidateSearchPage = () => {
   const BRAND_COLOR = "#000073";
 
-  const [candidates] = useState([
+  const [candidates,setCandidates] = useState([
     {
       candidateId: "CAN-9921-X1",
       fullName: "Nguyễn Văn A",
@@ -90,6 +90,32 @@ const CandidateSearchPage = () => {
     }
   ]);
 
+  useEffect(()=>
+  {
+    const fetchCandidate=async()=>
+    {
+      const res=await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/search`,{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+              fullname: "",
+            email: "",
+          softSkill: "",
+            experience: "",
+            technologies: "",
+            desiredSalary: ""
+                  }),
+          credentials:"include"
+      });
+
+      const data= await res.json();
+      console.log(data)
+    }
+    fetchCandidate()
+  },[])
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCandidate, setSelectedCandidate] = useState<any>(null);
 
@@ -102,10 +128,10 @@ const CandidateSearchPage = () => {
   }, [candidates, searchTerm]);
 
   const router=useRouter();
-  const {infoCompany}=useAuth();
+  const {infoCompany,isLoading}=useAuth();
 
   useEffect(() => {
-    if(!infoCompany)
+    if(!infoCompany&& !isLoading)
         {
                 router.push("/");
                 return;
@@ -123,7 +149,7 @@ const CandidateSearchPage = () => {
           </h1>
           <div className="relative max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-            <input
+            <input suppressHydrationWarning
               type="text"
               placeholder="Tìm theo tên hoặc kỹ năng..."
               className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 focus:border-[#000073] focus:ring-1 focus:ring-[#000073] outline-none transition-all bg-white shadow-sm text-sm"
