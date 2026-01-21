@@ -183,12 +183,16 @@ const router=useRouter()
                     <span className="font-semibold">{orderDetail.vipPackage.durationDays} ngày</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="opacity-80">Số tin đăng:</span>
+                    <span className="opacity-80">Giới hạn số tin đăng:</span>
                     <span className="font-semibold">{orderDetail.vipPackage.postLimit} tin</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="opacity-80">Hiển thị tin:</span>
                     <span className="font-semibold">{orderDetail.vipPackage.jobPostDurationDays} ngày</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="opacity-80">Giới hạn số tin đăng trong 1 tuần:</span>
+                    <span className="font-semibold">{orderDetail.vipPackage.weeklyPostLimit} ngày</span>
                   </div>
                 </div>
                 
