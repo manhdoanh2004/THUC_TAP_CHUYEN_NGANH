@@ -28,6 +28,7 @@ interface ServicePackage {
   description: string;
   isActive: boolean; 
   weeklyPostLimit?: number;
+  postLimit:number;
 }
 
 const apiKey = ""; 
@@ -59,6 +60,7 @@ export default function ServiceManagerList() {
     isActive: true,
     weeklyPostLimit:0,
     code:'',
+    postLimit:0
   });
 
   // --- API Helpers ---
@@ -135,7 +137,8 @@ export default function ServiceManagerList() {
       price: 0,
       description: '',
       isActive: true,
-      code:""
+      code:"",
+      postLimit:0
     });
     setIsModalOpen(true);
   };
@@ -151,7 +154,8 @@ export default function ServiceManagerList() {
       price: pkg.price,
       description: pkg.description,
       isActive: pkg.isActive,
-      code:pkg.code||""
+      code:pkg.code||"",
+      postLimit:pkg.postLimit
     });
     setIsModalOpen(true);
   };
@@ -532,6 +536,14 @@ export default function ServiceManagerList() {
                    </div>
                 </div>
 
+                <div>
+                   <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2 mb-2">
+               Giới hạn bài đăng :
+                   </h4>
+                   <p className="text-slate-600 text-sm leading-relaxed">
+                      {viewingPackage.postLimit || "0 "} bài đăng
+                   </p>
+                </div>
                 <div>
                    <h4 className="text-sm font-semibold text-slate-900 flex items-center gap-2 mb-2">
                Số lượng bài đăng trong tuần 
