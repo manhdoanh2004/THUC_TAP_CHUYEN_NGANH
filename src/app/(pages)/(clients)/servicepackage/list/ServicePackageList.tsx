@@ -71,7 +71,7 @@ const {isLogin,infoCompany}=useAuth();
     useEffect(() => {
  
      if(!infoCompany) return;
-       fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/vip-packages`, {
+       fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/vip-packages/active`, {
          credentials: 'include',
          
        })
