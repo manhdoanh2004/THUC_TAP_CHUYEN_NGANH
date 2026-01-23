@@ -42,8 +42,12 @@ export const ModalCVDetail = ({ isOpen, onClose, cv}:{isOpen: boolean, onClose: 
                   File CV:
                 </div>
                 <div className="bg-[#D9D9D9] h-[500px] md:h-[600px] rounded-[4px] overflow-hidden mt-[10px]">
-                  <iframe src={cv.cv} className="w-full h-full" title="CV Preview"></iframe>
-                </div>
+                      <iframe 
+                        src={`${cv.cv}#toolbar=0&navpanes=0&scrollbar=0`} 
+                        className="w-full h-full" 
+                        title="CV Preview"
+                      ></iframe>
+                    </div>
               </div>
             </div>
           ) : (

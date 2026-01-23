@@ -394,7 +394,7 @@ export default function ServiceManagerList() {
               </button>
             </div>
             
-            <form onSubmit={handleSubmit} className="p-6 bg-white">
+            <form onSubmit={handleSubmit} className="p-6 bg-white h-[500px] overflow-y-auto ">
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Tên gói dịch vụ</label>
