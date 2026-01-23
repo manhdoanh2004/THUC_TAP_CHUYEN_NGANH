@@ -155,7 +155,8 @@ export default function ServiceManagerList() {
       description: pkg.description,
       isActive: pkg.isActive,
       code:pkg.code||"",
-      postLimit:pkg.postLimit
+      postLimit:pkg.postLimit,
+      weeklyPostLimit: pkg.weeklyPostLimit || 0,
     });
     setIsModalOpen(true);
   };
@@ -273,6 +274,8 @@ export default function ServiceManagerList() {
                   <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Tên gói</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Hạn dùng</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Hạn bài đăng</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Số bài</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Bài đăng/tuần</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Giá niêm yết</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Trạng thái</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Thao tác</th>
@@ -286,6 +289,8 @@ export default function ServiceManagerList() {
                     </td>
                     <td className="px-6 py-4 text-slate-600">{pkg.durationDays} ngày</td>
                     <td className="px-6 py-4 text-slate-600">{pkg.jobPostDurationDays} ngày</td>
+                    <td className="px-6 py-4 text-slate-600">{pkg.postLimit}</td>
+                    <td className="px-6 py-4 text-slate-600">{pkg.weeklyPostLimit}</td>
                     <td className="px-6 py-4 font-semibold text-blue-600">
                       {pkg.price.toLocaleString('vi-VN')} đ
                     </td>
@@ -440,7 +445,17 @@ export default function ServiceManagerList() {
                     />
                   </div>
                 </div>
-
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Số bài đăng giới hạn</label>
+                  <input 
+                    required
+                    disabled={isLoading}
+                    type="number" 
+                    className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none disabled:bg-slate-50"
+                    value={formData.postLimit}
+                    onChange={(e) => setFormData({...formData, postLimit: parseInt(e.target.value)})}
+                  />
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Số lượng bài đăng trong tuần </label>
                   <input 

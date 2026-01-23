@@ -220,7 +220,7 @@ export const OrderManagerPage=()=>
               </div>
               <div class="bg-white p-3 rounded-xl border border-amber-100 shadow-sm col-span-2">
                 <p class="text-slate-500 text-[10px]">Trạng thái gói</p>
-                <p class="${pkg.isActive ? 'text-green-600' : 'text-red-600'}">${pkg.isActive ? 'Đang áp dụng' : 'Ngưng áp dụng'}</p>
+                <p class="${pkg.isActive ? 'text-green-600' : 'text-red-600'}">${pkg.isActive ? 'Đang hoạt động' : 'Ngừng hoạt động'}</p>
               </div>
               <div class="col-span-full">
                 <p class="text-slate-500 text-[10px] mb-1">Mô tả dịch vụ</p>
