@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   // Thêm mục 'images' nếu chưa có
+  output: 'standalone',
   images: {
     // Thêm tên miền của Cloudinary vào đây
     domains: [
