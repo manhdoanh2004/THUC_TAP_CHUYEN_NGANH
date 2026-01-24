@@ -102,7 +102,7 @@ const ServicePackages: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 justify-center  mt-[35px]">
           {servicePackage && servicePackage.length > 0 ? (
            <>
-               {servicePackage?.map((service:any) => { return   <div 
+               {servicePackage?.filter((service: any) => service.code !=="DEFAULT").map((service:any) => { return   <div 
               key={service.id} 
               className={`bg-white rounded-3xl border p-8 shadow-sm hover:shadow-2xl transition-all duration-500 text-left flex flex-col relative group overflow-hidden
                 ${service.code === 'PRO' ? 'border-blue-200 ring-2 ring-blue-500/10' : 'border-neutral-200'}`}

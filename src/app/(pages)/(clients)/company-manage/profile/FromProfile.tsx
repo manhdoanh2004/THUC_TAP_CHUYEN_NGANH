@@ -18,6 +18,7 @@ import { EditorMCE } from "@/components/editor/EditorMCE";
 import MultiSelect from "@/components/form/MultiSelect";
 import {cityList} from "../../../../../config/variables"
 import { useAuth } from "@/context/AuthContext";
+import ServiceExpiryInfo from "@/components/helper/client/ServiceExpiryInfo";
 // Đăng ký plugins
 registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview);
 
@@ -149,10 +150,24 @@ export const FormProfile = () => {
     }
   };
 
+  const servicePackage= {
+        "createdAt": "17/01/2026 20:30:51",
+        "updateAt": "17/01/2026 20:30:51",
+        "id": 3,
+        "code": "VIP2",
+        "name": "Gói vip 2",
+        "price": 200000.0,
+        "durationDays": 30,
+        "postLimit": 50,
+        "weeklyPostLimit": 10,
+        "jobPostDurationDays": 30,
+        "description": "",
+        "isActive": true
+    }
   return (
     <>
       <Toaster position="top-right" richColors />
-      {infoCompany && (
+      {/* {infoCompany && (
         <form
           onSubmit={handleSubmit}
           id="profileForm"
@@ -307,7 +322,234 @@ export const FormProfile = () => {
             </button>
           </div>
         </form>
-      )}
+      )} */}
+      {infoCompany && (
+  <div className="grid lg:grid-cols-2 grid-cols-1 gap-[30px] items-start">
+    <div>
+      <form
+        onSubmit={handleSubmit}
+        id="profileForm"
+        action=""
+        className="grid sm:grid-cols-2 grid-cols-1 gap-x-[20px] gap-y-[15px]"
+      >
+        <div className="sm:col-span-2">
+          <label
+            htmlFor="companyName"
+            className="block font-[500] text-[14px] text-black mb-[5px]"
+          >
+            Tên công ty *
+          </label>
+          <input
+            type="text"
+            defaultValue={infoCompany.companyName}
+            name="companyName"
+            id="companyName"
+            className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
+          />
+        </div>
+        <div className="sm:col-span-2">
+          <label
+            htmlFor="logo"
+            className="block font-[500] text-[14px] text-black mb-[5px]"
+          >
+            Logo
+          </label>
+          <FilePond
+            name="logo"
+            allowMultiple={false}
+            allowRemove={true}
+            labelIdle="+"
+            acceptedFileTypes={["image/*"]}
+            files={logos}
+            onupdatefiles={setLogos}
+          />
+        </div>
+        <div className="relative">
+          <MultiSelect
+            label="Thành phố"
+            options={newcityList}
+            defaultSelected={companycityList}
+            onChange={(values) => setSelectedValues(values)}
+          />
+        </div>
+        <div className="">
+          <label
+            htmlFor="address"
+            className="block font-[500] text-[14px] text-black mb-[5px]"
+          >
+            Địa chỉ
+          </label>
+          <input
+            type="text"
+            name="address"
+            defaultValue={infoCompany.address}
+            id="address"
+            className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
+          />
+        </div>
+        <div className="">
+          <label
+            htmlFor="companyModel"
+            className="block font-[500] text-[14px] text-black mb-[5px]"
+          >
+            Mô hình công ty
+          </label>
+          <input
+            type="text"
+            name="companyModel"
+            defaultValue={infoCompany.companyModel}
+            id="companyModel"
+            className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
+          />
+        </div>
+        <div className="">
+          <label
+            htmlFor="companyEmployees"
+            className="block font-[500] text-[14px] text-black mb-[5px]"
+          >
+            Quy mô công ty
+          </label>
+          <input
+            type="text"
+            name="companyEmployees"
+            defaultValue={infoCompany.companyEmployees}
+            id="companyEmployees"
+            className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
+          />
+        </div>
+        <div className="">
+          <label
+            htmlFor="workingTime"
+            className="block font-[500] text-[14px] text-black mb-[5px]"
+          >
+            Thời gian làm việc
+          </label>
+          <input
+            type="text"
+            name="workingTime"
+            defaultValue={infoCompany.workingTime}
+            id="workingTime"
+            className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
+          />
+        </div>
+        <div className="">
+          <label
+            htmlFor="workOvertime"
+            className="block font-[500] text-[14px] text-black mb-[5px]"
+          >
+            Làm việc ngoài giờ
+          </label>
+          <input
+            type="text"
+            name="workOvertime"
+            defaultValue={infoCompany.workOvertime}
+            id="workOvertime"
+            className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
+          />
+        </div>
+
+        <div className="">
+          <label
+            htmlFor="phone"
+            className="block font-[500] text-[14px] text-black mb-[5px]"
+          >
+            Số điện thoại
+          </label>
+          <input
+            type="text"
+            name="phone"
+            defaultValue={infoCompany.phone}
+            id="phone"
+            className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
+          />
+        </div>
+        <div className="sm:col-span-2">
+          <label
+            htmlFor="description"
+            className="block font-[500] text-[14px] text-black mb-[5px]"
+          >
+            Mô tả chi tiết
+          </label>
+          <EditorMCE editorRef={editorRef} value={infoCompany.description} />
+        </div>
+        <div className="sm:col-span-2">
+          <button className="bg-[#0088FF] rounded-[4px] h-[48px] px-[20px] font-[700] text-[16px] text-white w-full sm:w-auto">
+            Cập nhật
+          </button>
+        </div>
+      </form>
+    </div>
+
+    {/* THÔNG TIN GÓI DỊCH VỤ*/}
+    {infoCompany.currentVipPackage?(<>
+     <div className="bg-[#F8F9FA] border border-[#E9ECEF] rounded-[8px] p-[20px] sticky top-[20px]">
+      <div className="flex justify-between items-center mb-[20px] border-b border-[#DEDEDE] pb-[10px]">
+        <h3 className="text-[18px] font-bold text-[#0088FF]">Gói dịch vụ hiện tại</h3>
+        <span className={`px-3 py-1 rounded-full text-xs font-bold ${servicePackage.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+            {servicePackage.isActive ? "Đang hoạt động" : "Ngừng hoạt động"}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-1 gap-y-[15px]">
+        {/* Row: Mã & Tên */}
+        <div className="grid grid-cols-2 gap-4">
+            <div>
+                <label className="block text-[12px] text-gray-500 uppercase font-semibold">Mã gói</label>
+                <div className="font-medium text-black">{servicePackage.code}</div>
+            </div>
+            <div>
+                <label className="block text-[12px] text-gray-500 uppercase font-semibold">Tên gói</label>
+                <div className="font-medium text-black">{servicePackage.name}</div>
+            </div>
+        </div>
+
+        {/* Ngày mua & Ngày hết hạn */}
+        
+       <ServiceExpiryInfo 
+    purchaseDateStr={infoCompany.vipPurchaseDate}// Thay bằng biến thực tế: servicePackage.createdAt
+    durationDays={infoCompany.currentVipPackage.durationDays}    // Thay bằng biến thực tế: servicePackage.durationDays (số nguyên, ví dụ 30)
+/>
+
+        {/*Hết  Ngày mua & Ngày hết hạn */}
+        <div className="border-t border-dashed border-gray-300 my-2"></div>
+
+        {/* Row: Thời hạn */}
+        <div className="grid grid-cols-2 gap-4">
+             <div>
+                <label className="block text-[12px] text-gray-500 uppercase font-semibold">Thời hạn gói</label>
+                <div className="font-medium text-black">{servicePackage.durationDays} ngày</div>
+            </div>
+            <div>
+                <label className="block text-[12px] text-gray-500 uppercase font-semibold">Thời hạn tin đăng</label>
+                <div className="font-medium text-black">{servicePackage.jobPostDurationDays} ngày/tin</div>
+            </div>
+        </div>
+
+        {/* Row: Giới hạn */}
+        <div className="bg-white p-3 rounded border border-gray-200">
+            <div className="flex justify-between items-center mb-2">
+                <span className="text-[14px] text-gray-600">Tổng giới hạn tin:</span>
+                <span className="font-bold text-black">{servicePackage.postLimit}</span>
+            </div>
+            <div className="flex justify-between items-center">
+                <span className="text-[14px] text-gray-600">Giới hạn theo tuần:</span>
+                <span className="font-bold text-black">{servicePackage.weeklyPostLimit}</span>
+            </div>
+        </div>
+
+        {/* Description nếu có */}
+        {servicePackage.description && (
+            <div>
+                <label className="block text-[12px] text-gray-500 uppercase font-semibold">Mô tả</label>
+                <div className="text-[14px] text-gray-700 italic">{servicePackage.description}</div>
+            </div>
+        )}
+      </div>
+    </div>
+    </>):(<></>)}
+   
+  </div>
+)}
     </>
   );
 };
