@@ -12,14 +12,14 @@ export const CompanyList=()=>
     const [companyList, setCompanyList] = useState<any[]>([]);
 
       useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/list?limitItems=2&page=${page}`)
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/all/job?page=${page-1}&size=6`)
           .then(res => res.json())
           .then(data => {
              
             if(data.code == "success") {
               
-              setCompanyList(data.companyList);
-              settotalPage(data.totalPage)
+              setCompanyList(data.result.content);
+              settotalPage(data.result.totalPages)
             }
           })
       }, [page]);
@@ -34,7 +34,7 @@ export const CompanyList=()=>
          <div className="grid lg:grid-cols-3 grid-cols-2 sm:gap-[20px] gap-x-[10px] gap-y-[20px]">
                     {/* Item */}
                    {companyList.map(item => (
-                        <CardCompanyItem key={item.id} item={item} />
+                        <CardCompanyItem key={item.employerId} item={item} />
                     ))}
                   </div>
         

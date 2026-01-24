@@ -6,7 +6,9 @@ import { CardCompanyItem } from "@/components/card/CardCompanyItem";
 import { CardJobItem } from "@/components/card/CardJobItem";
 import CompanyCardSkeleton from "@/components/card/CompanyCardSkeleton";
 import JobCardSkeleton from "@/components/card/JobCartSkeleton";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { MdKeyboardArrowRight } from "react-icons/md";
 
 export const Section3 = () => {
   const [companyList, setCompanyList] = useState<any[]|null>(null);
@@ -32,8 +34,9 @@ export const Section3 = () => {
           {/* Wrap */}
           <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 sm:gap-[20px] gap-x-[10px] gap-y-[20px]">
             {/* Item */}
+            
             {companyList?(<>
-              {companyList.map(item => (
+              {companyList.slice(0, 6).map(item => (
               <CardJobItem key={item.jobId} item={item} />
             ))}
             </>):(<>

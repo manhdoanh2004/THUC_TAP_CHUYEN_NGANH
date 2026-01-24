@@ -1,22 +1,28 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CardJobItem } from "@/components/card/CardJobItem";
 import { useEffect, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6"; // Đảm bảo bạn đã cài react-icons
+const formatSlugToName = (slug: string) => {
+  return decodeURIComponent(slug)
+    .replace(/-/g, ' ') // Thay thế dấu gạch ngang thành dấu cách nếu cần
+    .replace(/\b\w/g, l => l.toUpperCase()); // Viết hoa chữ cái đầu
+};
 
-
-export const CompanyDetail = ({slug}:{slug:string}) => {
+export const CompanyDetail = ({slug}:{slug:any}) => {
   // 1. Khai báo state để lưu dữ liệu
   const [companyDetail, setCompanyDetail] = useState<any>(null);
   const [jobList, setJobList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  
   // 2. Sử dụng useEffect để gọi API
   useEffect(() => {
     const fetchCompanyData = async () => {
       try {
         const form=new FormData();
-        form.append("companyName",slug);
+        form.append("companyName",`${slug}` );
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/info/public`, {
           method: "POST",
           body: form

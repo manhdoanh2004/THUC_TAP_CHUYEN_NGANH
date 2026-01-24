@@ -21,10 +21,10 @@ export default async function CompanyDetailPage({
 }) {
 
   const { slug } = await params;
-  
+  const decodedSlug = decodeURIComponent(slug);
   return (
     <>
-     <CompanyDetail slug={slug} />
+     <CompanyDetail slug={decodedSlug} />
     </>
   )
 }

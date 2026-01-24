@@ -13,7 +13,7 @@ export const HeaderAccount = () => {
   const { isLogin, infoUser, infoCompany } = useAuth();
   const router = useRouter();
 
-const hasPackage = infoCompany?.currentVipPackage? true : false;
+const hasPackage = infoCompany?.currentVipPackage? infoCompany?.currentVipPackage.code!=='DEFAULT'? true:false : false;
   const handleLogout = (url: any) => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {
       credentials: "include",
@@ -99,7 +99,7 @@ const hasPackage = infoCompany?.currentVipPackage? true : false;
           <span 
             className={`inline-block max-w-[80px] sm:max-w-[150px] truncate align-middle whitespace-nowrap 
               ${hasPackage ? 'font-bold text-[#FFD700]' : 'text-white'} 
-            `} // Tùy chọn: Đổi màu chữ nếu là VIP
+            `}
             title={infoCompany.companyName}
           >
             {infoCompany.companyName}

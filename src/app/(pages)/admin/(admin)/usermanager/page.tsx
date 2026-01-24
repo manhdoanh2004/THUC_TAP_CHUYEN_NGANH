@@ -129,7 +129,7 @@ const UserManager = () => {
    
         const res = await confirmAction('Xóa vĩnh viễn?', user.name, 'error', '#dc2626');
         if (res.isConfirmed) {
-          const respone=await fetch(`http://localhost:8080 /admin/users/${user.id}`,{
+          const respone=await fetch(`http://localhost:8080/admin/users/${user.id}`,{
             method:"DELETE",
             credentials:"include"
           });

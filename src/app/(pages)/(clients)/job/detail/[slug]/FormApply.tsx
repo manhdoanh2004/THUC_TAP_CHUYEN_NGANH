@@ -185,7 +185,7 @@ import { useAuth } from '@/context/AuthContext';
 //     </div>
 //   );
 // };
-const FormApply = ({ jobId, isLogin, setIsSubmitApplied, isSubmitApplied, oldCv, setIsApplied }: any) => {
+const FormApply = ({ infoUser,jobId, isLogin, setIsSubmitApplied, isSubmitApplied, oldCv, setIsApplied }: any) => {
   const [fileName, setFileName] = useState<string>('');
   const [useExistingCv, setUseExistingCv] = useState<boolean>(false);
   const [existingCvUrl, setExistingCvUrl] = useState<string | null>(oldCv);
@@ -258,20 +258,27 @@ const FormApply = ({ jobId, isLogin, setIsSubmitApplied, isSubmitApplied, oldCv,
       <h2 className="font-bold text-xl mb-5 text-gray-800">Ứng tuyển ngay</h2>
       
       <form id="formApplyBody" className="space-y-4">
-        {/* ... (Giữ nguyên phần input Họ tên, Email, Phone) ... */}
+     
         <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1">Họ tên *</label>
-              <input type="text" name="name" id="name" className="w-full h-11 border border-gray-300 rounded-lg px-4 focus:ring-2 focus:ring-blue-500 outline-none bg-white" />
+              <input type="text" name="name" id="name"
+              defaultValue={`${useExistingCv?`${infoUser.fullName}`:""}`}
+              className="w-full h-11 border border-gray-300 rounded-lg px-4 focus:ring-2 focus:ring-blue-500 outline-none bg-white" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Email *</label>
-                <input type="email" name="email" id="email" className="w-full h-11 border border-gray-300 rounded-lg px-4 focus:ring-2 focus:ring-blue-500 outline-none bg-white" />
+                <input 
+                
+                   defaultValue={`${useExistingCv?`${infoUser.email}`:""}`}
+                type="email" name="email" id="email" className="w-full h-11 border border-gray-300 rounded-lg px-4 focus:ring-2 focus:ring-blue-500 outline-none bg-white" />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Số điện thoại *</label>
-                <input type="text" name="phone" id="phone" className="w-full h-11 border border-gray-300 rounded-lg px-4 focus:ring-2 focus:ring-blue-500 outline-none bg-white" />
+                <input
+                   defaultValue={`${useExistingCv?`${infoUser.phone}`:""}`}
+                type="text" name="phone" id="phone" className="w-full h-11 border border-gray-300 rounded-lg px-4 focus:ring-2 focus:ring-blue-500 outline-none bg-white" />
               </div>
             </div>
         </div>
@@ -290,7 +297,7 @@ const FormApply = ({ jobId, isLogin, setIsSubmitApplied, isSubmitApplied, oldCv,
               onChange={(e) => setUseExistingCv(e.target.checked)}
             />
             <label htmlFor="useExistingCv" className="text-sm font-semibold text-gray-700 cursor-pointer">
-              Sử dụng CV đã tải lên hệ thống
+              Sử dụng thông tin  đã tải lên hệ thống
             </label>
           </div>
 
@@ -455,7 +462,7 @@ export const JobDetail = ({ jobDetail }: any) => {
             )}
 
             {isLogin && !isApplied && !isSubmitApplied && (
-              <FormApply setIsApplied={setIsApplied} isSubmitApplied={isSubmitApplied} setIsSubmitApplied={setIsSubmitApplied} jobId={jobDetail.jobId} isLogin={isLogin} oldCv={infoUser.cv} />
+              <FormApply infoUser={infoUser} setIsApplied={setIsApplied} isSubmitApplied={isSubmitApplied} setIsSubmitApplied={setIsSubmitApplied} jobId={jobDetail.jobId} isLogin={isLogin} oldCv={infoUser.cv} />
             )}
           </div>
 
