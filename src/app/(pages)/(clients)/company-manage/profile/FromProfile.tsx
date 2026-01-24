@@ -150,20 +150,7 @@ export const FormProfile = () => {
     }
   };
 
-  const servicePackage= {
-        "createdAt": "17/01/2026 20:30:51",
-        "updateAt": "17/01/2026 20:30:51",
-        "id": 3,
-        "code": "VIP2",
-        "name": "Gói vip 2",
-        "price": 200000.0,
-        "durationDays": 30,
-        "postLimit": 50,
-        "weeklyPostLimit": 10,
-        "jobPostDurationDays": 30,
-        "description": "",
-        "isActive": true
-    }
+
   return (
     <>
       <Toaster position="top-right" richColors />
@@ -324,7 +311,7 @@ export const FormProfile = () => {
         </form>
       )} */}
       {infoCompany && (
-  <div className="grid lg:grid-cols-2 grid-cols-1 gap-[30px] items-start">
+  <div className={`grid lg:grid-cols-2 grid-cols-1 gap-[30px] items-start`}>
     <div>
       <form
         onSubmit={handleSubmit}
@@ -442,7 +429,7 @@ export const FormProfile = () => {
           <input
             type="text"
             name="workOvertime"
-            defaultValue={infoCompany.workOvertime}
+            defaultValue={infoCompany.workingOvertime}
             id="workOvertime"
             className="w-[100%] h-[46px] border border-[#DEDEDE] rounded-[4px] py-[14px] px-[20px] font-[500] text-[14px] text-black"
           />
@@ -481,12 +468,12 @@ export const FormProfile = () => {
     </div>
 
     {/* THÔNG TIN GÓI DỊCH VỤ*/}
-    {infoCompany.currentVipPackage?(<>
+    {infoCompany.currentVipPackage&&infoCompany.currentVipPackage.code!=="DEFAULT"?(<>
      <div className="bg-[#F8F9FA] border border-[#E9ECEF] rounded-[8px] p-[20px] sticky top-[20px]">
       <div className="flex justify-between items-center mb-[20px] border-b border-[#DEDEDE] pb-[10px]">
         <h3 className="text-[18px] font-bold text-[#0088FF]">Gói dịch vụ hiện tại</h3>
-        <span className={`px-3 py-1 rounded-full text-xs font-bold ${servicePackage.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-            {servicePackage.isActive ? "Đang hoạt động" : "Ngừng hoạt động"}
+        <span className={`px-3 py-1 rounded-full text-xs font-bold ${infoCompany.currentVipPackage.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+            {infoCompany.currentVipPackage.isActive ? "Đang hoạt động" : "Ngừng hoạt động"}
         </span>
       </div>
 
@@ -495,11 +482,11 @@ export const FormProfile = () => {
         <div className="grid grid-cols-2 gap-4">
             <div>
                 <label className="block text-[12px] text-gray-500 uppercase font-semibold">Mã gói</label>
-                <div className="font-medium text-black">{servicePackage.code}</div>
+                <div className="font-medium text-black">{infoCompany.currentVipPackage.code}</div>
             </div>
             <div>
                 <label className="block text-[12px] text-gray-500 uppercase font-semibold">Tên gói</label>
-                <div className="font-medium text-black">{servicePackage.name}</div>
+                <div className="font-medium text-black">{infoCompany.currentVipPackage.name}</div>
             </div>
         </div>
 
@@ -515,33 +502,33 @@ export const FormProfile = () => {
 
         {/* Row: Thời hạn */}
         <div className="grid grid-cols-2 gap-4">
-             <div>
+             <div>  
                 <label className="block text-[12px] text-gray-500 uppercase font-semibold">Thời hạn gói</label>
-                <div className="font-medium text-black">{servicePackage.durationDays} ngày</div>
+                <div className="font-medium text-black">{infoCompany.currentVipPackage.durationDays} ngày</div>
             </div>
             <div>
                 <label className="block text-[12px] text-gray-500 uppercase font-semibold">Thời hạn tin đăng</label>
-                <div className="font-medium text-black">{servicePackage.jobPostDurationDays} ngày/tin</div>
+                <div className="font-medium text-black">{infoCompany.currentVipPackage.jobPostDurationDays} ngày/tin</div>
             </div>
         </div>
 
-        {/* Row: Giới hạn */}
+        {/* Row: Giới hạn */} 
         <div className="bg-white p-3 rounded border border-gray-200">
             <div className="flex justify-between items-center mb-2">
                 <span className="text-[14px] text-gray-600">Tổng giới hạn tin:</span>
-                <span className="font-bold text-black">{servicePackage.postLimit}</span>
+                <span className="font-bold text-black">{infoCompany.currentVipPackage.postLimit}</span>
             </div>
             <div className="flex justify-between items-center">
                 <span className="text-[14px] text-gray-600">Giới hạn theo tuần:</span>
-                <span className="font-bold text-black">{servicePackage.weeklyPostLimit}</span>
+                <span className="font-bold text-black">{infoCompany.currentVipPackage.weeklyPostLimit}</span>
             </div>
         </div>
 
         {/* Description nếu có */}
-        {servicePackage.description && (
+        {infoCompany.currentVipPackage.description && (
             <div>
                 <label className="block text-[12px] text-gray-500 uppercase font-semibold">Mô tả</label>
-                <div className="text-[14px] text-gray-700 italic">{servicePackage.description}</div>
+                <div className="text-[14px] text-gray-700 italic">{infoCompany.currentVipPackage.description}</div>
             </div>
         )}
       </div>

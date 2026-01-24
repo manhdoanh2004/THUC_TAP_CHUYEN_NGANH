@@ -59,9 +59,10 @@ interface Job {
 const TABLE_HEADERS = [
   { key: 'name', label: 'Công việc', sortable: true },
   { key: 'company', label: 'Công ty', sortable: true },
+   { key: 'status', label: 'Trạng Thái', sortable: true },
   { key: 'appliedDate', label: 'Ngày đăng', sortable: true },
   { key: 'deadline', label: 'Ngày hết hạn', sortable: true },
-  { key: 'status', label: 'Trạng Thái', sortable: true },
+ 
   { key: 'action', label: 'Hành Động', sortable: false },
 ];
 
@@ -401,15 +402,7 @@ const ToastNotification = ({ message }:{message:any}) => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         {row.employer.companyName}
                       </td>
-                      {/* Ngày Ngày đăng */}
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {row.createdAt}
-                      </td>
-                      {/* Ngày hết hạn */}
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {row.deadline}
-                      </td>
-                      {/* Trạng Thái */}
+                       {/* Trạng Thái */}
                       <td className="px-6 py-4 whitespace-nowrap flex text-center">
                         <span
                           className={`inline-flex items-center px-3 py-1 justify-center rounded-full font-semibold text-xs ${statusInfo.bg} ${statusInfo.textColor}`}
@@ -417,6 +410,15 @@ const ToastNotification = ({ message }:{message:any}) => {
                           {statusInfo.label}
                         </span>
                       </td>
+                      {/* Ngày Ngày đăng */}
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        {row.createAt}
+                      </td>
+                      {/* Ngày hết hạn */}
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        {row.deadline}
+                      </td>
+                     
                       {/* Hành Động */}
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center justify-center gap-3">

@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const OrderSuccess = ({id}:{id:string}) => {
   // Mock data based on your JSON structure
@@ -208,9 +209,9 @@ const router=useRouter()
             {/* Actions */}
             <div className="grid grid-cols-1 gap-3">
               
-              <button className="flex items-center justify-center w-full py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-black transition-colors">
+              <Link href="/" className="flex items-center justify-center w-full py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-black transition-colors">
                 Quay lại trang chủ <ChevronRight className="w-4 h-4 ml-1" />
-              </button>
+              </Link>
             </div>
           </div>
         </div>

@@ -150,7 +150,7 @@ const ServicePackages: React.FC = () => {
                     ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-200' 
                     : 'bg-neutral-900 text-white hover:bg-blue-600 shadow-neutral-200'}`}
               >
-                <span>Kích hoạt ngay</span>
+                <span>{infoCompany.currentVipPackage ? `${infoCompany.currentVipPackage.code=="DEFAULT" ? "Kích hoạt ngay" : "Chuyển đổi gói dịch vụ "}` : "Kích hoạt ngay"}</span>
                 <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>})}
@@ -174,17 +174,6 @@ const FeatureItem = ({ label, value }: { label: string, value: any }) => (
   </div>
 );
 
-const PaymentOption = ({ id, current, set, icon, title, desc }: any) => (
-  <div 
-    onClick={() => set(id)}
-    className={`flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all ${current === id ? 'border-blue-600 bg-blue-50' : 'border-neutral-100 hover:border-neutral-200'}`}
-  >
-    <div className={`w-5 h-5 rounded-full border-2 mr-4 flex items-center justify-center ${current === id ? 'border-blue-600' : 'border-neutral-300'}`}>
-      {current === id && <div className="w-2.5 h-2.5 bg-blue-600 rounded-full" />}
-    </div>
-    <div className="p-2 bg-white rounded-lg border border-neutral-100 mr-4">{icon}</div>
-    <div><p className="font-bold text-sm">{title}</p><p className="text-xs text-neutral-500">{desc}</p></div>
-  </div>
-);
+
 
 export default ServicePackages;

@@ -62,7 +62,7 @@ const ResendTimer: React.FC<ResendTimerProps> = ({ data, handleResendEmail, shou
                 </p>
             ) : (
                 <p className="mt-2 text-sm">
-                    Chưa nhận được email? <span className="cursor-pointer text-red-600 font-medium hover:text-red-700" onClick={handleResendEmail}>
+                    Chưa nhận được email? <span className="cursor-pointer text-red-600 font-medium hover:text-red-700" onClick={()=>handleResendEmail(data?.email)}>
                         Vui lòng nhấn vào đây để nhận lại
                     </span>
                 </p>
