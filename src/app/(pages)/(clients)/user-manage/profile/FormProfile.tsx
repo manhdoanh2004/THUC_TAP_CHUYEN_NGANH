@@ -74,38 +74,6 @@ const handleChangeSwitchInput=(checked:boolean)=>{
 
         const validator = new JustValidate("#profileForm");
         validator
-          .addField('#fullName', [
-            {
-              rule: 'required',
-              errorMessage: 'Vui lòng nhập họ tên!'
-            },
-            {
-              rule: 'minLength',
-              value: 5,
-              errorMessage: 'Họ tên phải có ít nhất 5 ký tự!',
-            },
-            {
-              rule: 'maxLength',
-              value: 50,
-              errorMessage: 'Họ tên không được vượt quá 50 ký tự!',
-            },
-          ])
-          .addField('#email', [
-            {
-              rule: 'required',
-              errorMessage: 'Vui lòng nhập email của bạn!',
-            },
-            {
-              rule: 'email',
-              errorMessage: 'Email không đúng định dạng!',
-            },
-          ])
-          .addField('#phone', [
-            {
-              rule: 'required',
-              errorMessage: 'Vui lòng nhập số điện thoại!',
-            },
-          ])
            .onFail(() => {
           setIsValid(false);
         })

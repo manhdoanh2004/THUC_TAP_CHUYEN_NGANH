@@ -28,11 +28,11 @@ export const HeaderMenu = (
               link: "/search?language=HTML5",
               children: null
             },
-            {
-              name: "CSS3",
-              link: "/search?language=CSS3",
-              children: null
-            },
+            // {
+            //   name: "CSS3",
+            //   link: "/search?language=CSS3",
+            //   children: null
+            // },
             {
               name: "Javascript",
               link: "/search?language=Javascript",
@@ -73,34 +73,10 @@ export const HeaderMenu = (
         }
       ]
     },
-    {
-      name: "Top Công Ty IT",
-      link: "/company/list",
-      children: [
-        {
-          name: "FPT Software",
-          link: "/search?company=FPT Software",
-          children: null
-        },
-        {
-          name: "Techcombank",
-          link: "/search?company=Techcombank",
-          children: null
-        },
-        {
-          name: "MB Bank",
-          link: "/search?company=MB Bank",
-          children: null
-        },
-        {
-          name: "ABC.LTD",
-          link: "/search?company=ABC.LTD",
-          children: null
-        }
-      ]
-    },
+ 
     
   ];
+ 
 
   return (
     <>
@@ -113,7 +89,7 @@ export const HeaderMenu = (
             </Link>
             <span className="text-white text-[20px] font-[600] cursor-pointer" onClick={onMenu}>X</span>
           </li>}
-          {menuList.map((menu, index) => (
+          {/* {menuList.map((menu, index) => (
             <li
               key={index}
               className={`inline-flex lg:w-auto w-full lg:justify-start
@@ -166,7 +142,7 @@ export const HeaderMenu = (
                 </ul>
               )}
             </li>
-          ))}
+          ))} */}
         </ul>
       </nav>
       

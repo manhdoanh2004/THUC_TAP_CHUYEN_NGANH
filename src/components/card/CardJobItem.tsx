@@ -63,7 +63,7 @@ export const CardJobItem = (props:{
 <div className={`mt-[12px] ${item.salaryMax < 0 || item.salaryMin < 0 ? "mb-[10px]" : "mb-[20px]"} mx-[16px] flex flex-col items-center gap-[4px]`}>
   
   {/* Kiểm tra nếu có address thì mới hiển thị cả icon và text */}
-  {item.employer?.address && (
+  {item.employer?.address ? (
     <div className="flex items-center justify-center gap-[4px] w-full text-center">
       <FaLocationDot className="text-[16px] flex-shrink-0" />
       <span 
@@ -73,7 +73,20 @@ export const CardJobItem = (props:{
         {item.employer.address}
       </span>
     </div>
-  )}
+  ):(<>
+  <div className="flex items-start justify-center gap-2">
+                    <FaLocationDot className="shrink-0 mt-1" />
+                    <div className="flex flex-wrap justify-center gap-1">
+                      {item.location?.map((loc: any, idx: number) => (
+                        <span key={idx} className="bg-white border border-gray-200 px-2 py-0.5 rounded text-[11px]">
+                          {loc}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+  </>)}
+
+    
 
   {/* Phần Lương thỏa thuận */}
   {(item.salaryMax < 0 || item.salaryMin < 0) && (

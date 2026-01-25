@@ -287,6 +287,7 @@ const FormApply = ({ infoUser,jobId, isLogin, setIsSubmitApplied, isSubmitApplie
 
         {/* Lựa chọn CV */}
         <div className="space-y-3">
+          {infoUser.cv?(<>
           <div className="flex items-center gap-2 mb-2">
             <input 
               type="checkbox" 
@@ -300,6 +301,8 @@ const FormApply = ({ infoUser,jobId, isLogin, setIsSubmitApplied, isSubmitApplie
               Sử dụng thông tin  đã tải lên hệ thống
             </label>
           </div>
+          </>):(<></>)}
+          
 
           {!useExistingCv ? (
             <div>
@@ -320,7 +323,9 @@ const FormApply = ({ infoUser,jobId, isLogin, setIsSubmitApplied, isSubmitApplie
               </div>
             </div>
           ) : (
-            <div className="bg-blue-50 border border-blue-100 rounded-lg p-3">
+           <>
+           {infoUser.cv?(<>
+           <div className="bg-blue-50 border border-blue-100 rounded-lg p-3">
                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-blue-700 text-sm">
                     <FaFilePdf size={20} />
@@ -340,6 +345,10 @@ const FormApply = ({ infoUser,jobId, isLogin, setIsSubmitApplied, isSubmitApplie
                  </div>
                )}
             </div>
+           </>):(<></>)}
+           
+           </>
+            
           )}
         </div>
 
